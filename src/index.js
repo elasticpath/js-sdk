@@ -52,6 +52,7 @@ import SubscriptionProductsEndpoint from './endpoints/subscription-products'
 import SubscriptionPlansEndpoint from './endpoints/subscription-plan'
 import SubscriptionOfferingsEndpoint from './endpoints/subscription-offerings'
 import SubscriptionsEndpoint from './endpoints/subscriptions'
+import RulePromotionsEndpoint from './endpoints/rule-promotions'
 
 import {
   cartIdentifier,
@@ -131,6 +132,7 @@ export default class ElasticPath {
       config
     )
     this.Subscriptions = new SubscriptionsEndpoint(config)
+    this.RulePromotions = new RulePromotionsEndpoint(config)
   }
 
   // Expose `Cart` class on ElasticPath class
