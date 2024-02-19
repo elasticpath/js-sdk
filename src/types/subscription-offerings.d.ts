@@ -145,7 +145,7 @@ export interface SubscriptionOfferingsEndpoint
     SubscriptionOfferingFilter,
     never,
     never
-    > {
+  > {
   endpoint: 'offerings'
 
   Build(body: SubscriptionOfferingBuildBody): Promise<Resource<SubscriptionOffering>>
