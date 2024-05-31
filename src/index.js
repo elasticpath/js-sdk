@@ -65,6 +65,7 @@ import {
 } from './utils/helpers'
 import CatalogsEndpoint from './endpoints/catalogs'
 import ShopperCatalogEndpoint from './endpoints/catalog'
+import CustomApisEndpoint from './endpoints/custom-apis'
 
 export default class ElasticPath {
   constructor(config) {
@@ -139,6 +140,7 @@ export default class ElasticPath {
     this.SubscriptionSubscribers = new SubscriptionSubscribersEndpoint(config)
     this.SubscriptionJobs = new SubscriptionJobsEndpoint(config)
     this.SubscriptionSchedules = new SubscriptionSchedulesEndpoint(config)
+    this.CustomApis = new CustomApisEndpoint(config)
   }
 
   // Expose `Cart` class on ElasticPath class
