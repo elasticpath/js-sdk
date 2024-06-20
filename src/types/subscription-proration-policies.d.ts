@@ -47,6 +47,6 @@ export interface SubscriptionProrationPoliciesEndpoint
     never,
     never,
     never
-    > {
+  > {
   endpoint: 'proration-policies'
 }
