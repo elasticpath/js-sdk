@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   brandsArray as brands,
   productsArray as products,
@@ -15,18 +15,16 @@ const authHeaders = {
   }
 }
 
-describe('Moltin brands', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath brands', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
   it('should return an array of brands', () => {
     // Intercept the API request
-    nock(apiUrl, authHeaders)
-      .get('/brands')
-      .reply(200, { data: brands })
+    nock(apiUrl, authHeaders).get('/brands').reply(200, { data: brands })
 
-    return Moltin.Brands.All().then(response => {
+    return ElasticPath.Brands.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
@@ -37,7 +35,7 @@ describe('Moltin brands', () => {
       .get('/brands/brand-1')
       .reply(200, { data: brands[0] })
 
-    return Moltin.Brands.Get(brands[0].id).then(response => {
+    return ElasticPath.Brands.Get(brands[0].id).then(response => {
       assert.equal(response.data.id, brands[0].id)
       assert.equal(response.data.name, brands[0].name)
       assert.equal(response.data.slug, brands[0].slug)
@@ -52,7 +50,7 @@ describe('Moltin brands', () => {
       .post('/brands')
       .reply(201, { data: { ...brands[0], id: undefined } })
 
-    return Moltin.Brands.Create({ ...brands[0] }).then(response => {
+    return ElasticPath.Brands.Create({ ...brands[0] }).then(response => {
       assert.equal(response.data.name, brands[0].name)
       assert.equal(response.data.slug, brands[0].slug)
       assert.equal(response.data.description, brands[0].description)
@@ -66,7 +64,7 @@ describe('Moltin brands', () => {
       .put('/brands/brand-1')
       .reply(200, { data: { ...brands[0], ...brandUpdate } })
 
-    return Moltin.Brands.Update(brands[0].id, {
+    return ElasticPath.Brands.Update(brands[0].id, {
       ...brands[0],
       ...brandUpdate
     }).then(response => {
@@ -81,11 +79,9 @@ describe('Moltin brands', () => {
 
   it('should delete a brand', () => {
     // Intercept the API request
-    nock(apiUrl, authHeaders)
-      .delete('/brands/brand-1')
-      .reply(204)
+    nock(apiUrl, authHeaders).delete('/brands/brand-1').reply(204)
 
-    return Moltin.Brands.Delete(brands[0].id).then(response => {
+    return ElasticPath.Brands.Delete(brands[0].id).then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -103,7 +99,7 @@ describe('Moltin brands', () => {
       })
       .reply(200, brands[0])
 
-    return Moltin.Products.CreateRelationships(
+    return ElasticPath.Products.CreateRelationships(
       products[0].id,
       'brand',
       brands[0].id
@@ -129,7 +125,7 @@ describe('Moltin brands', () => {
       })
       .reply(200, brands[0])
 
-    return Moltin.Products.CreateRelationships(products[0].id, 'brand', [
+    return ElasticPath.Products.CreateRelationships(products[0].id, 'brand', [
       brands[0].id,
       brands[1].id
     ]).then(response => {
@@ -150,7 +146,7 @@ describe('Moltin brands', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(
+    return ElasticPath.Products.DeleteRelationships(
       products[0].id,
       'brand',
       brands[0].id
@@ -176,7 +172,7 @@ describe('Moltin brands', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(products[0].id, 'brand', [
+    return ElasticPath.Products.DeleteRelationships(products[0].id, 'brand', [
       brands[0].id,
       brands[1].id
     ]).then(response => {
@@ -197,7 +193,7 @@ describe('Moltin brands', () => {
       })
       .reply(200, brands[0])
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'brand',
       brands[0].id
@@ -216,11 +212,12 @@ describe('Moltin brands', () => {
         data: []
       })
 
-    return Moltin.Products.UpdateRelationships(products[0].id, 'brand').then(
-      response => {
-        assert.deepEqual(response, { data: [] })
-      }
-    )
+    return ElasticPath.Products.UpdateRelationships(
+      products[0].id,
+      'brand'
+    ).then(response => {
+      assert.deepEqual(response, { data: [] })
+    })
   })
 
   it('should return an array of attributes', () => {
@@ -228,7 +225,7 @@ describe('Moltin brands', () => {
       .get('/brands/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Brands.Attributes('testtoken').then(response => {
+    return ElasticPath.Brands.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

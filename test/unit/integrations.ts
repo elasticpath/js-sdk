@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   integrationJobsArray,
   integrationLogsResponse,
@@ -9,8 +9,8 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin integrations', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath integrations', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -28,7 +28,7 @@ describe('Moltin integrations', () => {
         data: integrations[0]
       })
 
-    return Moltin.Integrations.Create(integrations[0]).then(response => {
+    return ElasticPath.Integrations.Create(integrations[0]).then(response => {
       assert.propertyVal(response.data, 'name', integrations[0].name)
     })
   })
@@ -47,11 +47,12 @@ describe('Moltin integrations', () => {
         data: integrations[1]
       })
 
-    return Moltin.Integrations.Update(integrations[1].id, integrations[1]).then(
-      response => {
-        assert.propertyVal(response.data, 'name', integrations[1].name)
-      }
-    )
+    return ElasticPath.Integrations.Update(
+      integrations[1].id,
+      integrations[1]
+    ).then(response => {
+      assert.propertyVal(response.data, 'name', integrations[1].name)
+    })
   })
 
   it('should return an array of integrations', () => {
@@ -64,7 +65,7 @@ describe('Moltin integrations', () => {
       .get('/integrations')
       .reply(200, { data: integrations })
 
-    return Moltin.Integrations.All().then(response => {
+    return ElasticPath.Integrations.All().then(response => {
       assert.lengthOf(response.data, 3)
     })
   })
@@ -81,7 +82,7 @@ describe('Moltin integrations', () => {
         data: integrations[2]
       })
 
-    return Moltin.Integrations.Get(integrations[2].id).then(response => {
+    return ElasticPath.Integrations.Get(integrations[2].id).then(response => {
       assert.propertyVal(response.data, 'id', integrations[2].id)
       assert.propertyVal(response.data, 'name', integrations[2].name)
       assert.equal(response.data.observes[0], integrations[2].observes[0])
@@ -98,9 +99,11 @@ describe('Moltin integrations', () => {
       .delete(`/integrations/${integrations[0].id}`)
       .reply(204)
 
-    return Moltin.Integrations.Delete(integrations[0].id).then(response => {
-      assert.equal(response, '{}')
-    })
+    return ElasticPath.Integrations.Delete(integrations[0].id).then(
+      response => {
+        assert.equal(response, '{}')
+      }
+    )
   })
 
   it('should return integrations logs', () => {
@@ -113,7 +116,7 @@ describe('Moltin integrations', () => {
       .get(`/integrations/123/logs`)
       .reply(200, { data: integrations })
 
-    return Moltin.Integrations.GetLogs('123').then(response => {
+    return ElasticPath.Integrations.GetLogs('123').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })
@@ -128,7 +131,7 @@ describe('Moltin integrations', () => {
       .get(`/integrations/123/jobs`)
       .reply(200, { data: integrationJobsArray })
 
-    return Moltin.Integrations.GetJobs('123').then(response => {
+    return ElasticPath.Integrations.GetJobs('123').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })
@@ -143,7 +146,7 @@ describe('Moltin integrations', () => {
       .get(`/integrations/123/jobs/integration-job-1/logs`)
       .reply(200, integrationLogsResponse)
 
-    return Moltin.Integrations.GetAllLogsForJob(
+    return ElasticPath.Integrations.GetAllLogsForJob(
       '123',
       'integration-job-1'
     ).then(response => {

@@ -1,9 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import {
-  gateway as MoltinGateway,
-  MemoryStorageFactory
-} from '../../src/moltin'
+import { gateway as ElasticPathGateway, MemoryStorageFactory } from '../../src'
 import {
   variationsArray as variations,
   optionsArray as options,
@@ -14,8 +11,8 @@ import {
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 const accessToken = 'testaccesstoken'
 
-describe('Moltin variations', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath variations', () => {
+  const ElasticPath = ElasticPathGateway({
     custom_authenticator: () => auth(accessToken),
     storage: new MemoryStorageFactory()
   })
@@ -31,7 +28,7 @@ describe('Moltin variations', () => {
       .get('/variations')
       .reply(200, { data: variations })
 
-    return Moltin.Variations.All().then(response => {
+    return ElasticPath.Variations.All().then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -45,7 +42,7 @@ describe('Moltin variations', () => {
       .get('/variations/variation-1')
       .reply(200, { data: variations[0] })
 
-    return Moltin.Variations.Get('variation-1').then(response => {
+    return ElasticPath.Variations.Get('variation-1').then(response => {
       assert.propertyVal(response.data, 'id', 'variation-1')
     })
   })
@@ -57,7 +54,7 @@ describe('Moltin variations', () => {
       .post('/variations')
       .reply(200, { data: { ...newVariation, id: 'newVariation' } })
 
-    return Moltin.Variations.Create(newVariation).then(response => {
+    return ElasticPath.Variations.Create(newVariation).then(response => {
       assert.propertyVal(response.data, 'id', 'newVariation')
       assert.propertyVal(response.data, 'name', 'Color')
     })
@@ -70,10 +67,12 @@ describe('Moltin variations', () => {
       .put('/variations/variation-1')
       .reply(200, { data: { ...variation, id: 'variation-1' } })
 
-    return Moltin.Variations.Update('variation-1', variation).then(response => {
-      assert.propertyVal(response.data, 'id', 'variation-1')
-      assert.propertyVal(response.data, 'name', 'Color')
-    })
+    return ElasticPath.Variations.Update('variation-1', variation).then(
+      response => {
+        assert.propertyVal(response.data, 'id', 'variation-1')
+        assert.propertyVal(response.data, 'name', 'Color')
+      }
+    )
   })
 
   it('should delete variation', () => {
@@ -85,7 +84,7 @@ describe('Moltin variations', () => {
       .delete('/variations/variation-1')
       .reply(204)
 
-    return Moltin.Variations.Delete('variation-1').then(response => {
+    return ElasticPath.Variations.Delete('variation-1').then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -99,7 +98,7 @@ describe('Moltin variations', () => {
       .get('/variations/variation-1/options/option-1')
       .reply(200, { data: options[0] })
 
-    return Moltin.Variations.Option('variation-1', 'option-1').then(
+    return ElasticPath.Variations.Option('variation-1', 'option-1').then(
       response => {
         assert.propertyVal(response.data, 'id', 'option-1')
       }
@@ -115,7 +114,7 @@ describe('Moltin variations', () => {
       .get('/variations/variation-1/options')
       .reply(200, { data: options })
 
-    return Moltin.Variations.Options('variation-1').then(response => {
+    return ElasticPath.Variations.Options('variation-1').then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -133,7 +132,7 @@ describe('Moltin variations', () => {
       .post('/variations/variation-1/options')
       .reply(200, { data: { ...newOption, id: 'new-option' } })
 
-    return Moltin.Variations.CreateOption('variation-1', newOption).then(
+    return ElasticPath.Variations.CreateOption('variation-1', newOption).then(
       response => {
         assert.propertyVal(response.data, 'id', 'new-option')
       }
@@ -153,7 +152,7 @@ describe('Moltin variations', () => {
       .put('/variations/variation-1/options/option-1')
       .reply(200, { data: { ...option, id: 'option-1' } })
 
-    return Moltin.Variations.UpdateOption(
+    return ElasticPath.Variations.UpdateOption(
       'variation-1',
       'option-1',
       option
@@ -171,7 +170,7 @@ describe('Moltin variations', () => {
       .delete('/variations/variation-1/options/option-1')
       .reply(204)
 
-    return Moltin.Variations.DeleteOption('variation-1', 'option-1').then(
+    return ElasticPath.Variations.DeleteOption('variation-1', 'option-1').then(
       response => {
         assert.equal(response, '{}')
       }
@@ -187,7 +186,7 @@ describe('Moltin variations', () => {
       .get('/variations/variation-1/options/option-1/modifiers/modifier-1')
       .reply(200, { data: modifiers[0] })
 
-    return Moltin.Variations.Modifier(
+    return ElasticPath.Variations.Modifier(
       'variation-1',
       'option-1',
       'modifier-1'
@@ -205,7 +204,7 @@ describe('Moltin variations', () => {
       .get('/variations/variation-1/options/option-1/modifiers')
       .reply(200, { data: modifiers })
 
-    return Moltin.Variations.Modifiers('variation-1', 'option-1').then(
+    return ElasticPath.Variations.Modifiers('variation-1', 'option-1').then(
       response => {
         assert.lengthOf(response.data, 3)
       }
@@ -226,7 +225,7 @@ describe('Moltin variations', () => {
       .post('/variations/variation-1/options/option-1/modifiers')
       .reply(200, { data: { ...newModifier, id: 'new-modifier' } })
 
-    return Moltin.Variations.CreateModifier(
+    return ElasticPath.Variations.CreateModifier(
       'variation-1',
       'option-1',
       newModifier
@@ -249,7 +248,7 @@ describe('Moltin variations', () => {
       .put('/variations/variation-1/options/option-1/modifiers/modifier-1')
       .reply(200, { data: { ...modifier, id: 'modifier-1' } })
 
-    return Moltin.Variations.UpdateModifier(
+    return ElasticPath.Variations.UpdateModifier(
       'variation-1',
       'option-1',
       'modifier-1',
@@ -268,7 +267,7 @@ describe('Moltin variations', () => {
       .delete('/variations/variation-1/options/option-1/modifiers/modifier-1')
       .reply(204)
 
-    return Moltin.Variations.DeleteModifier(
+    return ElasticPath.Variations.DeleteModifier(
       'variation-1',
       'option-1',
       'modifier-1'

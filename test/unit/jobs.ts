@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { jobsArray as jobs } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin jobs', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath jobs', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin jobs', () => {
       .get('/jobs')
       .reply(200, { data: jobs })
 
-    return Moltin.Jobs.All().then(response => {
+    return ElasticPath.Jobs.All().then(response => {
       assert.lengthOf(response.data, 3)
     })
   })
@@ -35,7 +35,7 @@ describe('Moltin jobs', () => {
       .get('/jobs/1')
       .reply(200, jobs[0])
 
-    return Moltin.Jobs.Get('1').then(response => {
+    return ElasticPath.Jobs.Get('1').then(response => {
       assert.propertyVal(response, 'id', 'job-1')
     })
   })
@@ -50,15 +50,15 @@ describe('Moltin jobs', () => {
       .get('/jobs/1/file')
       .reply(200, jobs[0])
 
-    return Moltin.Jobs.GetFile('1').then(response => {
+    return ElasticPath.Jobs.GetFile('1').then(response => {
       assert.propertyVal(response, 'id', 'job-1')
     })
   })
 
   it('should create a new job', () => {
     const newJobs = {
-      filter: "",
-      job_type: "order_export"
+      filter: '',
+      job_type: 'order_export'
     }
 
     // Intercept the API request
@@ -70,7 +70,7 @@ describe('Moltin jobs', () => {
       .post('/jobs', { data: newJobs })
       .reply(201, jobs[0])
 
-    return Moltin.Jobs.Create(newJobs).then(response => {
+    return ElasticPath.Jobs.Create(newJobs).then(response => {
       assert.propertyVal(response, 'id', 'job-1')
     })
   })

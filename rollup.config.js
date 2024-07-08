@@ -15,7 +15,7 @@ const isProd = NODE_ENV === 'production'
 const isDev = NODE_ENV === 'development' && process.env.SERVE === 'true'
 
 const baseConfig = {
-  input: 'src/moltin.js',
+  input: 'src/index.js',
   watch: {
     include: 'src/**'
   },
@@ -32,7 +32,7 @@ export default [
   {
     ...baseConfig,
     output: {
-      name: 'moltin',
+      name: 'index',
       exports: 'named',
       file: pkg.browser,
       format: 'umd'
@@ -76,8 +76,8 @@ export default [
     external: [...baseConfig.external, ...Object.keys(pkg.dependencies || {})]
   },
   {
-    input: 'src/moltin.d.ts',
-    output: [{ file: 'dist/moltin.d.ts', format: 'es' }],
+    input: 'src/index.d.ts',
+    output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts()]
   }
 ]

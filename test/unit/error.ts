@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   notFoundError,
   rateLimitError,
@@ -9,8 +9,8 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin error handling', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath error handling', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX',
     retryDelay: 10, // Reduce retryDelay/retryJitter/fetchMaxAttempts for retries during testing
     retryJitter: 1,
@@ -28,7 +28,7 @@ describe('Moltin error handling', () => {
       .times(2)
       .reply(429, rateLimitError)
 
-    return Moltin.Products.All().catch(error => {
+    return ElasticPath.Products.All().catch(error => {
       assert.deepEqual(error, { errors: [{ status: 429 }] })
     })
   })
@@ -43,7 +43,7 @@ describe('Moltin error handling', () => {
       .get('/products')
       .reply(404, notFoundError)
 
-    return Moltin.Products.All().catch(error => {
+    return ElasticPath.Products.All().catch(error => {
       assert.deepEqual(error, {
         errors: [
           {
@@ -67,7 +67,7 @@ describe('Moltin error handling', () => {
       .reply(429, rateLimitError)
       .get('/products')
       .reply(200, { data: products })
-    return Moltin.Products.All().then(response => {
+    return ElasticPath.Products.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })

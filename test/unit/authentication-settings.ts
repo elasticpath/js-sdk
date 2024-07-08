@@ -1,20 +1,18 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin Authentication Settings', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath Authentication Settings', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
   it('Get all Settings', () => {
-    nock(apiUrl, {})
-      .get('/settings/customer-authentication')
-      .reply(200, {})
+    nock(apiUrl, {}).get('/settings/customer-authentication').reply(200, {})
 
-    return Moltin.AuthenticationSettings.Get().then(res => {
+    return ElasticPath.AuthenticationSettings.Get().then(res => {
       assert.isObject(res)
     })
   })

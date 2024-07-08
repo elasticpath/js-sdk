@@ -1,20 +1,18 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin Account Membership Settings', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath Account Membership Settings', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
   it('Get Account Membership Settings', () => {
-    nock(apiUrl, {})
-      .get('/settings/account-membership')
-      .reply(200, {})
+    nock(apiUrl, {}).get('/settings/account-membership').reply(200, {})
 
-    return Moltin.AccountMembershipSettings.Get().then(res => {
+    return ElasticPath.AccountMembershipSettings.Get().then(res => {
       assert.isObject(res)
     })
   })
@@ -33,7 +31,7 @@ describe('Moltin Account Membership Settings', () => {
       membership_limit: 2
     }
 
-    return Moltin.AccountMembershipSettings.Update(body).then(res => {
+    return ElasticPath.AccountMembershipSettings.Update(body).then(res => {
       assert.isObject(res)
     })
   })

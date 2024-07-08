@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { filesArray as files, productsArray as products } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin files', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath files', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin files', () => {
       .get('/files')
       .reply(200, { data: files })
 
-    return Moltin.Files.All().then(response => {
+    return ElasticPath.Files.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
@@ -35,7 +35,7 @@ describe('Moltin files', () => {
       .get('/files/1')
       .reply(200, files[0])
 
-    return Moltin.Files.Get('1').then(response => {
+    return ElasticPath.Files.Get('1').then(response => {
       assert.propertyVal(response, 'id', 'file-1')
     })
   })
@@ -57,7 +57,7 @@ describe('Moltin files', () => {
       })
       .reply(200, files[0])
 
-    return Moltin.Products.CreateRelationships(
+    return ElasticPath.Products.CreateRelationships(
       products[0].id,
       'file',
       files[0].id
@@ -87,7 +87,7 @@ describe('Moltin files', () => {
       })
       .reply(200, files[0])
 
-    return Moltin.Products.CreateRelationships(products[0].id, 'file', [
+    return ElasticPath.Products.CreateRelationships(products[0].id, 'file', [
       files[0].id,
       files[1].id
     ]).then(response => {
@@ -112,7 +112,7 @@ describe('Moltin files', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(
+    return ElasticPath.Products.DeleteRelationships(
       products[0].id,
       'file',
       files[0].id
@@ -142,7 +142,7 @@ describe('Moltin files', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(products[0].id, 'file', [
+    return ElasticPath.Products.DeleteRelationships(products[0].id, 'file', [
       files[0].id,
       files[1].id
     ]).then(response => {
@@ -167,7 +167,7 @@ describe('Moltin files', () => {
       })
       .reply(204)
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'file',
       files[0].id
@@ -190,11 +190,12 @@ describe('Moltin files', () => {
         data: []
       })
 
-    return Moltin.Products.UpdateRelationships(products[0].id, 'file').then(
-      response => {
-        assert.deepEqual(response, { data: [] })
-      }
-    )
+    return ElasticPath.Products.UpdateRelationships(
+      products[0].id,
+      'file'
+    ).then(response => {
+      assert.deepEqual(response, { data: [] })
+    })
   })
 
   it('should create a product-main_image relationship', () => {
@@ -212,7 +213,7 @@ describe('Moltin files', () => {
       })
       .reply(200, files[0])
 
-    return Moltin.Products.CreateRelationships(
+    return ElasticPath.Products.CreateRelationships(
       products[0].id,
       'main-image',
       files[0].id
@@ -236,9 +237,11 @@ describe('Moltin files', () => {
       })
       .reply(200, files[0])
 
-    return Moltin.Products.CreateRelationships(products[0].id, 'main-image', [
-      files[0].id
-    ]).then(response => {
+    return ElasticPath.Products.CreateRelationships(
+      products[0].id,
+      'main-image',
+      [files[0].id]
+    ).then(response => {
       assert.propertyVal(response, 'id', 'file-1')
     })
   })
@@ -258,7 +261,7 @@ describe('Moltin files', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(
+    return ElasticPath.Products.DeleteRelationships(
       products[0].id,
       'main-image',
       files[0].id
@@ -282,7 +285,7 @@ describe('Moltin files', () => {
       })
       .reply(204)
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'main-image',
       files[0].id
@@ -301,7 +304,7 @@ describe('Moltin files', () => {
       .delete(`/files/${files[0].id}`)
       .reply(204)
 
-    return Moltin.Files.Delete(files[0].id).then(response => {
+    return ElasticPath.Files.Delete(files[0].id).then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -320,7 +323,7 @@ describe('Moltin files', () => {
       .post('/files')
       .reply(201, { data: { ...newFile, id: 'file-5' } })
 
-    return Moltin.Files.Create(newFile, 'multipart/form-data').then(
+    return ElasticPath.Files.Create(newFile, 'multipart/form-data').then(
       response => {
         assert.equal(response.data.id, 'file-5')
       }

@@ -1,5 +1,5 @@
-// Type definitions for @moltin/js-sdk
-// Project: @moltin/sdk
+// Type definitions for @elasticpath/js-sdk
+// Project: @elasticpath/js-sdk
 import {
   AuthenticateResponseBody,
   Config,
@@ -58,7 +58,7 @@ import { ApplicationKeysEndpoint } from './types/application-keys'
 import { SubscriptionProductsEndpoint } from './types/subscription-products'
 import { SubscriptionPlansEndpoint } from './types/subscription-plans'
 import { SubscriptionOfferingsEndpoint } from './types/subscription-offerings'
-import { OneTimePasswordTokenRequestEndpoint } from "./types/one-time-password-token-request";
+import { OneTimePasswordTokenRequestEndpoint } from './types/one-time-password-token-request'
 import { SubscriptionsEndpoint } from './types/subscriptions'
 
 export * from './types/config'
@@ -132,9 +132,9 @@ export * from './types/one-time-password-token-request'
 export * from './types/subscriptions'
 
 // UMD
-export as namespace moltin
+export as namespace elasticpath
 
-export class Moltin {
+export class ElasticPath {
   config: Config
   cartId?: string
   request: RequestFactory
@@ -198,9 +198,9 @@ export class Moltin {
   Authenticate(): Promise<AuthenticateResponseBody>
 }
 
-export function gateway(config: ConfigOptions): Moltin
+export function gateway(config: ConfigOptions): ElasticPath
 
-export namespace moltin {
+export namespace elasticpath {
   export interface Settings {
     additional_languages?: string[]
     calculation_method?: string

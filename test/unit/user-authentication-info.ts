@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
 describe('User Authentication Info', () => {
-  const Moltin = MoltinGateway({
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -17,7 +17,7 @@ describe('User Authentication Info', () => {
       .get(/\/authentication-realms\/(.*)\/user-authentication-info/)
       .reply(200, {})
 
-    return Moltin.UserAuthenticationInfo.All(realmId).then(res => {
+    return ElasticPath.UserAuthenticationInfo.All(realmId).then(res => {
       assert.isObject(res)
     })
   })
@@ -36,7 +36,7 @@ describe('User Authentication Info', () => {
         ]
       })
 
-    return Moltin.UserAuthenticationInfo.Filter({
+    return ElasticPath.UserAuthenticationInfo.Filter({
       eq: { name: 'jane' }
     })
       .All(realmId)
@@ -51,7 +51,7 @@ describe('User Authentication Info', () => {
       .get(/\/authentication-realms\/(.*)\/user-authentication-info\/(.*)/)
       .reply(200, {})
 
-    return Moltin.UserAuthenticationInfo.Get(
+    return ElasticPath.UserAuthenticationInfo.Get(
       realmId,
       userAuthenticationId
     ).then(res => {
@@ -70,11 +70,11 @@ describe('User Authentication Info', () => {
       email: 'john.doe@banks.com'
     }
 
-    return Moltin.UserAuthenticationInfo.Create(realmId, { data: body }).then(
-      res => {
-        assert.isObject(res)
-      }
-    )
+    return ElasticPath.UserAuthenticationInfo.Create(realmId, {
+      data: body
+    }).then(res => {
+      assert.isObject(res)
+    })
   })
 
   it('Update a ingle User Authentication Info', () => {
@@ -88,9 +88,13 @@ describe('User Authentication Info', () => {
       email: 'john.doe@banks.com'
     }
 
-    return Moltin.UserAuthenticationInfo.Update(realmId, userAuthenticationId, {
-      data: body
-    }).then(res => {
+    return ElasticPath.UserAuthenticationInfo.Update(
+      realmId,
+      userAuthenticationId,
+      {
+        data: body
+      }
+    ).then(res => {
       assert.isObject(res)
     })
   })
@@ -100,7 +104,7 @@ describe('User Authentication Info', () => {
       .delete(/\/authentication-realms\/(.*)\/user-authentication-info\/(.*)/)
       .reply(204)
 
-    return Moltin.UserAuthenticationInfo.Delete(
+    return ElasticPath.UserAuthenticationInfo.Delete(
       realmId,
       userAuthenticationId
     ).then(res => {

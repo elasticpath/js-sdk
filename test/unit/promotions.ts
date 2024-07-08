@@ -1,9 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import {
-  gateway as MoltinGateway,
-  MemoryStorageFactory
-} from '../../src/moltin'
+import { gateway as ElasticPathGateway, MemoryStorageFactory } from '../../src'
 import {
   auth,
   promotionsArray as promotions,
@@ -13,8 +10,8 @@ import {
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 const accessToken = 'testaccesstoken'
 
-describe('Moltin promotions', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath promotions', () => {
+  const ElasticPath = ElasticPathGateway({
     custom_authenticator: () => auth(accessToken),
     storage: new MemoryStorageFactory()
   })
@@ -29,7 +26,7 @@ describe('Moltin promotions', () => {
       .get('/promotions')
       .reply(200, { data: promotions })
 
-    return Moltin.Promotions.All().then(response => {
+    return ElasticPath.Promotions.All().then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -44,7 +41,7 @@ describe('Moltin promotions', () => {
       .get('/promotions/1')
       .reply(200, promotions[0])
 
-    return Moltin.Promotions.Get('1').then(response => {
+    return ElasticPath.Promotions.Get('1').then(response => {
       assert.propertyVal(response, 'id', promotions[0].id)
     })
   })
@@ -77,7 +74,7 @@ describe('Moltin promotions', () => {
       .post('/promotions', { data: newPromotion })
       .reply(201, promotions[0])
 
-    return Moltin.Promotions.Create(newPromotion).then(response => {
+    return ElasticPath.Promotions.Create(newPromotion).then(response => {
       assert.propertyVal(response, 'id', promotions[0].id)
     })
   })
@@ -92,7 +89,7 @@ describe('Moltin promotions', () => {
       .get('/promotions/1/codes')
       .reply(200, { data: promotionCodes })
 
-    return Moltin.Promotions.Codes('1').then(response => {
+    return ElasticPath.Promotions.Codes('1').then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -110,7 +107,7 @@ describe('Moltin promotions', () => {
       })
       .reply(201, promotions[0])
 
-    return Moltin.Promotions.AddCodes('1', newCodes).then(response => {
+    return ElasticPath.Promotions.AddCodes('1', newCodes).then(response => {
       assert.propertyVal(response, 'id', promotions[0].id)
     })
   })

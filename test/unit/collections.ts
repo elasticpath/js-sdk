@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   attributeResponse,
   collectionsArray as collections,
@@ -9,8 +9,8 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin collections', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath collections', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -24,7 +24,7 @@ describe('Moltin collections', () => {
       .get('/collections')
       .reply(200, { data: collections })
 
-    return Moltin.Collections.All().then(response => {
+    return ElasticPath.Collections.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
@@ -39,7 +39,7 @@ describe('Moltin collections', () => {
       .get('/collections/1')
       .reply(200, collections[0])
 
-    return Moltin.Collections.Get('1').then(response => {
+    return ElasticPath.Collections.Get('1').then(response => {
       assert.propertyVal(response, 'name', 'Collection 1')
     })
   })
@@ -62,7 +62,7 @@ describe('Moltin collections', () => {
       .post('/collections')
       .reply(201, { data: { ...newCollection, id: 'col1' } })
 
-    return Moltin.Collections.Create(newCollection).then(response => {
+    return ElasticPath.Collections.Create(newCollection).then(response => {
       assert.equal(response.data.id, 'col1')
       assert.equal(response.data.type, newCollection.type)
       assert.equal(response.data.name, newCollection.name)
@@ -89,7 +89,7 @@ describe('Moltin collections', () => {
         name: 'Updated collection name'
       })
 
-    return Moltin.Collections.Update('1', {
+    return ElasticPath.Collections.Update('1', {
       name: 'Updated collection name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated collection name')
@@ -106,7 +106,7 @@ describe('Moltin collections', () => {
       .delete('/collections/1')
       .reply(204)
 
-    return Moltin.Collections.Delete('1').then(response => {
+    return ElasticPath.Collections.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -128,7 +128,7 @@ describe('Moltin collections', () => {
       })
       .reply(200, collections[0])
 
-    return Moltin.Products.CreateRelationships(
+    return ElasticPath.Products.CreateRelationships(
       products[0].id,
       'collection',
       collections[0].id
@@ -158,10 +158,11 @@ describe('Moltin collections', () => {
       })
       .reply(200, collections[0])
 
-    return Moltin.Products.CreateRelationships(products[0].id, 'collection', [
-      collections[0].id,
-      collections[1].id
-    ]).then(response => {
+    return ElasticPath.Products.CreateRelationships(
+      products[0].id,
+      'collection',
+      [collections[0].id, collections[1].id]
+    ).then(response => {
       assert.propertyVal(response, 'id', 'collection-1')
     })
   })
@@ -183,7 +184,7 @@ describe('Moltin collections', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(
+    return ElasticPath.Products.DeleteRelationships(
       products[0].id,
       'collection',
       collections[0].id
@@ -213,10 +214,11 @@ describe('Moltin collections', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(products[0].id, 'collection', [
-      collections[0].id,
-      collections[1].id
-    ]).then(response => {
+    return ElasticPath.Products.DeleteRelationships(
+      products[0].id,
+      'collection',
+      [collections[0].id, collections[1].id]
+    ).then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -238,7 +240,7 @@ describe('Moltin collections', () => {
       })
       .reply(200, collections[0])
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'collection',
       collections[0].id
@@ -261,7 +263,7 @@ describe('Moltin collections', () => {
         data: []
       })
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'collection'
     ).then(response => {
@@ -278,7 +280,7 @@ describe('Moltin collections', () => {
       .get('/collections/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Collections.Attributes('testtoken').then(response => {
+    return ElasticPath.Collections.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { attributeResponse } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin flow fields', () => {
+describe('ElasticPath flow fields', () => {
   it('should create a field', () => {
     const newField = {
       type: 'field',
@@ -21,7 +21,7 @@ describe('Moltin flow fields', () => {
       omit_null: false
     }
 
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -33,7 +33,7 @@ describe('Moltin flow fields', () => {
       .post('/fields')
       .reply(201, { data: { ...newField, id: 'field1' } })
 
-    return Moltin.Fields.Create(newField).then(response => {
+    return ElasticPath.Fields.Create(newField).then(response => {
       assert.equal(response.data.id, 'field1')
       assert.equal(response.data.type, newField.type)
       assert.equal(response.data.name, newField.name)
@@ -49,7 +49,7 @@ describe('Moltin flow fields', () => {
   })
 
   it('should update a field', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -69,7 +69,7 @@ describe('Moltin flow fields', () => {
         name: 'Updated field name'
       })
 
-    return Moltin.Fields.Update('1', {
+    return ElasticPath.Fields.Update('1', {
       name: 'Updated field name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated field name')
@@ -77,7 +77,7 @@ describe('Moltin flow fields', () => {
   })
 
   it('should get a field', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -92,13 +92,13 @@ describe('Moltin flow fields', () => {
         name: 'Updated field name'
       })
 
-    return Moltin.Fields.Get('1').then(response => {
+    return ElasticPath.Fields.Get('1').then(response => {
       assert.propertyVal(response, 'name', 'Updated field name')
     })
   })
 
   it('should delete a field', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -111,13 +111,13 @@ describe('Moltin flow fields', () => {
       .delete('/fields/1')
       .reply(204)
 
-    return Moltin.Fields.Delete('1').then(response => {
+    return ElasticPath.Fields.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
 
   it('should return an array of attributes', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     nock(apiUrl, {
@@ -128,7 +128,7 @@ describe('Moltin flow fields', () => {
       .get('/fields/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Fields.Attributes('testtoken').then(response => {
+    return ElasticPath.Fields.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

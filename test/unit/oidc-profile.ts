@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
 describe('Oidc Profiles', () => {
-  const Moltin = MoltinGateway({
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -16,7 +16,7 @@ describe('Oidc Profiles', () => {
       .get(/\/authentication-realms\/(.*)\/oidc-profiles/)
       .reply(200, {})
 
-    return Moltin.OidcProfile.All(realmId).then(res => {
+    return ElasticPath.OidcProfile.All(realmId).then(res => {
       assert.isObject(res)
     })
   })
@@ -26,7 +26,7 @@ describe('Oidc Profiles', () => {
       .get(/\/authentication-realms\/(.*)\/oidc-profiles\/(.*)/)
       .reply(200, {})
 
-    return Moltin.OidcProfile.Get({
+    return ElasticPath.OidcProfile.Get({
       realmId,
       profileId: '4da65e78-7f9b-4248-b498-823d43120da9'
     }).then(res => {
@@ -47,7 +47,7 @@ describe('Oidc Profiles', () => {
       client_secret: 'XXXXXX'
     }
 
-    return Moltin.OidcProfile.Create(realmId, {data:body}).then(res => {
+    return ElasticPath.OidcProfile.Create(realmId, { data: body }).then(res => {
       assert.isObject(res)
     })
   })
@@ -68,8 +68,10 @@ describe('Oidc Profiles', () => {
 
     const profileId = 'e1b5c7fa-f2b6-48d2-b659-3d82f20968a9'
 
-    return Moltin.OidcProfile.Update(realmId, profileId, {data:body}).then(res => {
-        assert.isObject(res)
+    return ElasticPath.OidcProfile.Update(realmId, profileId, {
+      data: body
+    }).then(res => {
+      assert.isObject(res)
     })
   })
 
@@ -80,7 +82,7 @@ describe('Oidc Profiles', () => {
 
     const profileId = '7e6645ef-0084-4928-b9b4-d2fe5577f70e'
 
-    return Moltin.OidcProfile.Delete(realmId, profileId).then(res => {
+    return ElasticPath.OidcProfile.Delete(realmId, profileId).then(res => {
       assert.equal(res, '{}')
     })
   })

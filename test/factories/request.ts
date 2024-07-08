@@ -1,13 +1,13 @@
 import { assert } from 'chai'
 import nock from 'nock'
 import fakeTimers from '@sinonjs/fake-timers'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { shopperCatalogProductResponse } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com'
 
-describe('Moltin request', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath request', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -24,7 +24,7 @@ describe('Moltin request', () => {
     clock?.uninstall()
   })
 
-  it('Moltin request when 401 response should attempt to re-authenticate', () => {
+  it('ElasticPath request when 401 response should attempt to re-authenticate', () => {
     // Intercept the API request
     nock(apiUrl, {
       reqheaders: {
@@ -55,7 +55,7 @@ describe('Moltin request', () => {
       .get('/catalog/products/1')
       .reply(200, shopperCatalogProductResponse)
 
-    return Moltin.ShopperCatalog.Products.Get({ productId: '1' }).then(
+    return ElasticPath.ShopperCatalog.Products.Get({ productId: '1' }).then(
       response => {
         assert.equal(response.data.attributes.name, 'Playstation 5 Controller')
       }

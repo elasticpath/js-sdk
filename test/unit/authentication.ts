@@ -1,14 +1,14 @@
 import { assert } from 'chai'
 import nock from 'nock'
 import fetch from 'cross-fetch'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com'
 const authExpire = 9999999999
 
-describe('Moltin authentication', () => {
+describe('ElasticPath authentication', () => {
   it('should return an access token', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -27,7 +27,7 @@ describe('Moltin authentication', () => {
         expires: authExpire
       })
 
-    return Moltin.Authenticate().then(response => {
+    return ElasticPath.Authenticate().then(response => {
       assert.equal(
         response.access_token,
         'a550d8cbd4a4627013452359ab69694cd446615a'
@@ -37,19 +37,19 @@ describe('Moltin authentication', () => {
   })
 
   it('should throw an error when no client id is set', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: ''
     })
 
     assert.throws(
-      () => Moltin.Authenticate(),
+      () => ElasticPath.Authenticate(),
       Error,
       /You must have a client_id set/
     )
   })
 
   it('should return an access token using custom_fetch', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       custom_fetch: fetch
     })
@@ -69,7 +69,7 @@ describe('Moltin authentication', () => {
         expires: authExpire
       })
 
-    return Moltin.Authenticate().then(response => {
+    return ElasticPath.Authenticate().then(response => {
       assert.equal(
         response.access_token,
         'a550d8cbd4a4627013452359ab69694cd446615a'
@@ -79,21 +79,21 @@ describe('Moltin authentication', () => {
   })
 
   it('should fallback to default API host if host is undefined during instantiation', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       host: undefined
     })
 
-    assert.equal(Moltin.config.host, 'euwest.api.elasticpath.com')
+    assert.equal(ElasticPath.config.host, 'euwest.api.elasticpath.com')
   })
 
   it('should use a custom API host', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       host: 'api.test.test'
     })
 
-    assert.equal(Moltin.config.host, 'api.test.test')
+    assert.equal(ElasticPath.config.host, 'api.test.test')
   })
 
   it('should cache authentication details', () => {
@@ -112,13 +112,13 @@ describe('Moltin authentication', () => {
         expires: authExpire
       })
 
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
-    Moltin.Authenticate().then(() => {
-      const { storage } = Moltin.request
-      assert.exists(storage.get('moltinCredentials'))
+    ElasticPath.Authenticate().then(() => {
+      const { storage } = ElasticPath.request
+      assert.exists(storage.get('elasticpathCredentials'))
     })
   })
 
@@ -138,13 +138,13 @@ describe('Moltin authentication', () => {
         expires: authExpire
       })
 
-    let Moltin = MoltinGateway({
+    let ElasticPath = ElasticPathGateway({
       client_id: 'YYY'
     })
 
-    return Moltin.Authenticate().then(() => {
-      const { storage } = Moltin.request
-      let credentials = JSON.parse(storage.get('moltinCredentials'))
+    return ElasticPath.Authenticate().then(() => {
+      const { storage } = ElasticPath.request
+      let credentials = JSON.parse(storage.get('elasticpathCredentials'))
       assert.equal(
         credentials.access_token,
         'a550d8cbd4a4627013452359ab69694cd446615b'
@@ -165,13 +165,13 @@ describe('Moltin authentication', () => {
           expires: authExpire
         })
 
-      Moltin = MoltinGateway({
+      ElasticPath = ElasticPathGateway({
         client_id: 'XXX'
       })
 
-      return Moltin.Authenticate().then(() => {
-        const { storage: storage2 } = Moltin.request
-        credentials = JSON.parse(storage2.get('moltinCredentials'))
+      return ElasticPath.Authenticate().then(() => {
+        const { storage: storage2 } = ElasticPath.request
+        credentials = JSON.parse(storage2.get('elasticpathCredentials'))
         assert.equal(
           credentials.access_token,
           'a550d8cbd4a4627013452359ab69694cd446615a'

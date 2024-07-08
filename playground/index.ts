@@ -1,7 +1,7 @@
-import * as moltin from './../'
+import * as ep from './../'
 
 async function main() {
-  const gateway = moltin.gateway({
+  const gateway = ep.gateway({
     host: 'epcc-integration.global.ssl.fastly.net',
     client_id: 'client_id',
     client_secret: 'client_secret',

@@ -1,48 +1,48 @@
 import { expect } from 'chai'
 import fetch from 'cross-fetch'
 import {
-  gateway as MoltinGateway,
+  gateway as ElasticPathGateway,
   MemoryStorageFactory,
   LocalStorageFactory
-} from '../../src/moltin'
+} from '../../src'
 import { throttleFetch } from '../../src/utils/throttle'
-describe('Moltin config', () => {
+describe('ElasticPath config', () => {
   it('storage defaults to `StorageFactory`', () => {
-    const Moltin = MoltinGateway({})
-    expect(Moltin.storage).to.be.an.instanceof(LocalStorageFactory)
-    expect(Moltin.config.storage).to.be.equal(Moltin.storage)
-    expect(Moltin.request.storage).to.be.equal(Moltin.storage)
-    expect(Moltin.Currencies.storage).to.equal(Moltin.storage)
+    const ElasticPath = ElasticPathGateway({})
+    expect(ElasticPath.storage).to.be.an.instanceof(LocalStorageFactory)
+    expect(ElasticPath.config.storage).to.be.equal(ElasticPath.storage)
+    expect(ElasticPath.request.storage).to.be.equal(ElasticPath.storage)
+    expect(ElasticPath.Currencies.storage).to.equal(ElasticPath.storage)
   })
 
   it('storage can be overridden', () => {
     const memoryStorage = new MemoryStorageFactory()
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       storage: memoryStorage
     })
-    expect(Moltin.storage).to.be.an.instanceof(MemoryStorageFactory)
-    expect(Moltin.config.storage).to.be.equal(Moltin.storage)
-    expect(Moltin.request.storage).to.be.equal(Moltin.storage)
-    expect(Moltin.Currencies.storage).to.be.equal(Moltin.storage)
+    expect(ElasticPath.storage).to.be.an.instanceof(MemoryStorageFactory)
+    expect(ElasticPath.config.storage).to.be.equal(ElasticPath.storage)
+    expect(ElasticPath.request.storage).to.be.equal(ElasticPath.storage)
+    expect(ElasticPath.Currencies.storage).to.be.equal(ElasticPath.storage)
   })
 
   it('custom_fetch can be overridden', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       custom_fetch: fetch
     })
 
-    expect(Moltin.config.auth.fetch).to.be.an.instanceof(Function)
-    expect(Moltin.config.auth.fetch).to.equal(fetch)
+    expect(ElasticPath.config.auth.fetch).to.be.an.instanceof(Function)
+    expect(ElasticPath.config.auth.fetch).to.equal(fetch)
   })
 
   it('custom_fetch will fail must be a Function', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       custom_fetch: 'string'
     } as any)
 
-    return Moltin.Authenticate().catch(error => {
+    return ElasticPath.Authenticate().catch(error => {
       expect(error).to.be.an.instanceof(TypeError)
     })
   })
@@ -73,31 +73,31 @@ describe('Moltin config', () => {
   })
 
   it('should use fetch if custom_fetch and throttleRequest value are not given', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
-    expect(Moltin.config.auth.fetch).to.equal(fetch)
+    expect(ElasticPath.config.auth.fetch).to.equal(fetch)
   })
 
   it('should use custom_fetch if throttleRequest value is not given', () => {
     // minimal test function
     const testCustomFetch = (url: string, options: object) => url
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX',
       custom_fetch: testCustomFetch
     })
-    expect(Moltin.config.auth.fetch).to.equal(testCustomFetch)
+    expect(ElasticPath.config.auth.fetch).to.equal(testCustomFetch)
   })
 
   it('should have throttling config options', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       throttleEnabled: true,
       throttleLimit: 3,
       throttleInterval: 125
     })
 
-    expect(Moltin.config.throttleConfig?.throttleEnabled).to.be.equal(true)
-    expect(Moltin.config.throttleConfig?.throttleLimit).to.be.equal(3)
-    expect(Moltin.config.throttleConfig?.throttleInterval).to.be.equal(125)
+    expect(ElasticPath.config.throttleConfig?.throttleEnabled).to.be.equal(true)
+    expect(ElasticPath.config.throttleConfig?.throttleLimit).to.be.equal(3)
+    expect(ElasticPath.config.throttleConfig?.throttleInterval).to.be.equal(125)
   })
 })

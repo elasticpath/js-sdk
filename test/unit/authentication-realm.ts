@@ -1,20 +1,18 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin Authentication Realms', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath Authentication Realms', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
   it('Get all Realms', () => {
-    nock(apiUrl, {})
-      .get('/authentication-realms')
-      .reply(200, {})
+    nock(apiUrl, {}).get('/authentication-realms').reply(200, {})
 
-    return Moltin.AuthenticationRealm.All().then(res => {
+    return ElasticPath.AuthenticationRealm.All().then(res => {
       assert.isObject(res)
     })
   })
@@ -25,7 +23,7 @@ describe('Moltin Authentication Realms', () => {
       .reply(200, {})
     const realmId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.AuthenticationRealm.Get({ realmId }).then(res => {
+    return ElasticPath.AuthenticationRealm.Get({ realmId }).then(res => {
       assert.isObject(res)
     })
   })
@@ -40,7 +38,7 @@ describe('Moltin Authentication Realms', () => {
       name: 'Boo Authentication Realm'
     }
 
-    return Moltin.AuthenticationRealm.Create({ data }).then(res => {
+    return ElasticPath.AuthenticationRealm.Create({ data }).then(res => {
       assert.isObject(res)
     })
   })
@@ -57,7 +55,7 @@ describe('Moltin Authentication Realms', () => {
 
     const realmId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.AuthenticationRealm.Update(realmId, body).then(res => {
+    return ElasticPath.AuthenticationRealm.Update(realmId, body).then(res => {
       assert.isObject(res)
     })
   })
@@ -69,7 +67,7 @@ describe('Moltin Authentication Realms', () => {
 
     const realmId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.AuthenticationRealm.Delete(realmId).then(res => {
+    return ElasticPath.AuthenticationRealm.Delete(realmId).then(res => {
       assert.isObject(res)
     })
   })

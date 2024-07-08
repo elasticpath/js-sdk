@@ -2,9 +2,9 @@
 
 # Elastic Path Commerce Cloud JavaScript SDK
 
-[![npm version](https://img.shields.io/npm/v/@moltin/sdk.svg)](https://www.npmjs.com/package/@moltin/sdk)
+[![npm version](https://img.shields.io/npm/v/@elasticpath/sdk.svg)](https://www.npmjs.com/package/@elasticpath/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/moltin/js-sdk/issues)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/elasticpath/js-sdk/issues)
 [![follow on Twitter](https://img.shields.io/twitter/follow/elasticpath?style=social&logo=twitter)](https://twitter.com/intent/follow?screen_name=elasticpath)
 
 > A simple to use API interface to help get you off the ground quickly and efficiently with your Elastic Path Commerce Cloud JavaScript apps.
@@ -13,30 +13,30 @@
 
 ## 🛠 Installation
 
-Install the package from [npm](https://www.npmjs.com/package/@moltin/sdk) and import in your project.
+Install the package from [npm](https://www.npmjs.com/package/@elasticpath/sdk) and import in your project.
 
 ```bash
-npm install --save @moltin/sdk
+npm install --save @elasticpath/sdk
 ```
 
 ## ⛽️ Usage
 
-To get started, instantiate a new Moltin client with your store credentials.
+To get started, instantiate a new ElasticPath client with your store credentials.
 
 > **Note:** This requires an [Elastic Path Commerce Cloud](https://www.elasticpath.com) account.
 
 ```js
 // JavaScript
-import { gateway as MoltinGateway } from '@moltin/sdk'
+import { gateway as ElasticPathGateway } from '@elasticpath/sdk'
 
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
   client_id: 'XXX'
 })
 
 // Node.js
-const MoltinGateway = require('@moltin/sdk').gateway
+const ElasticPathGateway = require('@elasticpath/sdk').gateway
 
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
   client_id: 'XXX',
   client_secret: 'XXX'
 })
@@ -45,10 +45,10 @@ const Moltin = MoltinGateway({
 Alternatively you can include the `UMD` bundle via [UNPKG](https://unpkg.com) like so:
 
 ``` html
-<script src="https://unpkg.com/@moltin/sdk"></script>
+<script src="https://unpkg.com/@elasticpath/sdk"></script>
 
 <script>
-  const Moltin = moltin.gateway({
+  const ElasticPath = elasticpath.gateway({
     client_id: 'XXX'
   });
 </script>
@@ -62,10 +62,10 @@ node: {
 }
 ```
 
-You can now authenticate with the Moltin service 🎉
+You can now authenticate with the ElasticPath service 🎉
 
 ```js
-Moltin.Authenticate().then(response => {
+ElasticPath.Authenticate().then(response => {
   console.log('authenticated', response)
 })
 ```
@@ -77,7 +77,7 @@ Check out the [API reference](https://elasticpath.dev/docs/commerce-cloud) to le
 If you're an enterprise customer with your own infrastructure, you'll need to specify your API URL when instantiating:
 
 ```js
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
   client_id: 'XXX',
   host: 'api.yourdomain.com'
 })
@@ -88,9 +88,9 @@ const Moltin = MoltinGateway({
 By default the Elastic Path Commerce Cloud SDK persists data to `window.localStorage` in the browser and `node-localstorage` in Node. If this doesn't suit your needs you can override the default storage with a `MemoryStorageFactory` which will persist data for the life cycle of the JavaScript VM:
 
 ```js
-import { gateway as MoltinGateway, MemoryStorageFactory } from '@moltin/sdk'
+import { gateway as ElasticPathGateway, MemoryStorageFactory } from '@elasticpath/sdk'
 
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
   client_id: 'XXX',
   storage: new MemoryStorageFactory()
 })
@@ -113,7 +113,7 @@ You can support multiple gateways with a `name` property when initializing the g
 `name` should be unique to avoid sharing storage keys with the other gateways of the same name.
 
 ```js
-import { gateway as EPCCGateway } from "@moltin/sdk"
+import { gateway as EPCCGateway } from "@elasticpath/sdk"
 
 const gatewayOne = EPCCGateway({
     name: "my-first-gateway",
@@ -130,7 +130,7 @@ Storage keys used for storage solutions are prefixed with the name provided and 
 `my-first-gateway_ep_cart`, `my-first-gateway_ep_credentials` and `my-first-gateway_ep_currency`.
 
 If no name property is provided to the EPCCGateway function, the legacy naming is maintained:
-`mcart`, `moltinCredentials` and `mcurrency`
+`mcart`, `elasticpathCredentials` and `mcurrency`
 
 ### Included Headers
 
@@ -140,10 +140,10 @@ You can pass them into the config used by the gateway like this:
 
 ``` TypeScript
 // JavaScript
-import { gateway as MoltinGateway } from '@moltin/sdk'
-// const MoltinGateway = require('@moltin/sdk').gateway -> for Node
+import { gateway as ElasticPathGateway } from '@elasticpath/sdk'
+// const ElasticPathGateway = require('@elasticpath/sdk').gateway -> for Node
 
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
     client_id: 'XXX',
     client_secret: 'XXX'
     currency: 'YEN',
@@ -158,7 +158,7 @@ In case the server responds with status 429 - "Too Many Requests" SDK will wait 
 You can fine tune this logic through following config parameters:
 
 ``` TypeScript
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
     client_id: 'XXX',
     client_secret: 'XXX',
     retryDelay: 1000,
@@ -181,7 +181,7 @@ Instead, every execution is placed into a queue, which will be drained at the de
 You can control throttling through following parameters:
 
 ``` TypeScript
-const Moltin = MoltinGateway({
+const ElasticPath = ElasticPathGateway({
     client_id: 'XXX',
     client_secret: 'XXX',
     throttleEnabled: true,
@@ -197,7 +197,7 @@ For example setting `throttleLimit = 5, throttleInterval = 1000` means maximum o
 
 ### Handling File Upload
 
-Files can be uploaded to the EPCC file service with the `Moltin.Files.Create` method. You should pass a `FormData` object as described in the [documentation](https://documentation.elasticpath.com/commerce-cloud/docs/api/advanced/files/create-a-file.html#post-create-a-file 'documentation').
+Files can be uploaded to the EPCC file service with the `ElasticPath.Files.Create` method. You should pass a `FormData` object as described in the [documentation](https://documentation.elasticpath.com/commerce-cloud/docs/api/advanced/files/create-a-file.html#post-create-a-file 'documentation').
 
 In a Node.js environment, where you may be using an alternative `FormData` implementation, you can include a second parameter to represent the `Content-Type` header for the request. This must be `multipart/form-data` and must include a `boundary`. For example, using the `form-data` [package](https://www.npmjs.com/package/form-data 'package'):
 
@@ -208,7 +208,7 @@ formData.append('file', buffer)
 
 const contentType = formData.getHeaders()['content-type']
 
-Moltin.Files.Create(formData, contentType)
+ElasticPath.Files.Create(formData, contentType)
 ```
 
 #### Referencing a file stored elsewhere
@@ -216,7 +216,7 @@ Moltin.Files.Create(formData, contentType)
 If you want to create a file by simply [referencing](https://documentation.elasticpath.com/commerce-cloud/docs/api/advanced/files/create-a-file.html#post-create-a-file 'referencing') a file stored elsewhere, you can use this helper method:
 
 ``` TypeScript
-Moltin.Files.Link('https://cdn.external-host.com/files/filename.png')
+ElasticPath.Files.Link('https://cdn.external-host.com/files/filename.png')
 ```
 
 Just pass the URL to the `Link` method and creation will be handled for you.
@@ -228,9 +228,9 @@ The Elastic Path Commerce Cloud JavaScript SDK is fully supported in Typescript.
 Imported module will contain all interfaces needed to consume backend services. i.e:
 
 ```TypeScript
-import * as moltin from '@moltin/sdk';
+import * as elasticpath from '@elasticpath/sdk';
 
-const product: moltin.ProductBase = {...}
+const product: elasticpath.ProductBase = {...}
 ```
 
 If you do not want to use the namespace, you can extend the interfaces and define them yourself, like so:
@@ -246,10 +246,10 @@ const product: Product = {...}
 Here is an example of a simple product creation:
 
 ```TypeScript
-import { Moltin, gateway, ProductBase, Resource } from '@moltin/sdk';
+import { ElasticPath, gateway, ProductBase, Resource } from '@elasticpath/sdk';
 
 async function main() {
-  const g: Moltin = gateway({client_id, client_secret});
+  const g: ElasticPath = gateway({client_id, client_secret});
   const auth = await g.Authenticate();
 
   const newProduct: ProductBase = {
@@ -274,14 +274,14 @@ async function main() {
 }
 ```
 
-You can also extend any base interface compatible with flows to create any custom interfaces that you might be using by re-declaring `@moltin/sdk` module. Following example adds several properties to `ProductsBase` interface that correspond to flows added to the backend.
+You can also extend any base interface compatible with flows to create any custom interfaces that you might be using by re-declaring `@elasticpath/sdk` module. Following example adds several properties to `ProductsBase` interface that correspond to flows added to the backend.
 
 In your project add a definition file (with a `.d.ts` extension) with a following code:
 
 ```TypeScript
-import * as moltin from '@moltin/sdk';
+import * as elasticpath from '@elasticpath/sdk';
 
-declare module '@moltin/sdk' {
+declare module '@elasticpath/sdk' {
 
   interface Weight {
     g: number;
@@ -344,4 +344,4 @@ You can learn more about the Rollup API and configuration [here](https://github.
 ## Terms And Conditions
 
 - Any changes to this project must be reviewed and approved by the repository owner.
-- For more information about the license, see [MIT License](https://github.com/moltin/js-sdk/blob/main/LICENSE).
+- For more information about the license, see [MIT License](https://github.com/elasticpath/js-sdk/blob/main/LICENSE).

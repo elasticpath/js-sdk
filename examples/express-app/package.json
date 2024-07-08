@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@moltin/sdk": "../..",
+    "@elasticpath/sdk": "../..",
     "express": "^4.16.3"
   }
 }

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   attributeResponse,
   categoriesArray as categories,
@@ -9,8 +9,8 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin categories', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath categories', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -24,7 +24,7 @@ describe('Moltin categories', () => {
       .get('/categories')
       .reply(200, { data: categories })
 
-    return Moltin.Categories.All().then(response => {
+    return ElasticPath.Categories.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
@@ -39,7 +39,7 @@ describe('Moltin categories', () => {
       .get('/categories/1')
       .reply(200, categories[0])
 
-    return Moltin.Categories.Get('1').then(response => {
+    return ElasticPath.Categories.Get('1').then(response => {
       assert.propertyVal(response, 'name', 'Category 1')
     })
   })
@@ -62,7 +62,7 @@ describe('Moltin categories', () => {
       .post('/categories')
       .reply(201, { data: { ...newCategory, id: 'cat1' } })
 
-    return Moltin.Categories.Create(newCategory).then(response => {
+    return ElasticPath.Categories.Create(newCategory).then(response => {
       assert.equal(response.data.id, 'cat1')
       assert.equal(response.data.name, newCategory.name)
       assert.equal(response.data.type, newCategory.type)
@@ -88,7 +88,7 @@ describe('Moltin categories', () => {
         name: 'Updated category name'
       })
 
-    return Moltin.Categories.Update('1', {
+    return ElasticPath.Categories.Update('1', {
       name: 'Updated category name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated category name')
@@ -105,7 +105,7 @@ describe('Moltin categories', () => {
       .delete('/categories/1')
       .reply(204)
 
-    return Moltin.Categories.Delete('1').then(response => {
+    return ElasticPath.Categories.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -127,7 +127,7 @@ describe('Moltin categories', () => {
       })
       .reply(200, categories[0])
 
-    return Moltin.Products.CreateRelationships(
+    return ElasticPath.Products.CreateRelationships(
       products[0].id,
       'category',
       categories[0].id
@@ -157,10 +157,11 @@ describe('Moltin categories', () => {
       })
       .reply(200, categories[0])
 
-    return Moltin.Products.CreateRelationships(products[0].id, 'category', [
-      categories[0].id,
-      categories[1].id
-    ]).then(response => {
+    return ElasticPath.Products.CreateRelationships(
+      products[0].id,
+      'category',
+      [categories[0].id, categories[1].id]
+    ).then(response => {
       assert.propertyVal(response, 'id', 'category-1')
     })
   })
@@ -182,7 +183,7 @@ describe('Moltin categories', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(
+    return ElasticPath.Products.DeleteRelationships(
       products[0].id,
       'category',
       categories[0].id
@@ -212,10 +213,11 @@ describe('Moltin categories', () => {
       })
       .reply(204)
 
-    return Moltin.Products.DeleteRelationships(products[0].id, 'category', [
-      categories[0].id,
-      categories[1].id
-    ]).then(response => {
+    return ElasticPath.Products.DeleteRelationships(
+      products[0].id,
+      'category',
+      [categories[0].id, categories[1].id]
+    ).then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -237,7 +239,7 @@ describe('Moltin categories', () => {
       })
       .reply(204)
 
-    return Moltin.Products.UpdateRelationships(
+    return ElasticPath.Products.UpdateRelationships(
       products[0].id,
       'category',
       categories[0].id
@@ -260,11 +262,12 @@ describe('Moltin categories', () => {
         data: []
       })
 
-    return Moltin.Products.UpdateRelationships(products[0].id, 'category').then(
-      response => {
-        assert.deepEqual(response, { data: [] })
-      }
-    )
+    return ElasticPath.Products.UpdateRelationships(
+      products[0].id,
+      'category'
+    ).then(response => {
+      assert.deepEqual(response, { data: [] })
+    })
   })
 
   it('should return an array of attributes', () => {
@@ -276,7 +279,7 @@ describe('Moltin categories', () => {
       .get('/categories/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Categories.Attributes('testtoken').then(response => {
+    return ElasticPath.Categories.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

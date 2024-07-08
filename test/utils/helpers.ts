@@ -170,8 +170,10 @@ describe('Format filter string', () => {
   })
 
   it('should return a valid filter string for "in" operator', () => {
-    const res = formatFilterString('in', { sku: ['prod12', 'prod34','prod56'] })
-    
+    const res = formatFilterString('in', {
+      sku: ['prod12', 'prod34', 'prod56']
+    })
+
     expect(res).to.equal('in(sku,prod12,prod34,prod56)')
   })
 })
@@ -300,26 +302,30 @@ describe('Build cart item data', () => {
 
 describe('Build cart checkout data', () => {
   it('should return checkout data', () => {
-    const res = buildCartCheckoutData('123', 'moltin office', 'moltin office')
+    const res = buildCartCheckoutData(
+      '123',
+      'elasticpath office',
+      'elasticpath office'
+    )
 
     expect(res).to.deep.equal({
       customer: { id: '123' },
-      billing_address: 'moltin office',
-      shipping_address: 'moltin office'
+      billing_address: 'elasticpath office',
+      shipping_address: 'elasticpath office'
     })
   })
 
   it('should return checkout data', () => {
     const res = buildCartCheckoutData(
       { id: 1, name: 'john' },
-      'moltin office',
-      'moltin office'
+      'elasticpath office',
+      'elasticpath office'
     )
 
     expect(res).to.deep.equal({
       customer: { id: 1, name: 'john' },
-      billing_address: 'moltin office',
-      shipping_address: 'moltin office'
+      billing_address: 'elasticpath office',
+      shipping_address: 'elasticpath office'
     })
   })
 })

@@ -1,13 +1,13 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { productsArray as products } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin products', () => {
+describe('ElasticPath products', () => {
   it('should return an array of products', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -20,13 +20,13 @@ describe('Moltin products', () => {
       .get('/products')
       .reply(200, { data: products })
 
-    return Moltin.Products.All().then(response => {
+    return ElasticPath.Products.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
 
   it('should return a single product', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -39,13 +39,13 @@ describe('Moltin products', () => {
       .get('/products/1')
       .reply(200, products[0])
 
-    return Moltin.Products.Get('1').then(response => {
+    return ElasticPath.Products.Get('1').then(response => {
       assert.propertyVal(response, 'name', 'Product 1')
     })
   })
 
   it('should return a filtered array of products', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -58,7 +58,7 @@ describe('Moltin products', () => {
       .get('/products?filter=eq(status,live):eq(slug,new-slug):gt(stock,2)')
       .reply(200, { data: products })
 
-    return Moltin.Products.Filter({
+    return ElasticPath.Products.Filter({
       eq: {
         status: 'live',
         slug: 'new-slug'
@@ -74,7 +74,7 @@ describe('Moltin products', () => {
   })
 
   it('should return a limited number of products', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -92,7 +92,7 @@ describe('Moltin products', () => {
       })
       .reply(200, { data: products })
 
-    return Moltin.Products.Limit(4)
+    return ElasticPath.Products.Limit(4)
       .All()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -100,7 +100,7 @@ describe('Moltin products', () => {
   })
 
   it('should return an array products offset by a value', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -118,7 +118,7 @@ describe('Moltin products', () => {
       })
       .reply(200, { data: products })
 
-    return Moltin.Products.Offset(10)
+    return ElasticPath.Products.Offset(10)
       .All()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -126,7 +126,7 @@ describe('Moltin products', () => {
   })
 
   it('should return all products and include associated brands, categories, collections', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -142,7 +142,7 @@ describe('Moltin products', () => {
       })
       .reply(200, { data: products })
 
-    return Moltin.Products.With(['brands', 'categories', 'collections'])
+    return ElasticPath.Products.With(['brands', 'categories', 'collections'])
       .All()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -150,7 +150,7 @@ describe('Moltin products', () => {
   })
 
   it('should return a single product and include associated brands, categories, collections', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -166,7 +166,7 @@ describe('Moltin products', () => {
       })
       .reply(200, products[0])
 
-    return Moltin.Products.With(['brands', 'categories', 'collections'])
+    return ElasticPath.Products.With(['brands', 'categories', 'collections'])
       .Get('1')
       .then(response => {
         assert.propertyVal(response, 'name', 'Product 1')
@@ -174,7 +174,7 @@ describe('Moltin products', () => {
   })
 
   it('should return all products sorted by name key', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -190,7 +190,7 @@ describe('Moltin products', () => {
       })
       .reply(200, { data: products })
 
-    return Moltin.Products.Sort('name')
+    return ElasticPath.Products.Sort('name')
       .All()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -216,7 +216,7 @@ describe('Moltin products', () => {
       commodity_type: 'physical' as const
     }
 
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -229,7 +229,7 @@ describe('Moltin products', () => {
       .post('/products')
       .reply(201, { data: { ...newProduct, id: 'product1Id' } })
 
-    return Moltin.Products.Create(newProduct).then(response => {
+    return ElasticPath.Products.Create(newProduct).then(response => {
       assert.equal(response.data.id, 'product1Id')
       assert.equal(response.data.type, newProduct.type)
       assert.equal(response.data.name, newProduct.name)
@@ -244,7 +244,7 @@ describe('Moltin products', () => {
   })
 
   it('should update a product', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -264,7 +264,7 @@ describe('Moltin products', () => {
         name: 'Updated product name'
       })
 
-    return Moltin.Products.Update('1', {
+    return ElasticPath.Products.Update('1', {
       name: 'Updated product name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated product name')
@@ -272,7 +272,7 @@ describe('Moltin products', () => {
   })
 
   it('should delete a product', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -285,13 +285,13 @@ describe('Moltin products', () => {
       .delete('/products/1')
       .reply(204)
 
-    return Moltin.Products.Delete('1').then(response => {
+    return ElasticPath.Products.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
 
   it('should not persist the includes property after request', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -307,15 +307,15 @@ describe('Moltin products', () => {
       })
       .reply(200, products)
 
-    return Moltin.Products.With('brands')
+    return ElasticPath.Products.With('brands')
       .All()
       .then(() => {
-        assert.notExists((Moltin.Products as any).includes)
+        assert.notExists((ElasticPath.Products as any).includes)
       })
   })
 
   it('should not persist the sort property after request', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -331,15 +331,15 @@ describe('Moltin products', () => {
       })
       .reply(200, products)
 
-    return Moltin.Products.Sort('name')
+    return ElasticPath.Products.Sort('name')
       .All()
       .then(() => {
-        assert.notExists((Moltin.Products as any).sort)
+        assert.notExists((ElasticPath.Products as any).sort)
       })
   })
 
   it('should not persist the limit property after request', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -357,15 +357,15 @@ describe('Moltin products', () => {
       })
       .reply(200, products)
 
-    return Moltin.Products.Limit(4)
+    return ElasticPath.Products.Limit(4)
       .All()
       .then(() => {
-        assert.notExists((Moltin.Products as any).limit)
+        assert.notExists((ElasticPath.Products as any).limit)
       })
   })
 
   it('should not persist the offset property after request', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -383,15 +383,15 @@ describe('Moltin products', () => {
       })
       .reply(200, products)
 
-    return Moltin.Products.Offset(10)
+    return ElasticPath.Products.Offset(10)
       .All()
       .then(() => {
-        assert.notExists((Moltin.Products as any).offset)
+        assert.notExists((ElasticPath.Products as any).offset)
       })
   })
 
   it('should not persist the filter property after request', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -404,7 +404,7 @@ describe('Moltin products', () => {
       .get('/products?filter=eq(status,live):eq(slug,new-slug):gt(stock,2)')
       .reply(200, products)
 
-    return Moltin.Products.Filter({
+    return ElasticPath.Products.Filter({
       eq: {
         status: 'live',
         slug: 'new-slug'
@@ -415,12 +415,12 @@ describe('Moltin products', () => {
     })
       .All()
       .then(() => {
-        assert.notExists((Moltin.Products as any).filter)
+        assert.notExists((ElasticPath.Products as any).filter)
       })
   })
 
   it('should build child products', () => {
-    const Moltin = MoltinGateway({ client_id: 'XXX' })
+    const ElasticPath = ElasticPathGateway({ client_id: 'XXX' })
 
     // Intercept the API request
     nock(apiUrl, {
@@ -431,13 +431,13 @@ describe('Moltin products', () => {
       .post('/products/1/build')
       .reply(200, products[0])
 
-    return Moltin.Products.BuildChildProducts('1').then(response => {
+    return ElasticPath.Products.BuildChildProducts('1').then(response => {
       assert.propertyVal(response, 'name', 'Product 1')
     })
   })
 
   it('should get products attributes', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -450,6 +450,6 @@ describe('Moltin products', () => {
       .get('/products/attributes')
       .reply(200, { data: products })
 
-    return Moltin.Products.Attributes('1')
+    return ElasticPath.Products.Attributes('1')
   })
 })

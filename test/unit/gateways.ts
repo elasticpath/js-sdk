@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { gatewaysArray as gateways, attributeResponse } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin gateways', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath gateways', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin gateways', () => {
       .get('/gateways')
       .reply(200, { data: gateways })
 
-    return Moltin.Gateways.All().then(response => {
+    return ElasticPath.Gateways.All().then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -35,7 +35,7 @@ describe('Moltin gateways', () => {
       .get('/gateways/braintree')
       .reply(200, gateways[0])
 
-    return Moltin.Gateways.Get(gateways[0].slug).then(response => {
+    return ElasticPath.Gateways.Get(gateways[0].slug).then(response => {
       assert.propertyVal(response, 'slug', 'braintree')
     })
   })
@@ -57,9 +57,11 @@ describe('Moltin gateways', () => {
         enabled: true
       })
 
-    return Moltin.Gateways.Enabled(gateways[0].slug, true).then(response => {
-      assert.propertyVal(response, 'enabled', true)
-    })
+    return ElasticPath.Gateways.Enabled(gateways[0].slug, true).then(
+      response => {
+        assert.propertyVal(response, 'enabled', true)
+      }
+    )
   })
 
   it('should update a gateway', () => {
@@ -78,7 +80,7 @@ describe('Moltin gateways', () => {
         name: 'Braintree (updated)'
       })
 
-    return Moltin.Gateways.Update(gateways[0].slug, {
+    return ElasticPath.Gateways.Update(gateways[0].slug, {
       name: 'Braintree (updated)'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Braintree (updated)')
@@ -95,7 +97,7 @@ describe('Moltin gateways', () => {
       .get('/gateways/braintree/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Gateways.GetSlugAttributes(gateways[0].slug).then(
+    return ElasticPath.Gateways.GetSlugAttributes(gateways[0].slug).then(
       response => {
         assert.lengthOf(response.data, 3)
       }

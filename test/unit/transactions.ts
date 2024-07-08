@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { orderTransactionsArray as transactions } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin order transactions', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath order transactions', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin order transactions', () => {
       .get('/orders/order-1/transactions')
       .reply(200, { data: transactions })
 
-    return Moltin.Transactions.All({ order: 'order-1' }).then(response => {
+    return ElasticPath.Transactions.All({ order: 'order-1' }).then(response => {
       assert.lengthOf(response.data, 2)
       assert.propertyVal(response.data[0], 'id', 'transaction-1')
       assert.propertyVal(response.data[1], 'id', 'transaction-2')
@@ -37,7 +37,7 @@ describe('Moltin order transactions', () => {
       .get('/orders/order-1/transactions/transaction-1')
       .reply(200, { data: transactions[0] })
 
-    return Moltin.Transactions.Get({
+    return ElasticPath.Transactions.Get({
       order: 'order-1',
       transaction: 'transaction-1'
     }).then(response => {
@@ -55,7 +55,7 @@ describe('Moltin order transactions', () => {
       .post('/orders/order-1/transactions/transaction-1/capture')
       .reply(200, {})
 
-    return Moltin.Transactions.Capture({
+    return ElasticPath.Transactions.Capture({
       order: 'order-1',
       transaction: 'transaction-1'
     }).then(response => {
@@ -73,7 +73,7 @@ describe('Moltin order transactions', () => {
       .post('/orders/order-1/transactions/transaction-1/refund')
       .reply(200, {})
 
-    return Moltin.Transactions.Refund({
+    return ElasticPath.Transactions.Refund({
       order: 'order-1',
       transaction: 'transaction-1'
     }).then(response => {

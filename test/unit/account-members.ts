@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com'
 
-describe('Moltin Account Members', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath Account Members', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -19,7 +19,7 @@ describe('Moltin Account Members', () => {
       .reply(200, {})
     const accountMemberId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.AccountMembers.Get(accountMemberId).then(res => {
+    return ElasticPath.AccountMembers.Get(accountMemberId).then(res => {
       assert.isObject(res)
     })
   })
@@ -29,7 +29,7 @@ describe('Moltin Account Members', () => {
       .get(/account-members\/*/)
       .reply(200, {})
 
-    return Moltin.AccountMembers.All().then(res => {
+    return ElasticPath.AccountMembers.All().then(res => {
       assert.isObject(res)
     })
   })
@@ -42,7 +42,7 @@ describe('Moltin Account Members', () => {
       })
       .reply(200, {})
 
-    return Moltin.AccountMembers.Filter({ eq: { name: 'John' } })
+    return ElasticPath.AccountMembers.Filter({ eq: { name: 'John' } })
       .All()
       .then(res => {
         assert.isObject(res)

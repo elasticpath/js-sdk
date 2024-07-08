@@ -1,12 +1,12 @@
 import { expect } from 'chai'
 import '../../src/utils/fetch-polyfill'
 import throttleMod from '../../src/utils/throttle.js'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
 describe('Build throttle mechanism', () => {
-  const Moltin = MoltinGateway({
+  const ElasticPath = ElasticPathGateway({
     client_id: 'xxx',
     client_secret: 'xxx',
     throttleEnabled: true,
@@ -16,8 +16,10 @@ describe('Build throttle mechanism', () => {
 
   it('should have correct config options for throttle', () => {
     const throttledQueueMock = function (limit: number, interval: number) {
-      expect(limit).to.equal(Moltin.config.throttleConfig?.throttleLimit)
-      expect(interval).to.equal(Moltin.config.throttleConfig?.throttleInterval)
+      expect(limit).to.equal(ElasticPath.config.throttleConfig?.throttleLimit)
+      expect(interval).to.equal(
+        ElasticPath.config.throttleConfig?.throttleInterval
+      )
     }
     throttleMod.__Rewire__('throttledQueue', throttledQueueMock)
   })

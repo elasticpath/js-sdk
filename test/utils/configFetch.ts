@@ -1,13 +1,13 @@
 import { expect } from 'chai'
 import '../../src/utils/fetch-polyfill'
 import resolveFetchMethod from '../../src/utils/configFetch'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 describe('Config fetch parameters', () => {
   // minimal test function
   const testCustomFetch = (url: string, options: object) => url
 
-  const Moltin = MoltinGateway({
+  const ElasticPath = ElasticPathGateway({
     client_id: 'xxx',
     client_secret: 'xxx',
     custom_fetch: testCustomFetch,
@@ -16,10 +16,10 @@ describe('Config fetch parameters', () => {
     throttleInterval: 125
   })
   const mockOptions = {
-    custom_fetch: Moltin.config.custom_fetch,
-    throttleEnabled: Moltin.config.throttleConfig?.throttleEnabled,
-    throttleLimit: Moltin.config.throttleConfig?.throttleLimit,
-    throttleInterval: Moltin.config.throttleConfig?.throttleInterval
+    custom_fetch: ElasticPath.config.custom_fetch,
+    throttleEnabled: ElasticPath.config.throttleConfig?.throttleEnabled,
+    throttleLimit: ElasticPath.config.throttleConfig?.throttleLimit,
+    throttleInterval: ElasticPath.config.throttleConfig?.throttleInterval
   }
   const throttleMock = async function (fn: () => any) {
     return fn()
@@ -28,9 +28,9 @@ describe('Config fetch parameters', () => {
   it('should have correct config options for resolveFetchMethod', () => {
     const resolveFetchMethodMock = function (options: any) {
       const isCustomFetch = options.custom_fetch ?? fetch
-      expect(options.custom_fetch).to.equal(Moltin.config.custom_fetch)
+      expect(options.custom_fetch).to.equal(ElasticPath.config.custom_fetch)
       expect(options.throttleEnabled).to.equal(
-        Moltin.config.throttleConfig?.throttleEnabled
+        ElasticPath.config.throttleConfig?.throttleEnabled
       )
       return options.throttleEnabled ? throttleMock : isCustomFetch
     }

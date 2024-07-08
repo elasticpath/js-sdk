@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { attributeResponse, currenciesArray as currencies } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin currencies', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath currencies', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin currencies', () => {
       .get('/currencies')
       .reply(200, { data: currencies })
 
-    return Moltin.Currencies.All().then(response => {
+    return ElasticPath.Currencies.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
@@ -35,7 +35,7 @@ describe('Moltin currencies', () => {
       .get('/currencies/1')
       .reply(200, { data: currencies[0] })
 
-    return Moltin.Currencies.Get('1').then(response => {
+    return ElasticPath.Currencies.Get('1').then(response => {
       assert.propertyVal(response.data, 'code', 'USD')
     })
   })
@@ -62,7 +62,7 @@ describe('Moltin currencies', () => {
       .post('/currencies')
       .reply(201, { data: { ...newCurrency, id: 'cur1' } })
 
-    return Moltin.Currencies.Create(newCurrency).then(response => {
+    return ElasticPath.Currencies.Create(newCurrency).then(response => {
       assert.equal(response.data.id, 'cur1')
       assert.equal(response.data.type, newCurrency.type)
       assert.equal(response.data.default, newCurrency.default)
@@ -95,7 +95,7 @@ describe('Moltin currencies', () => {
         code: 'GBP'
       })
 
-    return Moltin.Currencies.Update('1', {
+    return ElasticPath.Currencies.Update('1', {
       code: 'GBP'
     }).then(response => {
       assert.propertyVal(response, 'code', 'GBP')
@@ -112,21 +112,21 @@ describe('Moltin currencies', () => {
       .delete('/currencies/1')
       .reply(204)
 
-    return Moltin.Currencies.Delete('1').then(response => {
+    return ElasticPath.Currencies.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
 
   it('should return the active currency', () => {
-    Moltin.Currencies.Set(currencies[2].code).then(() => {
-      Moltin.Currencies.Active().then(response => {
+    ElasticPath.Currencies.Set(currencies[2].code).then(() => {
+      ElasticPath.Currencies.Active().then(response => {
         assert.equal(response, 'YEN')
       })
     })
   })
 
   it('should set the active currency', () => {
-    Moltin.Currencies.Set(currencies[1].code).then(response => {
+    ElasticPath.Currencies.Set(currencies[1].code).then(response => {
       assert.equal(response, 'GBP')
     })
   })
@@ -140,7 +140,7 @@ describe('Moltin currencies', () => {
       .get('/currencies/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Currencies.Attributes('testtoken').then(response => {
+    return ElasticPath.Currencies.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

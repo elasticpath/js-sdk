@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com'
 
-describe('Moltin Accounts', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath Accounts', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -19,7 +19,7 @@ describe('Moltin Accounts', () => {
       .reply(200, {})
     const accountId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.Accounts.Get(accountId).then(res => {
+    return ElasticPath.Accounts.Get(accountId).then(res => {
       assert.isObject(res)
     })
   })
@@ -40,7 +40,7 @@ describe('Moltin Accounts', () => {
       registration_id: '00000000-0000-1000-8000-000000000000'
     }
 
-    return Moltin.Accounts.Create(body).then(res => {
+    return ElasticPath.Accounts.Create(body).then(res => {
       assert.isObject(res)
     })
   })
@@ -50,7 +50,7 @@ describe('Moltin Accounts', () => {
       .get(/accounts\/*/)
       .reply(200, {})
 
-    return Moltin.Accounts.All().then(res => {
+    return ElasticPath.Accounts.All().then(res => {
       assert.isObject(res)
     })
   })
@@ -67,12 +67,12 @@ describe('Moltin Accounts', () => {
     const body = {
       type: 'account',
       name: 'sub-acc-test-create-name-1',
-      legal_name: 'sub-acc-test-create-legal-name-1',
+      legal_name: 'sub-acc-test-create-legal-name-1'
     }
 
     const accountId = '64f35045-2a76-4bcf-b6ba-02bb12090d38'
 
-    return Moltin.Accounts.Update(accountId, body).then(res => {
+    return ElasticPath.Accounts.Update(accountId, body).then(res => {
       assert.isObject(res)
     })
   })
@@ -89,7 +89,7 @@ describe('Moltin Accounts', () => {
       .delete(/accounts\/*/)
       .reply(204, {})
 
-    return Moltin.Accounts.Delete(accountId).then(res => {
+    return ElasticPath.Accounts.Delete(accountId).then(res => {
       assert.isObject(res)
     })
   })
@@ -103,7 +103,7 @@ describe('Moltin Accounts', () => {
       .get(/accounts/)
       .reply(200, {})
 
-    return Moltin.Accounts.Filter({
+    return ElasticPath.Accounts.Filter({
       eq: {
         name: 'bluefuse'
       }

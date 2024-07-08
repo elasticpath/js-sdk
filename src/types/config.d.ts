@@ -1,5 +1,5 @@
 import { StorageFactory } from './storage'
-import { Moltin } from '../moltin'
+import { ElasticPath } from '../index'
 
 export interface RequestFactory {
   config: Config
@@ -12,7 +12,7 @@ export interface RequestFactory {
     method: HttpVerbs,
     body?: any,
     token?: string,
-    instance?: Moltin,
+    instance?: ElasticPath,
     wrapBody?: Boolean,
     version?: 'v1' | 'v2' | 'v3' | 'pcm',
     additionalHeaders?: { [key: string]: string }

@@ -19,7 +19,7 @@ import {
   Variation,
   ModifierResponse,
   OptionResponse
-} from '../src/moltin'
+} from '../src'
 
 export const auth = (accessToken): Promise<CustomAuthenticatorResponseBody> =>
   new Promise(resolve =>
@@ -39,7 +39,7 @@ export const integrationsArray = [
     observes: ['integrations.updated'],
     integration_type: 'webhook',
     configuration: {
-      url: 'https://moltin.com/webhooktest1'
+      url: 'https://elasticpath.com/webhooktest1'
     }
   },
   {
@@ -51,7 +51,7 @@ export const integrationsArray = [
     observes: ['integrations.deleted'],
     integration_type: 'webhook',
     configuration: {
-      url: 'https://moltin.com/webhooktest2'
+      url: 'https://elasticpath.com/webhooktest2'
     }
   },
   {
@@ -63,7 +63,7 @@ export const integrationsArray = [
     observes: ['integrations.updated'],
     integration_type: 'webhook',
     configuration: {
-      url: 'https://moltin.com/webhooktest2'
+      url: 'https://elasticpath.com/webhooktest2'
     }
   }
 ]
@@ -516,7 +516,7 @@ export const customerAddressesArray: CustomerAddress[] = [
     name: 'Office',
     phone_number: '(555) 555-1234',
     instructions: 'Instruction 1',
-    company_name: 'Moltin',
+    company_name: 'ElasticPath',
     line_1: 'British India House',
     line_2: '15 Carliol Square',
     city: 'Newcastle upon Tyne',
@@ -532,7 +532,7 @@ export const customerAddressesArray: CustomerAddress[] = [
     name: 'Office',
     phone_number: '(555) 555-1234',
     instructions: 'Instruction 2',
-    company_name: 'Moltin',
+    company_name: 'ElasticPath',
     line_1: 'British India House',
     line_2: '15 Carliol Square',
     city: 'Newcastle upon Tyne',
@@ -551,7 +551,7 @@ export const accountAddressesArray: AccountAddress[] = [
     name: 'Office',
     phone_number: '(555) 555-1234',
     instructions: 'Instruction 1',
-    company_name: 'Moltin',
+    company_name: 'ElasticPath',
     line_1: 'British India House',
     line_2: '15 Carliol Square',
     city: 'Newcastle upon Tyne',
@@ -567,7 +567,7 @@ export const accountAddressesArray: AccountAddress[] = [
     name: 'Office',
     phone_number: '(555) 555-1234',
     instructions: 'Instruction 2',
-    company_name: 'Moltin',
+    company_name: 'ElasticPath',
     line_1: 'British India House',
     line_2: '15 Carliol Square',
     city: 'Newcastle upon Tyne',

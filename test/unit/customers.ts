@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import { attributeResponse, customersArray as customers } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin customers', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath customers', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -20,7 +20,7 @@ describe('Moltin customers', () => {
       .get('/customers')
       .reply(200, { data: customers })
 
-    return Moltin.Customers.All().then(response => {
+    return ElasticPath.Customers.All().then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
@@ -35,7 +35,7 @@ describe('Moltin customers', () => {
       .get('/customers/1')
       .reply(200, customers[0])
 
-    return Moltin.Customers.Get('1').then(response => {
+    return ElasticPath.Customers.Get('1').then(response => {
       assert.propertyVal(response, 'id', 'customer-1')
     })
   })
@@ -51,7 +51,7 @@ describe('Moltin customers', () => {
       .get('/customers/1')
       .reply(200, customers[0])
 
-    return Moltin.Customers.Get('1', 'testtoken').then(response => {
+    return ElasticPath.Customers.Get('1', 'testtoken').then(response => {
       assert.propertyVal(response, 'id', 'customer-1')
     })
   })
@@ -63,12 +63,14 @@ describe('Moltin customers', () => {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
       }
     })
-      .get('/customers?filter=eq(email,jonathan@moltin.com):like(name,jon)')
+      .get(
+        '/customers?filter=eq(email,jonathan@elasticpath.com):like(name,jon)'
+      )
       .reply(200, { data: customers })
 
-    return Moltin.Customers.Filter({
+    return ElasticPath.Customers.Filter({
       eq: {
-        email: 'jonathan@moltin.com'
+        email: 'jonathan@elasticpath.com'
       },
       like: {
         name: 'jon'
@@ -97,7 +99,7 @@ describe('Moltin customers', () => {
       .post('/customers')
       .reply(201, { data: { ...newCustomer, id: 'cus1' } })
 
-    return Moltin.Customers.Create(newCustomer).then(response => {
+    return ElasticPath.Customers.Create(newCustomer).then(response => {
       assert.equal(response.data.id, 'cus1')
       assert.equal(response.data.type, newCustomer.type)
       assert.equal(response.data.name, newCustomer.name)
@@ -123,7 +125,7 @@ describe('Moltin customers', () => {
         name: 'Updated customer name'
       })
 
-    return Moltin.Customers.Update('customer-1', {
+    return ElasticPath.Customers.Update('customer-1', {
       name: 'Updated customer name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated customer name')
@@ -148,7 +150,7 @@ describe('Moltin customers', () => {
         name: 'Updated customer name'
       })
 
-    return Moltin.Customers.Update(
+    return ElasticPath.Customers.Update(
       'customer-1',
       { name: 'Updated customer name' },
       'testtoken'
@@ -167,7 +169,7 @@ describe('Moltin customers', () => {
       .delete('/customers/customer-1')
       .reply(204)
 
-    return Moltin.Customers.Delete('customer-1').then(response => {
+    return ElasticPath.Customers.Delete('customer-1').then(response => {
       assert.equal(response, '{}')
     })
   })
@@ -182,7 +184,7 @@ describe('Moltin customers', () => {
       .post('/customers/tokens', {
         data: {
           type: 'token',
-          authentication_mechanism: "password",
+          authentication_mechanism: 'password',
           email: customers[0].email,
           password: customers[0].password
         }
@@ -192,7 +194,7 @@ describe('Moltin customers', () => {
         token: customers[0].token
       })
 
-    return Moltin.Customers.Token(
+    return ElasticPath.Customers.Token(
       customers[0].email,
       customers[0].password
     ).then(response => {
@@ -202,9 +204,10 @@ describe('Moltin customers', () => {
   })
 
   it('should authenticate a customer and return a JWT when using oidc', () => {
-    const someAuthorizationCode = "c87fec2c-5b08-4cd8-842c-2b3816240dce"
-    const someCodeVerifier = "6Z4X0ZPqz~LKQ.R~8ILi54xKXKK5WQF2W~OI-Wq7AIvOuG25AhrHkR2-bOP~5oKOTXspmpAgYidnvP9KnKxPFvgTzXBWi4rYtq428zW4aGRY1SXGargvLYBj39DWKvHf"
-    const someRedirectUri = "https://www.elasticpath.com"
+    const someAuthorizationCode = 'c87fec2c-5b08-4cd8-842c-2b3816240dce'
+    const someCodeVerifier =
+      '6Z4X0ZPqz~LKQ.R~8ILi54xKXKK5WQF2W~OI-Wq7AIvOuG25AhrHkR2-bOP~5oKOTXspmpAgYidnvP9KnKxPFvgTzXBWi4rYtq428zW4aGRY1SXGargvLYBj39DWKvHf'
+    const someRedirectUri = 'https://www.elasticpath.com'
 
     // Intercept the API request
     nock(apiUrl, {
@@ -215,10 +218,10 @@ describe('Moltin customers', () => {
       .post('/customers/tokens', {
         data: {
           type: 'token',
-          authentication_mechanism: "oidc",
+          authentication_mechanism: 'oidc',
           oauth_authorization_code: someAuthorizationCode,
           oauth_redirect_uri: someRedirectUri,
-          oauth_code_verifier: someCodeVerifier,
+          oauth_code_verifier: someCodeVerifier
         }
       })
       .reply(201, {
@@ -226,7 +229,7 @@ describe('Moltin customers', () => {
         token: customers[0].token
       })
 
-    return Moltin.Customers.TokenViaOIDC(
+    return ElasticPath.Customers.TokenViaOIDC(
       someAuthorizationCode,
       someRedirectUri,
       someCodeVerifier
@@ -236,7 +239,6 @@ describe('Moltin customers', () => {
     })
   })
 
-
   it('should not persist the filter property after request', () => {
     // Intercept the API request
     nock(apiUrl, {
@@ -244,17 +246,17 @@ describe('Moltin customers', () => {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
       }
     })
-      .get('/customers?filter=eq(email,jonathan@moltin.com)')
+      .get('/customers?filter=eq(email,jonathan@elasticpath.com)')
       .reply(200, customers)
 
-    return Moltin.Customers.Filter({
+    return ElasticPath.Customers.Filter({
       eq: {
-        email: 'jonathan@moltin.com'
+        email: 'jonathan@elasticpath.com'
       }
     })
       .All()
       .then(() => {
-        assert.notExists((Moltin.Customers as any).filter)
+        assert.notExists((ElasticPath.Customers as any).filter)
       })
   })
 
@@ -267,7 +269,7 @@ describe('Moltin customers', () => {
       .get('/customers/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Customers.Attributes('testtoken').then(response => {
+    return ElasticPath.Customers.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })

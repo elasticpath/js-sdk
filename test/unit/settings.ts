@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin settings', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath settings', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
@@ -38,7 +38,7 @@ describe('Moltin settings', () => {
         }
       })
 
-    return Moltin.Settings.All().then(response => {
+    return ElasticPath.Settings.All().then(response => {
       assert.deepEqual(response, {
         data: {
           type: 'settings',
@@ -96,7 +96,7 @@ describe('Moltin settings', () => {
         }
       })
 
-    return Moltin.Settings.Update({ page_length: 50 }).then(response => {
+    return ElasticPath.Settings.Update({ page_length: 50 }).then(response => {
       assert.deepEqual(response, {
         data: {
           type: 'settings',
@@ -126,10 +126,10 @@ describe('Moltin settings', () => {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
       }
     })
-        .delete('/settings')
-        .reply(204, {})
+      .delete('/settings')
+      .reply(204, {})
 
-    return Moltin.Settings.Delete().then(response => {
+    return ElasticPath.Settings.Delete().then(response => {
       assert.deepEqual(response, {})
     })
   })

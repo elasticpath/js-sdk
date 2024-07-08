@@ -1,13 +1,13 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { ApplicationKeyBase, gateway as MoltinGateway } from '../../src/moltin'
+import { ApplicationKeyBase, gateway as ElasticPathGateway } from '../../src'
 import { applicationKeysArray as applicationKeys } from '../factories'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
 describe('Store Application Keys', () => {
   it('should return an array of application keys', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -19,14 +19,14 @@ describe('Store Application Keys', () => {
     })
       .get('/application-keys')
       .reply(200, { data: applicationKeys })
-    
-    return Moltin.ApplicationKeys.All().then(response => {
+
+    return ElasticPath.ApplicationKeys.All().then(response => {
       assert.lengthOf(response.data, 4)
     })
   })
 
   it('should not return client secret', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -38,13 +38,13 @@ describe('Store Application Keys', () => {
     })
       .get('/application-keys')
       .reply(200, { data: applicationKeys })
-    
-    return Moltin.ApplicationKeys.All().then(response => {
-      response.data.map((key => assert.notProperty(key, 'client_secret')))
+
+    return ElasticPath.ApplicationKeys.All().then(response => {
+      response.data.map(key => assert.notProperty(key, 'client_secret'))
     })
   })
 
-  it ('should create a new application key', () => {
+  it('should create a new application key', () => {
     const newApplicationKey = {
       id: 'applicationKeyId1',
       name: 'application-key-name',
@@ -64,7 +64,7 @@ describe('Store Application Keys', () => {
       type: 'application_key'
     }
 
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -77,18 +77,23 @@ describe('Store Application Keys', () => {
       .post('/application-keys')
       .reply(201, { data: newApplicationKey })
 
-    return Moltin.ApplicationKeys.Create(applicationKeyBody).then(response => {
-      assert.equal(response.data.id, newApplicationKey.id)
-      assert.equal(response.data.name, applicationKeyBody.name)
-      assert.equal(response.data.type, newApplicationKey.type)
-      assert.equal(response.data.client_id, newApplicationKey.client_id)
-      assert.equal(response.data.client_secret, newApplicationKey.client_secret)
-      assert.deepEqual(response.data.meta, newApplicationKey.meta)
-    })
+    return ElasticPath.ApplicationKeys.Create(applicationKeyBody).then(
+      response => {
+        assert.equal(response.data.id, newApplicationKey.id)
+        assert.equal(response.data.name, applicationKeyBody.name)
+        assert.equal(response.data.type, newApplicationKey.type)
+        assert.equal(response.data.client_id, newApplicationKey.client_id)
+        assert.equal(
+          response.data.client_secret,
+          newApplicationKey.client_secret
+        )
+        assert.deepEqual(response.data.meta, newApplicationKey.meta)
+      }
+    )
   })
 
   it('should delete an application key', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -101,7 +106,7 @@ describe('Store Application Keys', () => {
       .delete('/application-keys/1')
       .reply(204)
 
-    return Moltin.ApplicationKeys.Delete('1').then(response => {
+    return ElasticPath.ApplicationKeys.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })

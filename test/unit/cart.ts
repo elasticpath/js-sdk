@@ -1,10 +1,10 @@
 import { assert } from 'chai'
 import nock from 'nock'
 import {
-  gateway as MoltinGateway,
+  gateway as ElasticPathGateway,
   ItemTaxObject,
   CartItemsResponse
-} from '../../src/moltin'
+} from '../../src'
 import {
   cartItemsArray as items,
   customCartData as customData
@@ -12,12 +12,12 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin cart', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath cart', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
-  Moltin.cartId = '3'
+  ElasticPath.cartId = '3'
 
   const customerId = {
     id: '1'
@@ -40,7 +40,7 @@ describe('Moltin cart', () => {
   const shipping_address = {
     first_name: 'John',
     last_name: 'Doe',
-    line_1: '1 Moltin Street',
+    line_1: '1 ElasticPath Street',
     postcode: 'NE1 6UF',
     county: 'Tyne & Wear',
     country: 'UK'
@@ -58,7 +58,7 @@ describe('Moltin cart', () => {
         id: '3'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Get()
       .then(response => {
         assert.propertyVal(response, 'id', '3')
@@ -77,7 +77,7 @@ describe('Moltin cart', () => {
         id: '5'
       })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .Get()
       .then(response => {
         assert.propertyVal(response, 'id', '5')
@@ -198,7 +198,7 @@ describe('Moltin cart', () => {
       .get('/carts/3/items')
       .reply(200, cartItemResponse)
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Items()
       .then(response => {
         assert.equal(response.data.length, cartItemResponse.data.length)
@@ -409,7 +409,7 @@ describe('Moltin cart', () => {
       .get('/carts/5/items')
       .reply(200, { data: items })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .Items()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -435,7 +435,7 @@ describe('Moltin cart', () => {
         quantity: 2
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddProduct('4', 2)
       .then(response => {
         assert.propertyVal(response, 'id', '4')
@@ -462,7 +462,7 @@ describe('Moltin cart', () => {
         quantity: 2
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddProduct('4', 2, {}, true)
       .then(response => {
         assert.propertyVal(response, 'sku', '4')
@@ -489,7 +489,7 @@ describe('Moltin cart', () => {
         quantity: 2
       })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .AddProduct('4', 2)
       .then(response => {
         assert.propertyVal(response, 'id', '4')
@@ -518,7 +518,7 @@ describe('Moltin cart', () => {
         image_url: 'image.link.com'
       })
 
-    return Moltin.Cart('6')
+    return ElasticPath.Cart('6')
       .AddProduct('4', 2, customData)
       .then(response => {
         assert.propertyVal(response, 'id', '4', 'image.link.com')
@@ -545,7 +545,7 @@ describe('Moltin cart', () => {
         quantity: 1
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddProduct('4')
       .then(response => {
         assert.propertyVal(response, 'id', '4')
@@ -587,7 +587,7 @@ describe('Moltin cart', () => {
         quantity: 1
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddCustomItem(item)
       .then(response => {
         assert.propertyVal(response, 'name', 'Custom Item')
@@ -613,7 +613,7 @@ describe('Moltin cart', () => {
         quantity: 1
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddPromotion('testcode')
       .then(response => {
         assert.propertyVal(response, 'name', 'Custom Item')
@@ -637,7 +637,7 @@ describe('Moltin cart', () => {
       })
       .reply(201, { name: 'Custom Item', quantity: 1 })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddPromotion('testcode', 'abcd-1234')
       .then(response => {
         assert.propertyVal(response, 'name', 'Custom Item')
@@ -663,7 +663,7 @@ describe('Moltin cart', () => {
         quantity: 1
       })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .AddPromotion('testcode')
       .then(response => {
         assert.propertyVal(response, 'name', 'Custom Item')
@@ -707,29 +707,31 @@ describe('Moltin cart', () => {
         quantity: 1
       })
 
-    return Moltin.Cart()
-      .BulkAdd([
-        {
-          type: 'custom_item',
-          name: 'Custom Item',
-          sku: '001',
-          description: 'A new custom item',
-          quantity: 1,
-          price: {
-            amount: 20
+    return ElasticPath.Cart()
+      .BulkAdd(
+        [
+          {
+            type: 'custom_item',
+            name: 'Custom Item',
+            sku: '001',
+            description: 'A new custom item',
+            quantity: 1,
+            price: {
+              amount: 20
+            }
+          },
+          {
+            type: 'cart_item',
+            id: '2',
+            quantity: 1
+          },
+          {
+            type: 'promotion_item',
+            code: 'testcode'
           }
-        },
-        {
-          type: 'cart_item',
-          id: '2',
-          quantity: 1
-        },
-        {
-          type: 'promotion_item',
-          code: 'testcode'
-        }
-      ],
-      { add_all_or_nothing: false })
+        ],
+        { add_all_or_nothing: false }
+      )
       .then(response => {
         assert.propertyVal(response, 'name', 'Custom Item')
         assert.propertyVal(response, 'quantity', 1)
@@ -755,7 +757,7 @@ describe('Moltin cart', () => {
         quantity: 6
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItemQuantity('2', 6)
       .then(item => {
         assert.propertyVal(item, 'id', '2')
@@ -782,7 +784,7 @@ describe('Moltin cart', () => {
         quantity: 6
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItem('2', 6)
       .then(item => {
         assert.propertyVal(item, 'id', '2')
@@ -811,7 +813,7 @@ describe('Moltin cart', () => {
         image_url: 'image.link.com'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItem('2', 6, customData)
       .then(response => {
         assert.propertyVal(response, 'id', '2')
@@ -841,9 +843,12 @@ describe('Moltin cart', () => {
           }
         ]
       })
-      .reply(200, [{ id: '4', quantity: 6 }, { id: '5', quantity: 7 }])
+      .reply(200, [
+        { id: '4', quantity: 6 },
+        { id: '5', quantity: 7 }
+      ])
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItems([
         {
           type: 'cart_item',
@@ -892,7 +897,7 @@ describe('Moltin cart', () => {
         { id: '5', quantity: 7, image_url: 'example-2.jpg' }
       ])
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItems([
         {
           type: 'cart_item',
@@ -928,7 +933,7 @@ describe('Moltin cart', () => {
       .delete('/carts/3/items/2')
       .reply(200, { data: items })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .RemoveItem('2')
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -945,7 +950,7 @@ describe('Moltin cart', () => {
       .delete('/carts/3/items')
       .reply(200, { data: items })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .RemoveAllItems()
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -962,7 +967,7 @@ describe('Moltin cart', () => {
       .delete('/carts/5/items/2')
       .reply(200, { data: items })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .RemoveItem('2')
       .then(response => {
         assert.lengthOf(response.data, 4)
@@ -979,7 +984,7 @@ describe('Moltin cart', () => {
       .delete('/carts/3')
       .reply(200, {})
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Delete()
       .then(response => {
         assert.deepEqual(response, {})
@@ -996,7 +1001,7 @@ describe('Moltin cart', () => {
       .delete('/carts/5')
       .reply(200, {})
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .Delete()
       .then(response => {
         assert.deepEqual(response, {})
@@ -1021,7 +1026,7 @@ describe('Moltin cart', () => {
       .post('/carts/3/items/5/taxes')
       .reply(200, { data: itemTax })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .AddItemTax('5', itemTax)
       .then(response => {
         assert.equal(response.data.code, itemTax.code)
@@ -1049,7 +1054,7 @@ describe('Moltin cart', () => {
       .put('/carts/3/items/5/taxes/6')
       .reply(200, { data: itemTax })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateItemTax('5', '6', itemTax)
       .then(response => {
         assert.equal(response.data.code, itemTax.code)
@@ -1069,7 +1074,7 @@ describe('Moltin cart', () => {
       .delete('/carts/3/items/5/taxes/6')
       .reply(200, {})
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .RemoveItemTax('5', '6')
       .then(response => {
         assert.deepEqual(response, {})
@@ -1095,7 +1100,7 @@ describe('Moltin cart', () => {
         status: 'complete'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Checkout('1', billing_address)
       .then(response => {
         assert.propertyVal(response, 'id', '1')
@@ -1122,7 +1127,7 @@ describe('Moltin cart', () => {
         status: 'complete'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Checkout(customerEmail, billing_address)
       .then(response => {
         assert.propertyVal(response, 'id', '1')
@@ -1149,7 +1154,7 @@ describe('Moltin cart', () => {
         status: 'complete'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .Checkout('1', billing_address, shipping_address)
       .then(response => {
         assert.propertyVal(response, 'id', '1')
@@ -1176,7 +1181,7 @@ describe('Moltin cart', () => {
         status: 'complete'
       })
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .Checkout('1', billing_address)
       .then(response => {
         assert.propertyVal(response, 'id', '1')
@@ -1201,7 +1206,7 @@ describe('Moltin cart', () => {
       })
       .reply(201, { id: '1', name: 'CartName', description: 'CartDescription' })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .CreateCart(
         {
           id: '1',
@@ -1234,7 +1239,7 @@ describe('Moltin cart', () => {
         description: 'UpdatedCartDescription'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .UpdateCart(
         {
           name: 'UpdatedCartName',
@@ -1260,7 +1265,7 @@ describe('Moltin cart', () => {
         id: '1'
       })
 
-    return Moltin.Cart()
+    return ElasticPath.Cart()
       .GetCartsList('testtoken')
       .then(response => {
         assert.propertyVal(response, 'id', '1')
@@ -1285,7 +1290,7 @@ describe('Moltin cart', () => {
       })
       .reply(200, {})
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .AddCustomerAssociation('customer-1', 'testtoken')
       .then(response => {
         assert.isObject(response)

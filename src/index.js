@@ -53,22 +53,29 @@ import SubscriptionPlansEndpoint from './endpoints/subscription-plan'
 import SubscriptionOfferingsEndpoint from './endpoints/subscription-offerings'
 import SubscriptionsEndpoint from './endpoints/subscriptions'
 
-import {cartIdentifier, tokenInvalid, getCredentials, resolveCredentialsStorageKey} from './utils/helpers'
+import {
+  cartIdentifier,
+  tokenInvalid,
+  getCredentials,
+  resolveCredentialsStorageKey
+} from './utils/helpers'
 import CatalogsEndpoint from './endpoints/catalogs'
 import ShopperCatalogEndpoint from './endpoints/catalog'
 
-export default class Moltin {
+export default class ElasticPath {
   constructor(config) {
     this.config = config
 
-    if (!config.disableCart) this.cartId = cartIdentifier(config.storage, config.name)
+    if (!config.disableCart)
+      this.cartId = cartIdentifier(config.storage, config.name)
 
     this.tokenInvalid = () => tokenInvalid(config)
 
     this.request = new RequestFactory(config)
     this.storage = config.storage
 
-    this.credentials = () => getCredentials(config.storage, resolveCredentialsStorageKey(config.name))
+    this.credentials = () =>
+      getCredentials(config.storage, resolveCredentialsStorageKey(config.name))
 
     this.Products = new ProductsEndpoint(config)
     this.PCM = new PCMEndpoint(config)
@@ -120,22 +127,24 @@ export default class Moltin {
     this.SubscriptionProducts = new SubscriptionProductsEndpoint(config)
     this.SubscriptionPlans = new SubscriptionPlansEndpoint(config)
     this.SubscriptionOfferings = new SubscriptionOfferingsEndpoint(config)
-    this.OneTimePasswordTokenRequest = new OneTimePasswordTokenRequestEndpoint(config)
+    this.OneTimePasswordTokenRequest = new OneTimePasswordTokenRequestEndpoint(
+      config
+    )
     this.Subscriptions = new SubscriptionsEndpoint(config)
   }
 
-  // Expose `Cart` class on Moltin class
+  // Expose `Cart` class on ElasticPath class
   Cart(id = this.cartId) {
     return !this.config.disableCart ? new CartEndpoint(this.request, id) : null
   }
 
-  // Expose `authenticate` function on the Moltin class
+  // Expose `authenticate` function on the ElasticPath class
   Authenticate() {
     return this.request.authenticate()
   }
 }
 
-// Export a function to instantiate the Moltin class
-const gateway = config => new Moltin(new Config(config))
+// Export a function to instantiate the ElasticPath class
+const gateway = config => new ElasticPath(new Config(config))
 
 export { gateway, MemoryStorageFactory, LocalStorageFactory }

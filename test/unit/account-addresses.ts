@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   accountAddressesArray as addresses,
   addressUpdate,
@@ -9,12 +9,12 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin addresses', () => {
-  const Moltin = MoltinGateway({
+describe('ElasticPath addresses', () => {
+  const ElasticPath = ElasticPathGateway({
     client_id: 'XXX'
   })
 
-  it('should return an array of account addresses', () => {
+  it.only('should return an array of account addresses', () => {
     // Intercept the API request
     nock(apiUrl, {
       reqheaders: {
@@ -24,7 +24,7 @@ describe('Moltin addresses', () => {
       .get('/accounts/account-1/addresses')
       .reply(200, { data: addresses })
 
-    return Moltin.AccountAddresses.All({ account: 'account-1' }).then(
+    return ElasticPath.AccountAddresses.All({ account: 'account-1' }).then(
       response => {
         assert.lengthOf(response.data, 2)
       }
@@ -42,7 +42,7 @@ describe('Moltin addresses', () => {
       .get('/accounts/account-1/addresses')
       .reply(200, { data: addresses })
 
-    return Moltin.AccountAddresses.All({
+    return ElasticPath.AccountAddresses.All({
       account: 'account-1',
       token: 'testtoken'
     }).then(response => {
@@ -60,7 +60,7 @@ describe('Moltin addresses', () => {
       .get('/accounts/account-1/addresses/address-1')
       .reply(200, { data: addresses[0] })
 
-    return Moltin.AccountAddresses.Get({
+    return ElasticPath.AccountAddresses.Get({
       account: 'account-1',
       address: 'address-1'
     }).then(response => {
@@ -79,7 +79,7 @@ describe('Moltin addresses', () => {
       .get('/accounts/account-1/addresses/address-1')
       .reply(200, { data: addresses[0] })
 
-    return Moltin.AccountAddresses.Get({
+    return ElasticPath.AccountAddresses.Get({
       account: 'account-1',
       address: 'address-1',
       token: 'testtoken'
@@ -98,7 +98,7 @@ describe('Moltin addresses', () => {
       .post('/accounts/account-1/addresses')
       .reply(201, { data: { ...addresses[0], id: undefined } })
 
-    return Moltin.AccountAddresses.Create({
+    return ElasticPath.AccountAddresses.Create({
       account: 'account-1',
       body: addresses[0]
     }).then(response => {
@@ -129,7 +129,7 @@ describe('Moltin addresses', () => {
       .post('/accounts/account-1/addresses')
       .reply(201, { data: addresses[0] })
 
-    return Moltin.AccountAddresses.Create({
+    return ElasticPath.AccountAddresses.Create({
       account: 'account-1',
       body: addresses[0],
       token: 'testtoken'
@@ -161,7 +161,7 @@ describe('Moltin addresses', () => {
       .put('/accounts/account-1/addresses/address-1')
       .reply(200, { data: { ...addresses[0], ...addressUpdate } })
 
-    return Moltin.AccountAddresses.Update({
+    return ElasticPath.AccountAddresses.Update({
       account: 'account-1',
       address: 'address-1',
       body: { ...addresses[0], ...addressUpdate }
@@ -195,7 +195,7 @@ describe('Moltin addresses', () => {
       .put('/accounts/account-1/addresses/address-1')
       .reply(200, { data: { ...addresses[0], ...addressUpdate } })
 
-    return Moltin.AccountAddresses.Update({
+    return ElasticPath.AccountAddresses.Update({
       account: 'account-1',
       address: 'address-1',
       token: 'testtoken',
@@ -229,7 +229,7 @@ describe('Moltin addresses', () => {
       .delete('/accounts/account-1/addresses/address-1')
       .reply(204)
 
-    return Moltin.AccountAddresses.Delete({
+    return ElasticPath.AccountAddresses.Delete({
       account: 'account-1',
       address: 'address-1'
     }).then(response => {
@@ -248,7 +248,7 @@ describe('Moltin addresses', () => {
       .delete('/accounts/account-1/addresses/address-1')
       .reply(204)
 
-    return Moltin.AccountAddresses.Delete({
+    return ElasticPath.AccountAddresses.Delete({
       account: 'account-1',
       address: 'address-1',
       token: 'testtoken'
@@ -266,8 +266,10 @@ describe('Moltin addresses', () => {
       .get('/addresses/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.AccountAddresses.Attributes('testtoken').then(response => {
-      assert.lengthOf(response.data, 3)
-    })
+    return ElasticPath.AccountAddresses.Attributes('testtoken').then(
+      response => {
+        assert.lengthOf(response.data, 3)
+      }
+    )
   })
 })

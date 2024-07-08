@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import nock from 'nock'
-import { gateway as MoltinGateway } from '../../src/moltin'
+import { gateway as ElasticPathGateway } from '../../src'
 import {
   flowsArray as flows,
   flowEntriesArray as flowEntries,
@@ -9,7 +9,7 @@ import {
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-describe('Moltin flows', () => {
+describe('ElasticPath flows', () => {
   it('should create a flow', () => {
     const newFlow = {
       slug: 'addresses' as const,
@@ -19,7 +19,7 @@ describe('Moltin flows', () => {
       enabled: true
     }
 
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -31,7 +31,7 @@ describe('Moltin flows', () => {
       .post('/flows')
       .reply(201, { data: { ...newFlow, id: 'flow1' } })
 
-    return Moltin.Flows.Create(newFlow).then(response => {
+    return ElasticPath.Flows.Create(newFlow).then(response => {
       assert.equal(response.data.id, 'flow1')
       assert.equal(response.data.type, newFlow.type)
       assert.equal(response.data.slug, newFlow.slug)
@@ -42,7 +42,7 @@ describe('Moltin flows', () => {
   })
 
   it('should update a flow', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -62,7 +62,7 @@ describe('Moltin flows', () => {
         name: 'Updated flow name'
       })
 
-    return Moltin.Flows.Update('flow-1', {
+    return ElasticPath.Flows.Update('flow-1', {
       name: 'Updated flow name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated flow name')
@@ -70,7 +70,7 @@ describe('Moltin flows', () => {
   })
 
   it('should get a flow', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -85,13 +85,13 @@ describe('Moltin flows', () => {
         name: 'Updated flow name'
       })
 
-    return Moltin.Flows.Get('flow-1').then(response => {
+    return ElasticPath.Flows.Get('flow-1').then(response => {
       assert.propertyVal(response, 'name', 'Updated flow name')
     })
   })
 
   it('should delete a flow', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -104,13 +104,13 @@ describe('Moltin flows', () => {
       .delete('/flows/flow-1')
       .reply(204)
 
-    return Moltin.Flows.Delete('flow-1').then(response => {
+    return ElasticPath.Flows.Delete('flow-1').then(response => {
       assert.equal(response, '{}')
     })
   })
 
   it('should return an array of flows', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -123,13 +123,13 @@ describe('Moltin flows', () => {
       .get('/flows')
       .reply(200, { data: flows })
 
-    return Moltin.Flows.All().then(response => {
+    return ElasticPath.Flows.All().then(response => {
       assert.lengthOf(response.data, 2)
     })
   })
 
   it('should return a single flow', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -142,13 +142,13 @@ describe('Moltin flows', () => {
       .get('/flows/flow-1')
       .reply(200, flows[0])
 
-    return Moltin.Flows.Get('flow-1').then(response => {
+    return ElasticPath.Flows.Get('flow-1').then(response => {
       assert.propertyVal(response, 'name', 'Flow 1')
     })
   })
 
   it('should return an array of flows entries', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -161,13 +161,13 @@ describe('Moltin flows', () => {
       .get('/flows/flow-1/entries')
       .reply(200, flowEntries)
 
-    return Moltin.Flows.GetEntries('flow-1').then(response => {
+    return ElasticPath.Flows.GetEntries('flow-1').then(response => {
       assert.lengthOf(response, 2)
     })
   })
 
   it('should return fields', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -180,13 +180,13 @@ describe('Moltin flows', () => {
       .get('/flows/12/fields')
       .reply(200)
 
-    return Moltin.Flows.GetFields('12').then(response => {
+    return ElasticPath.Flows.GetFields('12').then(response => {
       assert.lengthOf(response, 2)
     })
   })
 
   it('should return a limited number of flow entries', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -204,7 +204,7 @@ describe('Moltin flows', () => {
       })
       .reply(200, { data: flowEntries })
 
-    return Moltin.Flows.Limit(4)
+    return ElasticPath.Flows.Limit(4)
       .GetEntries('flow-1')
       .then(response => {
         assert.lengthOf(response.data, 2)
@@ -212,7 +212,7 @@ describe('Moltin flows', () => {
   })
 
   it('should return an array flow entries offset by a value', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -230,7 +230,7 @@ describe('Moltin flows', () => {
       })
       .reply(200, flowEntries)
 
-    return Moltin.Flows.Offset(10)
+    return ElasticPath.Flows.Offset(10)
       .GetEntries('flow-1')
       .then(response => {
         assert.lengthOf(response, 2)
@@ -238,7 +238,7 @@ describe('Moltin flows', () => {
   })
 
   it('should create a flow entry', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -257,7 +257,7 @@ describe('Moltin flows', () => {
         name: 'A new entry'
       })
 
-    return Moltin.Flows.CreateEntry('flow-1', {
+    return ElasticPath.Flows.CreateEntry('flow-1', {
       name: 'A new entry'
     }).then(response => {
       assert.propertyVal(response, 'name', 'A new entry')
@@ -265,7 +265,7 @@ describe('Moltin flows', () => {
   })
 
   it('should update an entry', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -285,7 +285,7 @@ describe('Moltin flows', () => {
         name: 'Updated flow name'
       })
 
-    return Moltin.Flows.UpdateEntry('flow-1', '1', {
+    return ElasticPath.Flows.UpdateEntry('flow-1', '1', {
       name: 'Updated flow name'
     }).then(response => {
       assert.propertyVal(response, 'name', 'Updated flow name')
@@ -293,7 +293,7 @@ describe('Moltin flows', () => {
   })
 
   it('should get an entry', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -308,13 +308,13 @@ describe('Moltin flows', () => {
         name: 'Updated flow name'
       })
 
-    return Moltin.Flows.GetEntry('flow-1', '1').then(response => {
+    return ElasticPath.Flows.GetEntry('flow-1', '1').then(response => {
       assert.propertyVal(response, 'name', 'Updated flow name')
     })
   })
 
   it('should delete an entry', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
 
@@ -327,12 +327,12 @@ describe('Moltin flows', () => {
       .delete('/flows/flow-1/entries/1')
       .reply(204)
 
-    return Moltin.Flows.DeleteEntry('flow-1', '1').then(response => {
+    return ElasticPath.Flows.DeleteEntry('flow-1', '1').then(response => {
       assert.equal(response, '{}')
     })
   })
   it('should delete flows by id', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -344,13 +344,13 @@ describe('Moltin flows', () => {
       .delete('/flows/1')
       .reply(204)
 
-    return Moltin.Flows.Delete('1').then(response => {
+    return ElasticPath.Flows.Delete('1').then(response => {
       assert.equal(response, '{}')
     })
   })
 
   it('should create a flow entry relationship', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -368,7 +368,7 @@ describe('Moltin flows', () => {
         type: 'brand'
       })
 
-    return Moltin.Flows.CreateEntryRelationship(
+    return ElasticPath.Flows.CreateEntryRelationship(
       'flow-1',
       'entry-1',
       'field-1',
@@ -381,7 +381,7 @@ describe('Moltin flows', () => {
   })
 
   it('should create one-to-many flow entry relationships', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -394,37 +394,37 @@ describe('Moltin flows', () => {
         data: [
           {
             type: 'brand',
-            id: 'id1',
+            id: 'id1'
           },
           {
             type: 'brand',
-            id: 'id2',
+            id: 'id2'
           }
         ]
       })
       .reply(201, [
         {
           type: 'brand',
-          id: 'id1',
+          id: 'id1'
         },
         {
           type: 'brand',
-          id: 'id2',
+          id: 'id2'
         }
       ])
 
-    return Moltin.Flows.CreateEntryRelationship(
+    return ElasticPath.Flows.CreateEntryRelationship(
       'flow-1',
       'entry-1',
       'field-1',
       [
         {
           type: 'brand',
-          id: 'id1',
+          id: 'id1'
         },
         {
           type: 'brand',
-          id: 'id2',
+          id: 'id2'
         }
       ]
     ).then(response => {
@@ -434,7 +434,7 @@ describe('Moltin flows', () => {
   })
 
   it('should update a flow entry relationship', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -452,7 +452,7 @@ describe('Moltin flows', () => {
         type: 'new'
       })
 
-    return Moltin.Flows.UpdateEntryRelationship(
+    return ElasticPath.Flows.UpdateEntryRelationship(
       'flow-1',
       'entry-1',
       'field-1',
@@ -465,7 +465,7 @@ describe('Moltin flows', () => {
   })
 
   it('should update one-to-many flow entry relationships', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -478,37 +478,37 @@ describe('Moltin flows', () => {
         data: [
           {
             type: 'brand',
-            id: 'new-id1',
+            id: 'new-id1'
           },
           {
             type: 'brand',
-            id: 'new-id2',
+            id: 'new-id2'
           }
         ]
       })
       .reply(201, [
         {
           type: 'brand',
-          id: 'new-id1',
+          id: 'new-id1'
         },
         {
           type: 'brand',
-          id: 'new-id2',
+          id: 'new-id2'
         }
       ])
 
-    return Moltin.Flows.UpdateEntryRelationship(
+    return ElasticPath.Flows.UpdateEntryRelationship(
       'flow-1',
       'entry-1',
       'field-1',
       [
         {
           type: 'brand',
-          id: 'new-id1',
+          id: 'new-id1'
         },
         {
           type: 'brand',
-          id: 'new-id2',
+          id: 'new-id2'
         }
       ]
     ).then(response => {
@@ -518,7 +518,7 @@ describe('Moltin flows', () => {
   })
 
   it('should update a flow entry relationship', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     // Intercept the API request
@@ -530,7 +530,7 @@ describe('Moltin flows', () => {
       .delete('/flows/flow-1/entries/entry-1/relationships/field-1')
       .reply(204)
 
-    return Moltin.Flows.DeleteEntryRelationship(
+    return ElasticPath.Flows.DeleteEntryRelationship(
       'flow-1',
       'entry-1',
       'field-1'
@@ -540,7 +540,7 @@ describe('Moltin flows', () => {
   })
 
   it('should return an array of attributes', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     nock(apiUrl, {
@@ -551,13 +551,13 @@ describe('Moltin flows', () => {
       .get('/flows/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Flows.Attributes('testtoken').then(response => {
+    return ElasticPath.Flows.Attributes('testtoken').then(response => {
       assert.lengthOf(response.data, 3)
     })
   })
 
   it('should return an array of attributes by flow type', () => {
-    const Moltin = MoltinGateway({
+    const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
     nock(apiUrl, {
@@ -568,10 +568,11 @@ describe('Moltin flows', () => {
       .get('/flows/flow-type-1/attributes')
       .reply(200, attributeResponse)
 
-    return Moltin.Flows.GetFlowTypeAttributes('flow-type-1', 'testtoken').then(
-      response => {
-        assert.lengthOf(response.data, 3)
-      }
-    )
+    return ElasticPath.Flows.GetFlowTypeAttributes(
+      'flow-type-1',
+      'testtoken'
+    ).then(response => {
+      assert.lengthOf(response.data, 3)
+    })
   })
 })
