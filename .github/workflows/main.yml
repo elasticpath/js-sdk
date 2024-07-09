@@ -88,26 +88,26 @@ jobs:
         with:
           files: test-results/**/*.xml
 
-  release:
-    needs: [lint, build, test]
-    runs-on: ubuntu-20.04
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta') }}
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELASTICPATH }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'yarn'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ github.event.repository.name }}-${{ github.sha }}-${{ github.run_id }}-bundles
-          path: dist
-      - name: Release, publish package
-        run: |
-          yarn install
-          npx semantic-release
+#  release:
+#    needs: [lint, build, test]
+#    runs-on: ubuntu-20.04
+#    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta') }}
+#    env:
+#      NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELASTICPATH }}
+#      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v3
+#      - uses: actions/setup-node@v3
+#        with:
+#          node-version: '18'
+#          cache: 'yarn'
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: ${{ github.event.repository.name }}-${{ github.sha }}-${{ github.run_id }}-bundles
+#          path: dist
+#      - name: Release, publish package
+#        run: |
+#          yarn install
+#          npx semantic-release
