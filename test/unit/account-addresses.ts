@@ -14,8 +14,9 @@ describe('ElasticPath addresses', () => {
     client_id: 'XXX'
   })
 
-  it.only('should return an array of account addresses', () => {
+  it('should return an array of account addresses', () => {
     // Intercept the API request
+
     nock(apiUrl, {
       reqheaders: {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'

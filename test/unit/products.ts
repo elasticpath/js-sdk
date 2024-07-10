@@ -6,10 +6,12 @@ import { productsArray as products } from '../factories'
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
 describe('ElasticPath products', () => {
-  it('should return an array of products', () => {
+  it.only('should return an array of products', () => {
     const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
     })
+
+    console.log(ElasticPath.Products)
 
     // Intercept the API request
     nock(apiUrl, {

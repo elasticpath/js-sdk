@@ -17,8 +17,6 @@ describe('ElasticPath variations', () => {
     storage: new MemoryStorageFactory()
   })
 
-  console.log('expected auth header: ', `Bearer ${accessToken}`)
-
   it('should return an a single variation', () => {
     nock(apiUrl, {
       reqheaders: {
