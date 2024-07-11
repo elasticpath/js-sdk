@@ -118,7 +118,7 @@ describe('ElasticPath authentication', () => {
 
     ElasticPath.Authenticate().then(() => {
       const { storage } = ElasticPath.request
-      assert.exists(storage.get('elasticpathCredentials'))
+      assert.exists(storage.get('epCredentials'))
     })
   })
 
@@ -144,7 +144,7 @@ describe('ElasticPath authentication', () => {
 
     return ElasticPath.Authenticate().then(() => {
       const { storage } = ElasticPath.request
-      let credentials = JSON.parse(storage.get('elasticpathCredentials'))
+      let credentials = JSON.parse(storage.get('epCredentials'))
       assert.equal(
         credentials.access_token,
         'a550d8cbd4a4627013452359ab69694cd446615b'
@@ -171,7 +171,7 @@ describe('ElasticPath authentication', () => {
 
       return ElasticPath.Authenticate().then(() => {
         const { storage: storage2 } = ElasticPath.request
-        credentials = JSON.parse(storage2.get('elasticpathCredentials'))
+        credentials = JSON.parse(storage2.get('epCredentials'))
         assert.equal(
           credentials.access_token,
           'a550d8cbd4a4627013452359ab69694cd446615a'

@@ -178,8 +178,6 @@ class RequestFactory {
     const storageKey = resolveCredentialsStorageKey(config.name)
     const credentials = getCredentials(storage, storageKey)
 
-    console.log(storageKey, credentials)
-
     const req = cred => {
       const access_token = cred ? cred.access_token : null
 

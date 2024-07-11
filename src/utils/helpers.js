@@ -171,8 +171,6 @@ export function buildURL(endpoint, params) {
     return `${endpoint}?${paramsString}`
   }
 
-  console.log('build', endpoint)
-
   return endpoint
 }
 
@@ -292,6 +290,7 @@ export function tokenInvalid({ storage, client_id, reauth, name }) {
 
   if (credentials.client_id !== client_id)
     return handleInvalid('Token status: client_id mismatch')
+
 
   if (Math.floor(Date.now() / 1000) >= credentials.expires)
     return handleInvalid('Token status: credentials expired')

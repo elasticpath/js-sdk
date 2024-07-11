@@ -130,7 +130,7 @@ Storage keys used for storage solutions are prefixed with the name provided and 
 `my-first-gateway_ep_cart`, `my-first-gateway_ep_credentials` and `my-first-gateway_ep_currency`.
 
 If no name property is provided to the EPCCGateway function, the legacy naming is maintained:
-`mcart`, `elasticpathCredentials` and `mcurrency`
+`mcart`, `epCredentials` and `mcurrency`
 
 ### Included Headers
 
