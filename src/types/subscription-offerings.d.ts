@@ -20,27 +20,60 @@ export interface SubscriptionOfferingBase {
   attributes: {
     name: string
     description: string
-    created_at: string
-    updated_at: string
-  },
-  relationships?: {
-    [key: string]: {
-      links?: {
-        related?: string
-        self?: string
-      },
-      data?: {
-        type?: string
-        id?: string
-      }
-    }
   }
 }
 
+export interface SubscriptionOfferingRelationships {
+  relationships?: {
+    plans?: {
+      data: {
+        id: string
+        type: 'subscription_offering_plan'
+      }[]
+      links: {
+        related: string
+      }
+    }
+    products?: {
+      data: {
+        id: string
+        type: 'subscription_offering_product'
+      }[]
+      links: {
+        related: string
+      }
+    }
+    proration_policy?: {
+      data: {
+        id: string
+        type: 'subscription_proration_policy'
+      }
+    }
+  }
+
+}
+
+export interface SubscriptionOfferingBuildProduct {
+  external_ref?: string
+  name: string
+  description?: string
+  sku?: string
+  main_image?: string
+  price?: {
+    [key: string]: {
+      amount: number
+      includes_tax?: boolean
+    }
+  }
+  price_units?: {
+    unit: "day" | "month"
+    amount: number
+  }
+}
 export interface SubscriptionOfferingBuildBody {
   name: string
   description: string
-  products: string[]
+  products: string[] | SubscriptionOfferingBuildProduct[]
   plans: string[]
 }
 
@@ -52,11 +85,23 @@ export interface SubscriptionOfferingAttachPlanBody {
   plans: string[]
 }
 
-export interface SubscriptionOffering extends Identifiable, SubscriptionOfferingBase {
+export interface SubscriptionOfferingAttachProrationPolicyBody {
+  type: 'subscription_proration_policy'
+  id: string
+}
 
+export interface SubscriptionOffering extends Identifiable, SubscriptionOfferingBase, SubscriptionOfferingRelationships {
+  meta: {
+    external_product_refs: string[]
+    owner: string
+    timestamps: {
+      created_at: string
+      updated_at: string
+    }
+  }
 }
 export type SubscriptionOfferingCreate = Omit<SubscriptionOfferingBase, 'attributes'> & {attributes: Partial<SubscriptionOfferingBase['attributes']>}
-export type SubscriptionOfferingUpdate = Omit<SubscriptionOffering, 'attributes'> & {attributes: Partial<SubscriptionOfferingBase['attributes']>}
+export type SubscriptionOfferingUpdate = Identifiable & Omit<SubscriptionOfferingBase, 'attributes'> & {attributes: Partial<SubscriptionOfferingBase['attributes']>}
 
 type SubscriptionOfferingAttachmentsRelationships = {
   relationships: {
@@ -69,7 +114,24 @@ type SubscriptionOfferingAttachmentsRelationships = {
   }
 }
 
-export type SubscriptionOfferingPlan = SubscriptionPlan & SubscriptionOfferingAttachmentsRelationships
+export interface SubscriptionOfferingFilter {
+  eq?: {
+    "products.external_ref": string
+  }
+}
+
+type SubscriptionOfferingPlanMeta = {
+  meta: {
+    active_plan?: boolean
+    owner: string
+    timestamps: {
+      created_at: string
+      updated_at: string
+    }
+  }
+}
+
+export type SubscriptionOfferingPlan = Omit<SubscriptionPlan, 'meta'> & SubscriptionOfferingAttachmentsRelationships & SubscriptionOfferingPlanMeta
 export type SubscriptionOfferingProduct = SubscriptionProduct & SubscriptionOfferingAttachmentsRelationships
 /**
  * Subscription Offering Endpoints
@@ -80,7 +142,7 @@ export interface SubscriptionOfferingsEndpoint
     SubscriptionOffering,
     SubscriptionOfferingCreate,
     SubscriptionOfferingUpdate,
-    never,
+    SubscriptionOfferingFilter,
     never,
     never
     > {
@@ -99,4 +161,8 @@ export interface SubscriptionOfferingsEndpoint
   AttachPlans(offeringId: string, body: SubscriptionOfferingAttachPlanBody): Promise<Resource<SubscriptionPlan[]>>
 
   RemovePlan(offeringId: string, planId: string): Promise<void>
+
+  AttachProrationPolicy(offeringId: string, body: SubscriptionOfferingAttachProrationPolicyBody | null): Promise<Resource<SubscriptionOfferingAttachProrationPolicyBody>>
+
+  ReplaceProducts(offeringId: string, productIds: string[]): Promise<Resource<SubscriptionProduct[]>>
 }
