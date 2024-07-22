@@ -2,39 +2,45 @@
 
 # Elastic Path Commerce Cloud JavaScript SDK
 
-[![npm version](https://img.shields.io/npm/v/@elasticpath/sdk.svg)](https://www.npmjs.com/package/@elasticpath/sdk)
+[![npm version](https://img.shields.io/npm/v/@elasticpath/js-sdk.svg)](https://www.npmjs.com/package/@elasticpath/js-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/elasticpath/js-sdk/issues)
 [![follow on Twitter](https://img.shields.io/twitter/follow/elasticpath?style=social&logo=twitter)](https://twitter.com/intent/follow?screen_name=elasticpath)
 
-> A simple to use API interface to help get you off the ground quickly and efficiently with your Elastic Path Commerce Cloud JavaScript apps.
+> [!IMPORTANT]  
+> This repository has been migrated from [@moltin/sdk](https://www.npmjs.com/package/@moltin/sdk). If you are a previous user of the Moltin SDK, read our [guide](MIGRATION_GUIDE.md) to learn more about migrating your implementation to this codebase  
+
+A simple to use API interface to help get you off the ground quickly and efficiently with your Elastic Path Commerce Cloud JavaScript apps.
 
 📚 [API reference](https://documentation.elasticpath.com/commerce-cloud/docs/developer/get-started/sdk.html#officially-supported-sdk) &mdash; 📚 [Elastic Path Commerce Cloud](https://www.elasticpath.com)
 
 ## 🛠 Installation
 
-Install the package from [npm](https://www.npmjs.com/package/@elasticpath/sdk) and import in your project.
+Install the package from [npm](https://www.npmjs.com/package/@elasticpath/js-sdk) and import in your project.
 
 ```bash
-npm install --save @elasticpath/sdk
+npm install --save @elasticpath/js-sdk
 ```
 
 ## ⛽️ Usage
 
-To get started, instantiate a new ElasticPath client with your store credentials.
+To get started, instantiate a new Elastic Path client with your store credentials.
 
-> **Note:** This requires an [Elastic Path Commerce Cloud](https://www.elasticpath.com) account.
+
+> [!NOTE]  
+> This requires an [Elastic Path Commerce Cloud](https://www.elasticpath.com) account. You can sign up for a free trial [here](https://cm.elasticpath.com/free-trial)
+
 
 ```js
 // JavaScript
-import { gateway as ElasticPathGateway } from '@elasticpath/sdk'
+import { gateway as ElasticPathGateway } from '@elasticpath/js-sdk'
 
 const ElasticPath = ElasticPathGateway({
   client_id: 'XXX'
 })
 
 // Node.js
-const ElasticPathGateway = require('@elasticpath/sdk').gateway
+const ElasticPathGateway = require('@elasticpath/js-sdk').gateway
 
 const ElasticPath = ElasticPathGateway({
   client_id: 'XXX',
@@ -45,7 +51,7 @@ const ElasticPath = ElasticPathGateway({
 Alternatively you can include the `UMD` bundle via [UNPKG](https://unpkg.com) like so:
 
 ``` html
-<script src="https://unpkg.com/@elasticpath/sdk"></script>
+<script src="https://unpkg.com/@elasticpath/js-sdk"></script>
 
 <script>
   const ElasticPath = elasticpath.gateway({
@@ -88,7 +94,7 @@ const ElasticPath = ElasticPathGateway({
 By default the Elastic Path Commerce Cloud SDK persists data to `window.localStorage` in the browser and `node-localstorage` in Node. If this doesn't suit your needs you can override the default storage with a `MemoryStorageFactory` which will persist data for the life cycle of the JavaScript VM:
 
 ```js
-import { gateway as ElasticPathGateway, MemoryStorageFactory } from '@elasticpath/sdk'
+import { gateway as ElasticPathGateway, MemoryStorageFactory } from '@elasticpath/js-sdk'
 
 const ElasticPath = ElasticPathGateway({
   client_id: 'XXX',
@@ -113,7 +119,7 @@ You can support multiple gateways with a `name` property when initializing the g
 `name` should be unique to avoid sharing storage keys with the other gateways of the same name.
 
 ```js
-import { gateway as EPCCGateway } from "@elasticpath/sdk"
+import { gateway as EPCCGateway } from "@elasticpath/js-sdk"
 
 const gatewayOne = EPCCGateway({
     name: "my-first-gateway",
@@ -140,8 +146,8 @@ You can pass them into the config used by the gateway like this:
 
 ``` TypeScript
 // JavaScript
-import { gateway as ElasticPathGateway } from '@elasticpath/sdk'
-// const ElasticPathGateway = require('@elasticpath/sdk').gateway -> for Node
+import { gateway as ElasticPathGateway } from '@elasticpath/js-sdk'
+// const ElasticPathGateway = require('@elasticpath/js-sdk').gateway -> for Node
 
 const ElasticPath = ElasticPathGateway({
     client_id: 'XXX',
@@ -228,7 +234,7 @@ The Elastic Path Commerce Cloud JavaScript SDK is fully supported in Typescript.
 Imported module will contain all interfaces needed to consume backend services. i.e:
 
 ```TypeScript
-import * as elasticpath from '@elasticpath/sdk';
+import * as elasticpath from '@elasticpath/js-sdk';
 
 const product: elasticpath.ProductBase = {...}
 ```
@@ -246,7 +252,7 @@ const product: Product = {...}
 Here is an example of a simple product creation:
 
 ```TypeScript
-import { ElasticPath, gateway, ProductBase, Resource } from '@elasticpath/sdk';
+import { ElasticPath, gateway, ProductBase, Resource } from '@elasticpath/js-sdk';
 
 async function main() {
   const g: ElasticPath = gateway({client_id, client_secret});
@@ -274,14 +280,14 @@ async function main() {
 }
 ```
 
-You can also extend any base interface compatible with flows to create any custom interfaces that you might be using by re-declaring `@elasticpath/sdk` module. Following example adds several properties to `ProductsBase` interface that correspond to flows added to the backend.
+You can also extend any base interface compatible with flows to create any custom interfaces that you might be using by re-declaring `@elasticpath/js-sdk` module. Following example adds several properties to `ProductsBase` interface that correspond to flows added to the backend.
 
 In your project add a definition file (with a `.d.ts` extension) with a following code:
 
 ```TypeScript
-import * as elasticpath from '@elasticpath/sdk';
+import * as elasticpath from '@elasticpath/js-sdk';
 
-declare module '@elasticpath/sdk' {
+declare module '@elasticpath/js-sdk' {
 
   interface Weight {
     g: number;
