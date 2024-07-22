@@ -1315,7 +1315,7 @@ describe('ElasticPath cart', () => {
       })
       .reply(200, {})
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .AddAccountAssociation('account-1', 'testtoken')
       .then(response => {
         assert.isObject(response)
@@ -1341,7 +1341,7 @@ describe('ElasticPath cart', () => {
       })
       .reply(204, {})
 
-    return Moltin.Cart('5')
+    return ElasticPath.Cart('5')
       .RemoveAccountAssociation('account-1', 'testtoken')
       .then(response => {
         assert.isObject(response)
