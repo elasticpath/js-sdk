@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@elasticpath/sdk@../..":
+"@elasticpath/js-sdk@../..":
   version "0.0.0-semantic-release"
   dependencies:
     es6-promise "^4.0.5"

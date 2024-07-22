@@ -1,5 +1,5 @@
 const express = require('express')
-const ElasticPathGateway = require('@elasticpath/sdk').gateway
+const ElasticPathGateway = require('@elasticpath/js-sdk').gateway
 
 const app = express()
 
