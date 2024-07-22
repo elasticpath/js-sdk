@@ -11,7 +11,7 @@ We are also taking this opportunity to entirely remove legacy naming (moltin) fr
 - **Package Name**: The package name has changed from `@moltin/sdk` to `@elasticpath/js-sdk`.
 - **GitHub Repository**: The GitHub repository has moved from `moltin/js-sdk` to `elasticpath/js-sdk`.
 
-> ![NOTE]
+> [!NOTE]
 > We are aligning the package name with the repository name, i.e. `js-sdk`, rather than just `sdk`. We are reserving the `sdk` name for future use.
 
 ## Installation
@@ -67,7 +67,7 @@ If you are directly accessing any of the state the SDK persists in localStorage 
 - **mcurrency** becomes **epcurrency**
 - **moltinCredentials** becomes **epCredentials**
 
-> ![CAUTION]
+> [!CAUTION]
 > Accessing this SDK state directly is **not recommended**
 
 The compiled SDK and types published in `/dist` as `moltin.cjs.js`, `moltin.d.ts`, `moltin.esm.js`, and `moltin.js` are now published as `index`
