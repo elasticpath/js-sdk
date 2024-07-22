@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@elasticpath/sdk": "../..",
+    "@elasticpath/js-sdk": "../..",
     "express": "^4.16.3"
   }
 }

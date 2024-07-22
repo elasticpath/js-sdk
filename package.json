@@ -1,9 +1,9 @@
 {
-  "name": "@elasticpath/sdk",
-  "description": "SDK for the ElasticPath eCommerce API",
+  "name": "@elasticpath/js-sdk",
+  "description": "SDK for the Elastic Path eCommerce API",
   "version": "0.0.0-semantic-release",
   "homepage": "https://github.com/elasticpath/js-sdk",
-  "author": "ElasticPath (https://elasticpath.com/)",
+  "author": "Elastic Path (https://elasticpath.com/)",
   "files": [
     "dist/**"
   ],
