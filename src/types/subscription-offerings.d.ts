@@ -3,6 +3,7 @@
  * Description: Subscription Offerings.
  * DOCS: TODO: add docs when ready
  */
+
 import {
   Identifiable,
   CrudQueryableResource, Resource
@@ -15,6 +16,7 @@ import { SubscriptionPlan } from './subscription-plans'
  * For custom flows, extend this interface
  * DOCS: TODO: add docs when ready
  */
+
 export interface SubscriptionOfferingBase {
   type: string
   attributes: {
@@ -133,6 +135,7 @@ type SubscriptionOfferingPlanMeta = {
 
 export type SubscriptionOfferingPlan = Omit<SubscriptionPlan, 'meta'> & SubscriptionOfferingAttachmentsRelationships & SubscriptionOfferingPlanMeta
 export type SubscriptionOfferingProduct = SubscriptionProduct & SubscriptionOfferingAttachmentsRelationships
+
 /**
  * Subscription Offering Endpoints
  * DOCS: TODO: add docs when ready
