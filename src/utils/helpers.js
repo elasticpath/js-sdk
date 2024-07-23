@@ -124,7 +124,7 @@ function formatQueryString(key, value) {
   return `${key}=${value}`
 }
 
-function buildQueryParams({ includes, sort, limit, offset, filter }) {
+function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSlugs}) {
   const query = {}
 
   if (includes) {
@@ -147,6 +147,10 @@ function buildQueryParams({ includes, sort, limit, offset, filter }) {
     query.filter = filter
   }
 
+  if(useTemplateSlugs) {
+    query.useTemplateSlugs = useTemplateSlugs
+  }
+
   return Object.keys(query)
     .map(k => formatQueryString(k, query[k]))
     .join('&')
@@ -164,13 +168,13 @@ export function buildURL(endpoint, params) {
     params.sort ||
     params.limit ||
     params.offset ||
-    params.filter
+    params.filter ||
+    params.useTemplateSlugs
   ) {
     const paramsString = buildQueryParams(params)
 
     return `${endpoint}?${paramsString}`
   }
-
   return endpoint
 }
 

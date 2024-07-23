@@ -145,7 +145,7 @@ export interface SubscriptionOfferingsEndpoint
     SubscriptionOfferingFilter,
     never,
     never
-    > {
+  > {
   endpoint: 'offerings'
 
   Build(body: SubscriptionOfferingBuildBody): Promise<Resource<SubscriptionOffering>>
@@ -165,4 +165,3 @@ export interface SubscriptionOfferingsEndpoint
   AttachProrationPolicy(offeringId: string, body: SubscriptionOfferingAttachProrationPolicyBody | null): Promise<Resource<SubscriptionOfferingAttachProrationPolicyBody>>
 
   ReplaceProducts(offeringId: string, productIds: string[]): Promise<Resource<SubscriptionProduct[]>>
-}

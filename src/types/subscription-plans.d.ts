@@ -16,30 +16,37 @@ import {
 export interface SubscriptionPlanBase {
   type: string
   attributes: {
-    name: string,
-    description?: string,
-    status: string,
-    billing_interval_type: string,
-    billing_frequency: number,
-    billing_day?: number,
-    billing_month_day?: number,
-    trial_period?: number,
-    plan_length: number,
-    end_behavior: string,
-    can_pause: boolean,
-    can_resume: boolean,
-    can_cancel: boolean,
-    base_price_percentage: number,
-    updated_at: string,
-    created_at: string
+    name: string
+    description?: string
+    billing_interval_type: string
+    billing_frequency: number
+    trial_period?: number
+    plan_length: number
+    end_behavior: string
+    can_pause: boolean
+    can_resume: boolean
+    can_cancel: boolean
+    base_price_percentage: number | null | undefined
+    fixed_price: {
+      [key: string]: {
+        amount: number
+        includes_tax?: boolean
+      }
+    } | null | undefined
   },
 }
 
 export interface SubscriptionPlan extends Identifiable, SubscriptionPlanBase {
-
+  meta: {
+    owner: string
+    timestamps: {
+      created_at: string
+      updated_at: string
+    }
+  }
 }
 export type SubscriptionPlanCreate = Omit<SubscriptionPlanBase, 'attributes'> & {attributes: Partial<SubscriptionPlanBase['attributes']>}
-export type SubscriptionPlanUpdate = Omit<SubscriptionPlan, 'attributes'> & {attributes: Partial<SubscriptionPlanBase['attributes']>}
+export type SubscriptionPlanUpdate = Identifiable & Omit<SubscriptionPlanBase, 'attributes'> & {attributes: Partial<SubscriptionPlanBase['attributes']>}
 
 /**
  * Subscription Plan Endpoints

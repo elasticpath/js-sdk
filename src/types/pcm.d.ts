@@ -39,6 +39,7 @@ export interface PcmProductBase extends PcmProductRelationships {
     locales?: { [key in Locales]?: { name?: string; description?: string } }
     components?: ProductComponents
     custom_inputs?: CustomInputs
+    tags?: string[]
   }
 }
 
@@ -52,8 +53,8 @@ export interface PcmJob extends Identifiable, PcmJobBase {
 export interface ProductComponents {
   [key: string]: {
     name: string
-    min?: number
-    max?: number
+    min?: number | null
+    max?: number | null
     sort_order?: number | null
     options: ProductComponentOption[]
   }
@@ -85,6 +86,7 @@ export interface ProductComponentOption {
   quantity: number
   type: string
   sort_order?: number | null
+  default?: boolean
   meta: {
     name: string
     sku: string
@@ -243,5 +245,5 @@ export interface PcmProductsEndpoint
    * @param filter - products filters
    * @constructor
    */
-  ExportProducts(filter?: PcmProductFilter): Promise<Resource<PcmJob>>
+  ExportProducts(filter?: PcmProductFilter, useTemplateSlugs?: boolean): Promise<Resource<PcmJob>>
 }

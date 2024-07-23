@@ -1,15 +1,30 @@
 import CRUDExtend from '../extends/crud'
 import { buildURL } from '../utils/helpers'
 
-class PromotionsEndpoint extends CRUDExtend {
+class RulePromotionsEndpoint extends CRUDExtend {
   constructor(endpoint) {
     super(endpoint)
 
-    this.endpoint = 'promotions'
+    this.endpoint = 'rule-promotions'
   }
 
-  Attributes() {
-    return this.request.send(`${this.endpoint}/attributes`, 'GET')
+  Create(body) {
+    return this.request.send(this.endpoint, 'POST', {
+      ...body,
+      type: 'rule_promotion'
+    })
+  }
+
+  Update(id, body, token = null) {
+    return this.request.send(
+      `${this.endpoint}/${id}`,
+      'PUT',
+      {
+        ...body,
+        type: 'rule_promotion'
+      },
+      token
+    )
   }
 
   Codes(promotionId, token = null) {
@@ -27,35 +42,20 @@ class PromotionsEndpoint extends CRUDExtend {
     )
   }
 
-  PromotionJobs(promotionId) {
-    const { limit, offset, filter } = this
-    return this.request.send(
-      buildURL(`${this.endpoint}/${promotionId}/jobs`, {
-        limit,
-        offset,
-        filter
-      }),
-      'GET'
-    )
-  }
-
   AddCodes(promotionId, codes) {
     return this.request.send(`${this.endpoint}/${promotionId}/codes`, 'POST', {
       type: 'promotion_codes',
       codes
     })
   }
-
-  AddCodesJob(promotionId, body) {
-    return this.request.send(`${this.endpoint}/${promotionId}/jobs`, 'POST', body)
-  }
-
+  
   DeleteCode(promotionId, codeId) {
     return this.request.send(
       `${this.endpoint}/${promotionId}/codes/${codeId}`,
       'DELETE'
     )
   }
+
 
   DeleteCodes(promotionId, codes) {
     return this.request.send(
@@ -67,22 +67,5 @@ class PromotionsEndpoint extends CRUDExtend {
       }
     )
   }
-
-  History(promotionId) {
-    const { limit, offset } = this
-
-    return this.request.send(
-      buildURL(`${this.endpoint}/${promotionId}/history`, {
-        limit,
-        offset
-      }),
-      'GET'
-    )
-  }
-
-  GetCodeExportFile(promotionId, jobId) {
-    return this.request.send(`${this.endpoint}/${promotionId}/jobs/${jobId}/file`, 'Get')
-  }
 }
-
-export default PromotionsEndpoint
+export default RulePromotionsEndpoint

@@ -6,8 +6,10 @@
 import {
   Identifiable,
   CrudQueryableResource,
-  Resource
+  Resource,
+  ResourcePage
 } from './core'
+import { SubscriptionOfferingPlan, SubscriptionOfferingProduct } from './subscription-offerings'
 
 /**
  * Core Subscription Base Interface
@@ -15,41 +17,29 @@ import {
  * DOCS: TODO: add docs when ready
  */
 export interface SubscriptionBase {
-  type: "subscription",
+  type: "subscription"
   attributes: {
-    account_id: string,
+    external_ref?: string
+    account_id: string
     offering: {
       id: string
-      type: "subscription-offering",
+      type: "subscription_offering"
       attributes: {
-        name: string,
-        description: string,
-        updated_at: string,
-        created_at: string
-      },
-      relationships: {
-        plans: {
-          links: {
-            related: string,
-            self: string
-          },
-          data: {
-            type: "offering-plan",
-            id: string
-          }
-        }
-      },
+        external_ref?: string
+        name: string
+        description: string
+      }
       meta: {
         owner: string
+        timestamps: {
+          updated_at: string
+          created_at: string
+          canceled_at: string | null
+        }
       }
-    },
-    plan_id: string,
-    currency: string,
-    updated_at: string,
-    created_at: string
-  },
-  meta: {
-    owner: string
+    }
+    plan_id: string
+    currency: string
   }
 }
 
@@ -60,6 +50,13 @@ export interface SubscriptionCreate {
   currency: string,
   meta?: {
     owner?: string
+  }
+}
+
+export interface SubscriptionUpdate extends Identifiable {
+  type: 'subscription'
+  attributes: {
+    plan_id: string
   }
 }
 
@@ -93,9 +90,42 @@ export interface SubscriptionInvoice extends Identifiable {
   }
 }
 
+export interface SubscriptionFilter {
+  eq?: {
+    account_id?: string
+  }
+}
+
 
 export interface Subscription extends Identifiable, SubscriptionBase {
+  relationships: {
+    subscriber: {
+      data: {
+        id: string
+        type: 'subscription_subscriber'
+      }
+    }
+  }
+  meta: {
+    owner: string
+    status: 'active' | 'inactive'
+    canceled: boolean
+    paused: boolean
+    closed: boolean
+    timestamps: {
+      updated_at: string
+      created_at: string
+      canceled_at: string | null
+    }
+  }
+}
 
+export type SubscriptionsInclude = 'plans'
+
+export type SubscriptionsStateAction = 'cancel'| 'pause'| 'resume'
+
+export interface SubscriptionsIncluded {
+  plans: SubscriptionOfferingPlan[]
 }
 
 /**
@@ -106,12 +136,20 @@ export interface SubscriptionsEndpoint
   extends Omit<CrudQueryableResource<
     Subscription,
     SubscriptionCreate,
+    SubscriptionUpdate,
+    SubscriptionFilter,
     never,
-    never,
-    never,
-    never
-    >, "Filter" | "Limit" | "Offset" | "Sort" | "With" | "Attributes" | "Update" | "Link" > {
+    SubscriptionsInclude
+    >, "All" | "Attributes" | "Link" > {
   endpoint: 'subscriptions'
 
+  All(token?: string): Promise<ResourcePage<Subscription, SubscriptionsIncluded>>
+
   GetInvoices(id: string): Promise<Resource<SubscriptionInvoice[]>>
+
+  GetAttachedProducts(id: string) : Promise<Resource<SubscriptionOfferingProduct[]>>
+
+  GetAttachedPlans(id: string) : Promise<Resource<SubscriptionOfferingPlan[]>>
+
+  CreateState(id: string, action: SubscriptionsStateAction) : Promise<void>
 }

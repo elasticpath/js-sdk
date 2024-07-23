@@ -58,6 +58,17 @@ class SubscriptionOfferingsEndpoint extends CRUDExtend {
     return this.request.send(`${this.endpoint}/${id}/plans`, 'GET')
   }
 
+  AttachProrationPolicy(offeringId, body) {
+    return this.request.send(`${this.endpoint}/${offeringId}/relationships/proration-policies`, 'PUT', {
+      data: body
+    }, undefined, undefined, false)
+  }
+
+  ReplaceProducts(offeringId, productIds) {
+    return this.request.send(`${this.endpoint}/${offeringId}/products/replace`, 'PUT', {
+      products: productIds
+    })
+  }
 }
 
 export default SubscriptionOfferingsEndpoint

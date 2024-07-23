@@ -60,6 +60,13 @@ import { SubscriptionPlansEndpoint } from './types/subscription-plans'
 import { SubscriptionOfferingsEndpoint } from './types/subscription-offerings'
 import { OneTimePasswordTokenRequestEndpoint } from './types/one-time-password-token-request'
 import { SubscriptionsEndpoint } from './types/subscriptions'
+import { RulePromotionsEndpoint } from './types/rule-promotions'
+import { SubscriptionSubscribersEndpoint } from './types/subscription-subscribers'
+import { SubscriptionJobsEndpoint } from './types/subscription-jobs'
+import { SubscriptionSchedulesEndpoint } from './types/subscription-schedules'
+import { CustomApisEndpoint } from './types/custom-apis'
+import { SubscriptionDunningRulesEndpoint } from './types/subscription-dunning-rules'
+import { SubscriptionProrationPoliciesEndpoint } from './types/subscription-proration-policies'
 
 export * from './types/config'
 export * from './types/storage'
@@ -130,6 +137,13 @@ export * from './types/subscription-plans'
 export * from './types/subscription-offerings'
 export * from './types/one-time-password-token-request'
 export * from './types/subscriptions'
+export * from './types/rule-promotions'
+export * from './types/subscription-subscribers'
+export * from './types/subscription-jobs'
+export * from './types/subscription-schedules'
+export * from './types/custom-apis'
+export * from './types/subscription-dunning-rules'
+export * from './types/subscription-proration-policies'
 
 // UMD
 export as namespace elasticpath
@@ -191,6 +205,13 @@ export class ElasticPath {
   SubscriptionOfferings: SubscriptionOfferingsEndpoint
   OneTimePasswordTokenRequest: OneTimePasswordTokenRequestEndpoint
   Subscriptions: SubscriptionsEndpoint
+  RulePromotions : RulePromotionsEndpoint
+  SubscriptionSubscribers : SubscriptionSubscribersEndpoint
+  SubscriptionJobs : SubscriptionJobsEndpoint
+  SubscriptionSchedules: SubscriptionSchedulesEndpoint
+  CustomApis: CustomApisEndpoint
+  SubscriptionDunningRules: SubscriptionDunningRulesEndpoint
+  SubscriptionProrationPolicies: SubscriptionProrationPoliciesEndpoint
 
   Cart(id?: string): CartEndpoint // This optional cart id is super worrying when using the SDK in a node server :/
   constructor(config: Config)

@@ -28,7 +28,7 @@ describe('ElasticPath Account Authentication Settings', () => {
           type: 'account_authentication_settings',
           enable_self_signup: true,
           auto_create_account_for_account_members: true,
-          account_member_self_management: 'update_only'
+          account_management_authentication_token_timeout_secs: 200,account_member_self_management: 'update_only'
         }
       })
       .reply(200, {
@@ -37,7 +37,7 @@ describe('ElasticPath Account Authentication Settings', () => {
           type: 'account_authentication_settings',
           enable_self_signup: true,
           auto_create_account_for_account_members: true,
-          account_member_self_management: 'update_only',
+          account_member_self_management: 'update_only',account_management_authentication_token_timeout_secs: 200,
           relationships: {
             authentication_realm: {
               data: {
@@ -55,6 +55,7 @@ describe('ElasticPath Account Authentication Settings', () => {
       type: 'account_authentication_settings',
       enable_self_signup: true,
       auto_create_account_for_account_members: true,
+      account_management_authentication_token_timeout_secs: 200,
       account_member_self_management: 'update_only'
     }
 
@@ -66,7 +67,7 @@ describe('ElasticPath Account Authentication Settings', () => {
             type: 'account_authentication_settings',
             enable_self_signup: true,
             auto_create_account_for_account_members: true,
-            account_member_self_management: 'update_only',
+            account_management_authentication_token_timeout_secs: 200,account_member_self_management: 'update_only',
             relationships: {
               authentication_realm: {
                 data: {
