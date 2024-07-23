@@ -153,9 +153,9 @@ export interface SubscriptionOfferingsEndpoint
 
   Build(body: SubscriptionOfferingBuildBody): Promise<Resource<SubscriptionOffering>>
 
-  GetAttachedProducts(id: string) : Promise<Resource<SubscriptionOfferingProduct[]>>
+  GetAttachedProducts(id: string): Promise<Resource<SubscriptionOfferingProduct[]>>
 
-  GetAttachedPlans(id: string) : Promise<Resource<SubscriptionOfferingPlan[]>>
+  GetAttachedPlans(id: string): Promise<Resource<SubscriptionOfferingPlan[]>>
 
   AttachProducts(offeringId: string, body: SubscriptionOfferingAttachProductBody): Promise<Resource<SubscriptionProduct[]>>
 
@@ -168,3 +168,4 @@ export interface SubscriptionOfferingsEndpoint
   AttachProrationPolicy(offeringId: string, body: SubscriptionOfferingAttachProrationPolicyBody | null): Promise<Resource<SubscriptionOfferingAttachProrationPolicyBody>>
 
   ReplaceProducts(offeringId: string, productIds: string[]): Promise<Resource<SubscriptionProduct[]>>
+}
