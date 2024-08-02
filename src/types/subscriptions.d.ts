@@ -9,7 +9,11 @@ import {
   Resource,
   ResourcePage
 } from './core'
-import { SubscriptionOfferingPlan, SubscriptionOfferingProduct } from './subscription-offerings'
+import {
+  SubscriptionOfferingPlan,
+  SubscriptionOfferingProduct
+} from './subscription-offerings'
+import { SubscriptionInvoice } from './subscription-invoices'
 
 /**
  * Core Subscription Base Interface
@@ -17,13 +21,13 @@ import { SubscriptionOfferingPlan, SubscriptionOfferingProduct } from './subscri
  * DOCS: TODO: add docs when ready
  */
 export interface SubscriptionBase {
-  type: "subscription"
+  type: 'subscription'
   attributes: {
     external_ref?: string
     account_id: string
     offering: {
       id: string
-      type: "subscription_offering"
+      type: 'subscription_offering'
       attributes: {
         external_ref?: string
         name: string
@@ -44,10 +48,10 @@ export interface SubscriptionBase {
 }
 
 export interface SubscriptionCreate {
-  account_id: string,
-  offering_id: string,
-  plan_id: string,
-  currency: string,
+  account_id: string
+  offering_id: string
+  plan_id: string
+  currency: string
   meta?: {
     owner?: string
   }
@@ -60,42 +64,11 @@ export interface SubscriptionUpdate extends Identifiable {
   }
 }
 
-export interface SubscriptionInvoice extends Identifiable {
-  type: "subscription-invoice",
-  attributes: {
-    billing_period: {
-      start: string,
-      end: string
-    },
-    invoice_items:       {
-      description: string,
-      price: {
-        currency: string,
-        amount: number,
-        includes_tax: boolean
-      }
-    }[],
-    outstanding: boolean,
-    updated_at: string,
-    created_at: string
-  },
-  meta: {
-    owner: string,
-    subscription_id: string,
-    price: {
-      currency: string,
-      amount: number,
-      includes_tax: boolean
-    }
-  }
-}
-
 export interface SubscriptionFilter {
   eq?: {
     account_id?: string
   }
 }
-
 
 export interface Subscription extends Identifiable, SubscriptionBase {
   relationships: {
@@ -122,7 +95,7 @@ export interface Subscription extends Identifiable, SubscriptionBase {
 
 export type SubscriptionsInclude = 'plans'
 
-export type SubscriptionsStateAction = 'cancel'| 'pause'| 'resume'
+export type SubscriptionsStateAction = 'cancel' | 'pause' | 'resume'
 
 export interface SubscriptionsIncluded {
   plans: SubscriptionOfferingPlan[]
@@ -133,23 +106,30 @@ export interface SubscriptionsIncluded {
  * DOCS: TODO: add docs when ready
  */
 export interface SubscriptionsEndpoint
-  extends Omit<CrudQueryableResource<
-    Subscription,
-    SubscriptionCreate,
-    SubscriptionUpdate,
-    SubscriptionFilter,
-    never,
-    SubscriptionsInclude
-    >, "All" | "Attributes" | "Link" > {
+  extends Omit<
+    CrudQueryableResource<
+      Subscription,
+      SubscriptionCreate,
+      SubscriptionUpdate,
+      SubscriptionFilter,
+      never,
+      SubscriptionsInclude
+    >,
+    'All' | 'Attributes' | 'Link'
+  > {
   endpoint: 'subscriptions'
 
-  All(token?: string): Promise<ResourcePage<Subscription, SubscriptionsIncluded>>
+  All(
+    token?: string
+  ): Promise<ResourcePage<Subscription, SubscriptionsIncluded>>
 
   GetInvoices(id: string): Promise<Resource<SubscriptionInvoice[]>>
 
-  GetAttachedProducts(id: string) : Promise<Resource<SubscriptionOfferingProduct[]>>
+  GetAttachedProducts(
+    id: string
+  ): Promise<Resource<SubscriptionOfferingProduct[]>>
 
-  GetAttachedPlans(id: string) : Promise<Resource<SubscriptionOfferingPlan[]>>
+  GetAttachedPlans(id: string): Promise<Resource<SubscriptionOfferingPlan[]>>
 
-  CreateState(id: string, action: SubscriptionsStateAction) : Promise<void>
+  CreateState(id: string, action: SubscriptionsStateAction): Promise<void>
 }
