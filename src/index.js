@@ -54,10 +54,11 @@ import SubscriptionOfferingsEndpoint from './endpoints/subscription-offerings'
 import SubscriptionsEndpoint from './endpoints/subscriptions'
 import RulePromotionsEndpoint from './endpoints/rule-promotions'
 import SubscriptionSubscribersEndpoint from './endpoints/subscription-subscribers'
-import SubscriptionJobsEndpoint  from './endpoints/subscription-jobs'
+import SubscriptionJobsEndpoint from './endpoints/subscription-jobs'
 import SubscriptionSchedulesEndpoint from './endpoints/subscription-schedules'
 import SubscriptionDunningRulesEndpoint from './endpoints/subscription-dunning-rules'
 import SubscriptionProrationPoliciesEndpoint from './endpoints/subscription-proration-policies'
+import SubscriptionInvoicesEndpoint from './endpoints/subscription-invoices'
 
 import {
   cartIdentifier,
@@ -144,7 +145,9 @@ export default class ElasticPath {
     this.SubscriptionSchedules = new SubscriptionSchedulesEndpoint(config)
     this.CustomApis = new CustomApisEndpoint(config)
     this.SubscriptionDunningRules = new SubscriptionDunningRulesEndpoint(config)
-    this.SubscriptionProrationPolicies = new SubscriptionProrationPoliciesEndpoint(config)
+    this.SubscriptionProrationPolicies =
+      new SubscriptionProrationPoliciesEndpoint(config)
+    this.SubscriptionInvoices = new SubscriptionInvoicesEndpoint(config)
   }
 
   // Expose `Cart` class on ElasticPath class
