@@ -68,6 +68,7 @@ import { CustomApisEndpoint } from './types/custom-apis'
 import { SubscriptionDunningRulesEndpoint } from './types/subscription-dunning-rules'
 import { SubscriptionProrationPoliciesEndpoint } from './types/subscription-proration-policies'
 import { SubscriptionInvoicesEndpoint } from './types/subscription-invoices'
+import { CustomRelationshipsEndpoint } from './types/custom-relationships'
 
 export * from './types/config'
 export * from './types/storage'
@@ -146,6 +147,7 @@ export * from './types/custom-apis'
 export * from './types/subscription-dunning-rules'
 export * from './types/subscription-proration-policies'
 export * from './types/subscription-invoices'
+export * from './types/custom-relationships'
 
 // UMD
 export as namespace elasticpath
@@ -215,6 +217,7 @@ export class ElasticPath {
   SubscriptionDunningRules: SubscriptionDunningRulesEndpoint
   SubscriptionProrationPolicies: SubscriptionProrationPoliciesEndpoint
   SubscriptionInvoices: SubscriptionInvoicesEndpoint
+  CustomRelationships: CustomRelationshipsEndpoint
 
   Cart(id?: string): CartEndpoint // This optional cart id is super worrying when using the SDK in a node server :/
   constructor(config: Config)
