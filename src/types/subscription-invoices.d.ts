@@ -8,7 +8,8 @@ import {
   Identifiable,
   CrudQueryableResource,
   Resource,
-  ResourceList
+  ResourceList,
+  ResourcePage
 } from './core'
 import { ItemTaxObject } from './cart'
 import { Price } from './price'
@@ -125,20 +126,26 @@ export interface SubscriptionInvoiceFilter {
  * Subscription Invoice Endpoints
  * DOCS: https://elasticpath.dev/docs/api/subscriptions/list-invoices
  */
-export interface SubscriptionInvoicesEndpoint
-  extends CrudQueryableResource<
-    SubscriptionInvoice,
-    never,
-    never,
-    SubscriptionInvoiceFilter,
-    never,
-    never
-  > {
+export interface SubscriptionInvoicesEndpoint {
   endpoint: 'invoices'
 
   /**
+   * List Invoices
+   * DOCS: https://elasticpath.dev/docs/api/subscriptions/list-invoices
+   * @constructor
+   */
+  All(): Promise<ResourcePage<SubscriptionInvoice>>
+
+  /**
+   * Get Invoice
+   * DOCS: https://elasticpath.dev/docs/api/subscriptions/get-invoice
+   * @param id - The ID of the invoice.
+   * @constructor
+   */
+  Get(id: string): Promise<Resource<SubscriptionInvoice>>
+
+  /**
    * List Invoice Payments
-   * Description:
    * DOCS: https://elasticpath.dev/docs/api/subscriptions/list-invoice-payments
    * @param invoiceId - The ID of the invoice to get the payments for.
    * @constructor
@@ -148,8 +155,7 @@ export interface SubscriptionInvoicesEndpoint
   ): Promise<ResourceList<SubscriptionInvoicePayment>>
 
   /**
-   * List Invoice Payments
-   * Description:
+   * Get Invoice Payment
    * DOCS: https://elasticpath.dev/docs/api/subscriptions/get-invoice-payment
    * @param invoiceId - The ID of the invoice to get the payment for.
    * @param paymentId - The ID of the payment.
@@ -159,4 +165,14 @@ export interface SubscriptionInvoicesEndpoint
     invoiceId: string,
     paymentId: string
   ): Promise<Resource<SubscriptionInvoicePayment>>
+
+  /**
+   * Subscription Invoice Filtering
+   * DOCS: https://elasticpath.dev/docs/api/subscriptions/list-invoices#filtering
+   */
+  Filter(filter: SubscriptionInvoiceFilter): SubscriptionInvoicesEndpoint
+
+  Limit(value: number): SubscriptionInvoicesEndpoint
+
+  Offset(value: number): SubscriptionInvoicesEndpoint
 }
