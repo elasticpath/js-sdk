@@ -59,6 +59,7 @@ import SubscriptionSchedulesEndpoint from './endpoints/subscription-schedules'
 import SubscriptionDunningRulesEndpoint from './endpoints/subscription-dunning-rules'
 import SubscriptionProrationPoliciesEndpoint from './endpoints/subscription-proration-policies'
 import SubscriptionInvoicesEndpoint from './endpoints/subscription-invoices'
+import CustomRelationshipsEndpoint from './endpoints/custom-relationships'
 
 import {
   cartIdentifier,
@@ -148,6 +149,7 @@ export default class ElasticPath {
     this.SubscriptionProrationPolicies =
       new SubscriptionProrationPoliciesEndpoint(config)
     this.SubscriptionInvoices = new SubscriptionInvoicesEndpoint(config)
+    this.CustomRelationships = new CustomRelationshipsEndpoint(config)
   }
 
   // Expose `Cart` class on ElasticPath class
