@@ -52,8 +52,10 @@ import {
    */
   export interface RulePromotionBase {
     type: 'rule_promotion'
+    priority: number
     name: string
     description: string
+    stackable: boolean
     enabled: boolean
     automatic?: boolean
     start: string
