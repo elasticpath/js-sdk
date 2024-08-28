@@ -58,6 +58,8 @@ import {
     automatic?: boolean
     start: string
     end: string
+    stackable: boolean
+    priority?: number | null | undefined
     rule_set: {
       currencies: string[]
       catalog_ids: string[]
