@@ -6,7 +6,7 @@ class CustomRelationshipsEndpoint {
     const config = { ...endpoint }
     config.version = 'pcm'
     this.request = new RequestFactory(config)
-    this.endpoint = 'custom_relationships'
+    this.endpoint = 'custom-relationships'
   }
 
   All() {
