@@ -5,8 +5,6 @@
 
 import {
   Identifiable,
-  CrudQueryableResource,
-  ResourcePage,
   ResourceList,
   Resource
 } from './core'
@@ -57,7 +55,7 @@ export interface CustomRelationshipsListResponse
 }
 
 export interface CustomRelationshipsEndpoint {
-  endpoint: 'custom_relationships'
+  endpoint: 'custom-relationships'
   /**
    * List Custom Relationships
    */
