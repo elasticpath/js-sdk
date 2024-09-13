@@ -60,7 +60,7 @@ export interface PcmCustomRelationshipEndpoint {
   ): Promise<CustomRelationshipsListResponse>
 
   /**
-   * Detach a custom relationship from a product
+   * Detach one or multiple custom relationships from a product
    * @param productId
    * @param body
    */
