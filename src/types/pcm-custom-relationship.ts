@@ -11,7 +11,6 @@ export interface PcmProductEntry extends Identifiable {
   type: 'product'
 }
 
-// TODO -- Entry type of attach/detach endpoint data array field
 export interface CustomRelationshipEntry {
   type: 'custom-relationship'
   slug: string
@@ -41,7 +40,6 @@ export interface ProductAssociationResponse {
   }
 }
 
-// TODO - Update attach/detach endpoint body types after api bug fix
 export interface PcmCustomRelationshipEndpoint {
   endpoint: 'custom-relationships'
 
