@@ -322,7 +322,7 @@ We love community contributions. Here's a quick guide if you want to submit a pu
 2.  Add a test for your change (it should fail)
 3.  Make the tests pass
 4.  Commit your changes (see note below)
-5.  Submit your PR with a brief description explaining your changes
+5.  Submit your PR with a brief description explaining your changes 
 
 > **Note:** Commits should adhere to the [Angular commit conventions](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines).
 
