@@ -148,7 +148,6 @@ export * from './types/subscription-dunning-rules'
 export * from './types/subscription-proration-policies'
 export * from './types/subscription-invoices'
 export * from './types/custom-relationships'
-export * from './types/pcm-custom-relationship'
 
 // UMD
 export as namespace elasticpath
