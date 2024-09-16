@@ -70,18 +70,26 @@ class PCMCustomRelationshipEndpoint {
   }
 
   GetProductsForCustomRelationship(productId, customRelationshipSlug) {
+    const { limit, offset } = this
     return this.request.send(
-      `products/${productId}/${this.endpoint}/${customRelationshipSlug}/products`,
+      buildURL(
+        `products/${productId}/${this.endpoint}/${customRelationshipSlug}/products`,
+        { limit, offset }
+      ),
       'GET'
     )
   }
 
   GetProductIdsForCustomRelationship(productId, customRelationshipSlug) {
-    const {limit, offset} = this
+    const { limit, offset } = this
     return this.request.send(
-      buildURL(`products/${productId}/${this.endpoint}/${customRelationshipSlug}`,{
-        limit, offset
-      } ),
+      buildURL(
+        `products/${productId}/${this.endpoint}/${customRelationshipSlug}`,
+        {
+          limit,
+          offset
+        }
+      ),
       'GET'
     )
   }
