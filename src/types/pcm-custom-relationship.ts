@@ -49,6 +49,10 @@ export interface PcmCustomRelationshipEndpoint {
    */
   All(productId: string): Promise<CustomRelationshipsListResponse>
 
+  Limit(value: number): PcmCustomRelationshipEndpoint
+
+  Offset(value: number): PcmCustomRelationshipEndpoint
+
   /**
    * Attach a custom relationship to a product
    * @param productId

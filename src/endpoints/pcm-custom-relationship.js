@@ -1,4 +1,5 @@
 import RequestFactory from '../factories/request'
+import { buildURL } from '../utils/helpers'
 
 class PCMCustomRelationshipEndpoint {
   constructor(endpoint) {
@@ -8,8 +9,24 @@ class PCMCustomRelationshipEndpoint {
     this.endpoint = 'custom-relationships'
   }
 
+  Limit(value) {
+    this.limit = value
+
+    return this
+  }
+
+  Offset(value) {
+    this.offset = value
+
+    return this
+  }
+
   All(productId) {
-    return this.request.send(`products/${productId}/${this.endpoint}`, 'GET')
+    const { limit, offset } = this
+    return this.request.send(
+      buildURL(`products/${productId}/${this.endpoint}`, { limit, offset }),
+      'GET'
+    )
   }
 
   AttachCustomRelationship(productId, body) {
@@ -60,8 +77,11 @@ class PCMCustomRelationshipEndpoint {
   }
 
   GetProductIdsForCustomRelationship(productId, customRelationshipSlug) {
+    const {limit, offset} = this
     return this.request.send(
-      `products/${productId}/${this.endpoint}/${customRelationshipSlug}`,
+      buildURL(`products/${productId}/${this.endpoint}/${customRelationshipSlug}`,{
+        limit, offset
+      } ),
       'GET'
     )
   }
