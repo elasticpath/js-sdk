@@ -1,8 +1,9 @@
 /**
  * Product Custom Relationships
  */
-import { Identifiable, ResourceList } from './core'
+import { Identifiable, Resource, ResourceList } from './core'
 import {
+  CustomRelationship,
   CustomRelationshipsListResponse
 } from './custom-relationships'
 import { PcmProduct } from './pcm'
@@ -61,7 +62,7 @@ export interface PcmCustomRelationshipEndpoint {
   AttachCustomRelationship(
     productId: string,
     body: CustomRelationshipEntry
-  ): Promise<CustomRelationshipsListResponse>
+  ): Promise<Resource<CustomRelationship>>
 
   /**
    * Detach one or multiple custom relationships from a product
