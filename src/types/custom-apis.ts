@@ -35,7 +35,7 @@ export type CustomFieldValidation =
       regex?: string | null, 
       allow_null_values?: boolean, 
       immutable?: boolean, 
-      unique: "yes" | "no" | undefined, 
+      unique: "yes" | "no", 
       unique_case_insensitivity?: boolean 
       } 
     }
