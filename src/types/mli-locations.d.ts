@@ -51,9 +51,9 @@ export interface LocationsEndpoint {
 
   /**
    * Get Location
-   * @param inventoryId - The inventoryId of the Location.
+   * @param locationId - The ID of the Location.
    */
-  Get(inventoryId: string): Promise<Resource<Location>>
+  Get(locationId: string): Promise<Resource<Location>>
 
   /**
    * Create Location
@@ -63,19 +63,19 @@ export interface LocationsEndpoint {
 
   /**
    * Update Location
-   * @param inventoryId - The inventoryId of the Location.
+   * @param locationId - The ID of the Location.
    * @param body - The base attributes of the Locations.
    */
   Update(
-    inventoryId: string,
+    locationId: string,
     body: UpdateLocationBody
   ): Promise<Resource<Location>>
 
   /**
    * Delete Location
-   * @param inventoryId - The inventoryId of the Location.
+   * @param locationId - The ID of the Location.
    */
-  Delete(inventoryId: string): Promise<{}>
+  Delete(locationId: string): Promise<{}>
 
   Limit(value: number): LocationsEndpoint
 
