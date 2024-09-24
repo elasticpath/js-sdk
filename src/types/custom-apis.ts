@@ -13,6 +13,7 @@ export interface CustomApiBase {
   api_type: string
   type: string
   slug: string
+  allow_upserts: boolean
 }
 
 export interface CustomApi extends Identifiable, CustomApiBase {
@@ -28,10 +29,35 @@ export interface CustomApi extends Identifiable, CustomApiBase {
 }
 
 export type CustomFieldValidation = 
-  | { string: { min_length?: number, max_length?: number, regex?: string, allow_null_values?: boolean } }
-  | { integer: { min_value?: number, max_value?: number, allow_null_values?: boolean } }
-  | { float: { min_value?: number, max_value?: number, allow_null_values?: boolean } }
-  | { boolean: { allow_null_values?: boolean } }
+  | { string: { 
+      min_length?: number | null, 
+      max_length?: number | null, 
+      regex?: string | null, 
+      allow_null_values?: boolean, 
+      immutable?: boolean, 
+      unique: "yes" | "no", 
+      unique_case_insensitivity?: boolean 
+      } 
+    }
+  | { integer: { 
+      min_value?: number | null, 
+      max_value?: number | null, 
+      allow_null_values?: boolean, 
+      immutable?: boolean 
+      } 
+    }
+  | { float: { 
+      min_value?: number | null, 
+      max_value?: number | null, 
+      allow_null_values?: boolean, 
+      immutable?: boolean 
+      } 
+    }
+  | { boolean: { 
+      allow_null_values?: boolean, 
+      immutable?: boolean 
+      } 
+    }
 
 export interface CustomApiFieldBase {
   name: string
@@ -39,7 +65,8 @@ export interface CustomApiFieldBase {
   field_type: string
   type: string
   slug: string
-  validation?: CustomFieldValidation
+  validation?: CustomFieldValidation,
+  use_as_url_slug: boolean
 }
 
 export interface CustomApiField extends Identifiable, CustomApiFieldBase {
@@ -113,5 +140,4 @@ export interface CustomApisEndpoint {
   ): Promise<ResponseBody>
 
   DeleteEntry<T = any>(customApiId: string, customApiEntryId: string): Promise<T>
-
 }
