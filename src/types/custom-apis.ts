@@ -140,5 +140,4 @@ export interface CustomApisEndpoint {
   ): Promise<ResponseBody>
 
   DeleteEntry<T = any>(customApiId: string, customApiEntryId: string): Promise<T>
-
 }
