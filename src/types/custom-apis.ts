@@ -6,7 +6,9 @@
 
 import { Identifiable, Resource, ResourcePage } from './core';
 
-
+export interface Presentation {
+  sort_order: number
+}
 export interface CustomApiBase {
   name: string
   description: string
@@ -66,7 +68,8 @@ export interface CustomApiFieldBase {
   type: string
   slug: string
   validation?: CustomFieldValidation,
-  use_as_url_slug: boolean
+  use_as_url_slug: boolean,
+  presentation?: Presentation
 }
 
 export interface CustomApiField extends Identifiable, CustomApiFieldBase {
