@@ -11,10 +11,11 @@ export interface GeolocationDetails {
 }
 export interface LocationAttributes {
   name: string
+  slug: string
   external_ref?: string
   description?: string
-  address: string[]
-  geolocation: GeolocationDetails
+  address?: string[]
+  geolocation?: GeolocationDetails
 }
 export interface LocationMeta {
   timestamps: {
