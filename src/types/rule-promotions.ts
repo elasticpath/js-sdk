@@ -53,7 +53,7 @@ export interface Condition {
 export interface RulePromotionBase {
   type: 'rule_promotion'
   name: string
-  description: string
+  description?: string
   enabled: boolean
   automatic?: boolean
   start: string
