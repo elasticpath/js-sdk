@@ -23,8 +23,8 @@ export interface NonAssociatedProductEntry extends Identifiable {
 
 export interface ProductAssociationResponse {
   meta: {
-    associated_products: string[]
-    products_not_associated: NonAssociatedProductEntry[]
+    associated_products?: string[]
+    products_not_associated?: NonAssociatedProductEntry[]
     owner: 'organization' | 'store'
     timestamps: {
       created_at: string
