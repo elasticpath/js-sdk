@@ -37,7 +37,7 @@ export interface Location extends Identifiable, LocationBase {}
 
 export interface CreateLocationBody extends LocationAttributes {}
 
-export interface UpdateLocationBody extends Identifiable, LocationAttributes {}
+export interface UpdateLocationBody extends LocationAttributes {}
 
 /**
  * Location Endpoints

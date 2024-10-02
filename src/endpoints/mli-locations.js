@@ -34,6 +34,7 @@ class InventoryLocationsEndpoint {
   Update(locationId, body) {
     return this.request.send(`${this.endpoint}/${locationId}`, 'PUT', {
       type: 'inventory_location',
+      id: locationId,
       attributes: body
     })
   }
