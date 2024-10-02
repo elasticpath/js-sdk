@@ -1,7 +1,7 @@
 /**
  * Product Custom Relationships
  */
-import { Identifiable, Resource, ResourceList } from './core'
+import { Identifiable, SimpleResourcePageResponse } from './core'
 import {
   CustomRelationship,
   CustomRelationshipsListResponse
@@ -15,14 +15,6 @@ export interface PcmProductEntry extends Identifiable {
 export interface CustomRelationshipEntry {
   type: 'custom-relationship'
   slug: string
-}
-
-export interface PcmRelatedProductResponse<T> extends ResourceList<T> {
-  meta: {
-    results: {
-      total: number
-    }
-  }
 }
 
 export interface NonAssociatedProductEntry extends Identifiable {
@@ -61,8 +53,8 @@ export interface PcmCustomRelationshipEndpoint {
    */
   AttachCustomRelationship(
     productId: string,
-    body: CustomRelationshipEntry
-  ): Promise<Resource<CustomRelationship>>
+    body: CustomRelationshipEntry[]
+  ): Promise<SimpleResourcePageResponse<CustomRelationship>>
 
   /**
    * Detach one or multiple custom relationships from a product
@@ -107,7 +99,7 @@ export interface PcmCustomRelationshipEndpoint {
   GetProductsForCustomRelationship(
     productId: string,
     customRelationshipSlug: string
-  ): Promise<PcmRelatedProductResponse<PcmProduct>>
+  ): Promise<SimpleResourcePageResponse<PcmProduct>>
 
   /**
    * Get all IDs of a product's related products under a custom relationship
@@ -118,5 +110,5 @@ export interface PcmCustomRelationshipEndpoint {
   GetProductIdsForCustomRelationship(
     productId: string,
     customRelationshipSlug: string
-  ): Promise<PcmRelatedProductResponse<PcmProductEntry>>
+  ): Promise<SimpleResourcePageResponse<PcmProductEntry>>
 }
