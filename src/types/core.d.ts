@@ -115,3 +115,11 @@ export interface CrudQueryableResource<R, C, U, F, S, I>
 
   Link(url: string): Promise<Resource<R>>
 }
+
+export interface SimpleResourcePageResponse<T> extends ResourceList<T> {
+  meta: {
+    results: {
+      total: number
+    }
+  }
+}

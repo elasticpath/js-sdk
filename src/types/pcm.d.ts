@@ -99,9 +99,12 @@ type productType = 'standard' | 'parent' | 'child'| 'bundle'
 
 export interface PcmProduct extends Identifiable, PcmProductBase {
   meta: {
+    created_at: string
+    updated_at: string
     variation_matrix: { [key: string]: string } | {}
     owner?: 'organization' | 'store'
     product_types?: productType[]
+    custom_relationships?: string[]
   }
 }
 
@@ -118,6 +121,13 @@ export interface PcmProductRelationships {
     main_image?: {
       data: {
         id: string
+      }
+    }
+    custom_relationships?: {
+      data?: Array<unknown> | null
+      links?: {
+        [key: string]: string
+        self: string
       }
     }
   }
