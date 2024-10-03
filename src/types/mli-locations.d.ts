@@ -37,7 +37,16 @@ export interface Location extends Identifiable, LocationBase {}
 
 export interface CreateLocationBody extends LocationAttributes {}
 
-export interface UpdateLocationBody extends LocationAttributes {}
+export interface UpdateLocationBody
+  extends Omit<
+    LocationAttributes,
+    'external_ref' | 'description' | 'address' | 'geolocation'
+  > {
+  external_ref?: string | null
+  description?: string | null
+  address?: string[] | null[]
+  geolocation?: GeolocationDetails | null
+}
 
 /**
  * Location Endpoints
