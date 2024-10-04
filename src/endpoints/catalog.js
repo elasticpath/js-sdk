@@ -315,6 +315,31 @@ class Products extends ShopperCatalogProductsQuery {
       additionalHeaders
     )
   }
+
+  GetRelatedProducts({
+    productId,
+    customRelationshipSlug,
+    token = null,
+    additionalHeaders = null
+  }) {
+    const { limit, offset, filter, includes } = this
+
+    return this.request.send(
+      buildURL(`catalog/${this.endpoint}/${productId}/relationships/${customRelationshipSlug}/products`, {
+        limit,
+        offset,
+        filter,
+        includes
+      }),
+      'GET',
+      undefined,
+      token,
+      undefined,
+      false,
+      undefined,
+      additionalHeaders
+    )
+  }
 }
 
 class ShopperCatalogEndpoint extends ShopperCatalogQuery {

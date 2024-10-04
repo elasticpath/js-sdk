@@ -167,6 +167,13 @@ export interface ShopperCatalogProductsEndpoint
     token?: string
     additionalHeaders?: ShopperCatalogAdditionalHeaders
   }): Promise<ShopperCatalogResourcePage<ProductResponse>>
+
+  GetRelatedProducts(options: {
+    productId: string
+    customRelationshipSlug: string
+    token?: string
+    additionalHeaders?: ShopperCatalogAdditionalHeaders
+  }): Promise<ShopperCatalogResourcePage<ProductResponse>>
 }
 
 export interface NodesShopperCatalogEndpoint
