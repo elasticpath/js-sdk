@@ -5,11 +5,10 @@ import InventoryLocationsEndpoint from './mli-locations'
 class MultiLocationInventories {
   constructor(endpoint) {
     const config = { ...endpoint }
-    config.headers = {
-      ...config.headers,
-      'ep-inventories-multi-location': true
-    }
-    this.request = new RequestFactory(endpoint)
+
+    config.headers['ep-inventories-multi-location'] = true
+
+    this.request = new RequestFactory(config)
 
     this.Locations = new InventoryLocationsEndpoint(config)
 
