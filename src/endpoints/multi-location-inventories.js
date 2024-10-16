@@ -6,7 +6,10 @@ class MultiLocationInventories {
   constructor(endpoint) {
     const config = { ...endpoint }
 
-    config.headers['ep-inventories-multi-location'] = true
+    config.headers = {
+      ...config.headers,
+      'ep-inventories-multi-location': true
+    }
 
     this.request = new RequestFactory(config)
 
