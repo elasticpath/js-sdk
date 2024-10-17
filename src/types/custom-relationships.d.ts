@@ -13,6 +13,7 @@ export interface CustomRelationshipBaseAttributes {
   name: string
   description?: string
   slug: string
+  bi_directional: boolean
 }
 
 export interface CustomRelationshipBase {
