@@ -30,19 +30,28 @@ class MultiLocationInventories {
     )
   }
 
-  Get(productId) {
-    return this.request.send(`${this.endpoint}/${productId}`, 'GET')
+  Get(inventoryId) {
+    return this.request.send(`${this.endpoint}/${inventoryId}`, 'GET')
   }
 
-  Create(body) {
+  Create(body, productId) {
     return this.request.send(`${this.endpoint}}`, 'POST', {
       type: 'stock',
+      id: productId,
       attributes: body
     })
   }
 
-  Delete(productId) {
-    return this.request.send(`${this.endpoint}/${productId}`, 'DELETE')
+  Update(inventoryId, body) {
+    return this.request.send(`${this.endpoint}/${inventoryId}`, 'PUT', {
+      type: 'stock',
+      id: inventoryId,
+      attributes: body
+    })
+  }
+
+  Delete(inventoryId) {
+    return this.request.send(`${this.endpoint}/${inventoryId}`, 'DELETE')
   }
 
   Limit(value) {

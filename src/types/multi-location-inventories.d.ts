@@ -4,50 +4,81 @@
 import { LocationsEndpoint } from './mli-locations'
 import { Identifiable, Resource, ResourcePage } from './core'
 
-type StockType = 'stock'
+/**
+ * Multi Location Inventory Types
+ */
+export type InventoryResourceType = 'stock'
 
-export interface StockMeta {
-  timestamps: {
-    created_at: string
-    updated_at: string
-  }
-}
-
-export interface StockBaseLocations {
-  [key: string]: {
-    available: number
-  }
-}
-
-export interface StockBaseAttributes {
-  product_id: string
-  locations: StockBaseLocations
-}
-
-export interface StockResponseLocations {
-  [key: string]: {
-    available: number
-    allocated: number
-    total: number
-  }
-}
-export interface StockResponseAttributes extends StockBaseAttributes {
-  allocated: number
-  total: number
-  locations: StockResponseLocations
-}
-
-export interface StockResponse extends Identifiable, StockMeta {
-  type: StockType
-  attributes: StockResponseAttributes
+/**
+ * Base Types
+ */
+export interface Timestamps {
+  created_at: string
+  updated_at: string
 }
 
 /**
- * Multi Location Inventories Endpoints
+ * Location-specific inventory quantities
+ */
+export interface LocationQuantities {
+  available: number
+  allocated: number
+  total: number
+}
+
+/**
+ * Create Operation Types
+ */
+export interface LocationCreateQuantity {
+  available: number
+}
+
+export interface StockCreate {
+  available?: number
+  locations?: {
+    [locationId: string]: LocationCreateQuantity
+  }
+}
+
+/**
+ * Update Operation Types
+ */
+export interface LocationUpdateQuantity {
+  allocated?: number
+  available?: number
+}
+
+export interface StockUpdate {
+  locations?: {
+    [locationId: string]: LocationUpdateQuantity | null
+  }
+}
+
+/**
+ * Response Types
+ */
+export interface StockLocationsMap {
+  [locationId: string]: LocationQuantities
+}
+
+export interface StockAttributes {
+  allocated: number
+  available: number
+  total: number
+  locations: StockLocationsMap
+}
+
+export interface StockResponse extends Identifiable {
+  type: InventoryResourceType
+  attributes: StockAttributes
+  timestamps: Timestamps
+}
+
+/**
+ * Multi Location Inventories Endpoint Interface
  */
 export interface MultiLocationInventoriesEndpoint {
   endpoint: 'inventory'
-
   Locations: LocationsEndpoint
 
   /**
@@ -57,21 +88,35 @@ export interface MultiLocationInventoriesEndpoint {
 
   /**
    * Get Stock for Product
-   * @param productId The ID of the product.
+   * @param inventoryId - The inventory identifier
    */
-  Get(productId: string): Promise<Resource<StockResponse>>
+  Get(inventoryId: string): Promise<Resource<StockResponse>>
 
   /**
    * Create Stock for Product
-   * @param body - The base attributes of the inventory stock.
+   * @param payload - Initial stock information with overall availability or per-location quantities
+   * @param productId - Optional product identifier
    */
-  Create(body: StockBaseAttributes): Promise<Resource<StockResponse>>
+  Create(
+    payload: StockCreate,
+    productId?: string
+  ): Promise<Resource<StockResponse>>
+
+  /**
+   * Update Stock for Product
+   * @param inventoryId - The inventory identifier
+   * @param payload - Location-specific updates. Set location to null to remove it
+   */
+  Update(
+    inventoryId: string,
+    payload: StockUpdate
+  ): Promise<Resource<StockResponse>>
 
   /**
    * Delete Stock for Product
-   * @param productId The ID of the product.
+   * @param inventoryId - The inventory identifier
    */
-  Delete(productId: string): Promise<{}>
+  Delete(inventoryId: string): Promise<{}>
 
   Limit(value: number): MultiLocationInventoriesEndpoint
 
