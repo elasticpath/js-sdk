@@ -84,6 +84,7 @@ export interface Order extends Identifiable, OrderBase {
       paid: FormattedPrice
       with_tax: FormattedPrice
       without_tax: FormattedPrice
+      without_discount: FormattedPrice
       tax: FormattedPrice
       discount: FormattedPrice
       shipping: FormattedPrice
@@ -272,6 +273,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
       }
       id: string
       code: string
+      promotion_source?: string
     }
   ]
   components?: ProductComponents
@@ -285,6 +287,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
   catalog_source?: 'pim'
   custom_inputs?: Record<string, any>
   shipping_group_id?: string
+  promotion_source?: string
 }
 
 export type PurchasePaymentMethod = 'purchase'
