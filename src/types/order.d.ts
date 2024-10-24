@@ -272,6 +272,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
       }
       id: string
       code: string
+      promotion_source?: string
     }
   ]
   components?: ProductComponents
@@ -285,6 +286,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
   catalog_source?: 'pim'
   custom_inputs?: Record<string, any>
   shipping_group_id?: string
+  promotion_source?: string
 }
 
 export type PurchasePaymentMethod = 'purchase'
