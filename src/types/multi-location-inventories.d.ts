@@ -74,6 +74,12 @@ export interface StockResponse extends Identifiable {
   timestamps: Timestamps
 }
 
+export interface MultiLocationInventoryFilter {
+  eq?: {
+    locations?: string
+  }
+}
+
 /**
  * Multi Location Inventories Endpoint Interface
  */
@@ -121,4 +127,6 @@ export interface MultiLocationInventoriesEndpoint {
   Limit(value: number): MultiLocationInventoriesEndpoint
 
   Offset(value: number): MultiLocationInventoriesEndpoint
+
+  Filter(filter: MultiLocationInventoryFilter): MultiLocationInventoriesEndpoint
 }
