@@ -35,7 +35,7 @@ class MultiLocationInventories {
   }
 
   Create(body, productId) {
-    return this.request.send(`${this.endpoint}}`, 'POST', {
+    return this.request.send(`${this.endpoint}`, 'POST', {
       type: 'stock',
       id: productId,
       attributes: body
@@ -61,6 +61,11 @@ class MultiLocationInventories {
 
   Offset(value) {
     this.offset = value
+    return this
+  }
+
+  Filter(filter) {
+    this.filter = filter
     return this
   }
 }
