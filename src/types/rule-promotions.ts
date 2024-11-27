@@ -89,6 +89,41 @@ export interface RulePromotionCode {
   consume_unit?: 'per_application' | 'per_checkout'
 }
 
+export interface RulePromotionCodesJob {
+  type: 'promotion_job'
+  job_type: 'code_generate' | 'code_export'
+  name?: string
+  parameters?: {
+    number_of_codes: number
+    consume_unit?: 'per_cart' | 'per_item'
+    code_prefix?: string
+    max_uses_per_code?: number
+    code_length: number
+  }
+}
+
+export interface RulePromotionJob extends Identifiable {
+  type: string
+  id: string
+  promotion_id: string
+  job_type: string
+  name?: string
+  parameters?: {
+    number_of_codes: number
+    consume_unit?: 'per_cart' | 'per_item'
+    max_uses_per_code?: number
+    code_length: number
+    code_prefix?: string
+  }
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  meta: {
+    timestamps: {
+      created_at: string
+      updated_at: string
+    }
+  }
+}
+
 export interface DeleteRulePromotionCodes extends ResourceList<any> {
   code: string
 }
@@ -114,10 +149,17 @@ export interface RulePromotionsEndpoint
 
   Codes(promotionId: string): Promise<ResourcePage<RulePromotionCode>>
 
+  Jobs(promotionId: string): Promise<ResourcePage<RulePromotionJob>>
+
   AddCodes(
     promotionId: string,
     codes: RulePromotionCode[]
   ): Promise<Resource<RulePromotionBase>>
+
+  AddCodesJob(
+    promotionId: string,
+    body: RulePromotionCodesJob
+  ): Promise<Resource<RulePromotionJob>>
 
   DeleteCode(promotionId: string, codeId: string): Promise<{}>
 
