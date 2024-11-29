@@ -42,11 +42,27 @@ class RulePromotionsEndpoint extends CRUDExtend {
     )
   }
 
+  Jobs(promotionId) {
+    const { limit, offset, filter } = this
+    return this.request.send(
+      buildURL(`${this.endpoint}/${promotionId}/jobs`, {
+        limit,
+        offset,
+        filter
+      }),
+      'GET'
+    )
+  }
+
   AddCodes(promotionId, codes) {
     return this.request.send(`${this.endpoint}/${promotionId}/codes`, 'POST', {
       type: 'promotion_codes',
       codes
     })
+  }
+
+  AddCodesJob(promotionId, body) {
+    return this.request.send(`${this.endpoint}/${promotionId}/jobs`, 'POST', body)
   }
   
   DeleteCode(promotionId, codeId) {
@@ -55,7 +71,6 @@ class RulePromotionsEndpoint extends CRUDExtend {
       'DELETE'
     )
   }
-
 
   DeleteCodes(promotionId, codes) {
     return this.request.send(
