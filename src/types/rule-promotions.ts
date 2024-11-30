@@ -75,7 +75,14 @@ export interface RulePromotionMeta {
   }
 }
 
-export interface RulePromotion extends Identifiable, RulePromotionBase {
+export interface RulePromotionMessage {
+  message?: string | null
+}
+
+export interface RulePromotion
+  extends Identifiable,
+    RulePromotionMessage,
+    RulePromotionBase {
   meta: RulePromotionMeta
 }
 
