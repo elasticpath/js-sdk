@@ -82,5 +82,10 @@ class RulePromotionsEndpoint extends CRUDExtend {
       }
     )
   }
+
+  GetCodeExportFile(promotionId, jobId) {
+    return this.request.send(`${this.endpoint}/${promotionId}/jobs/${jobId}/file`, 'Get')
+  }
+  
 }
 export default RulePromotionsEndpoint

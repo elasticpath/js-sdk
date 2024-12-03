@@ -130,8 +130,13 @@ export interface DeleteRulePromotionCodes extends ResourceList<any> {
 
 export interface RulePromotionFilter {
   eq?: {
+    job_type?: string
     code?: string
   }
+}
+
+export interface CodeFileHref {
+  href: string
 }
 
 export interface RulePromotionsEndpoint
@@ -167,4 +172,6 @@ export interface RulePromotionsEndpoint
     promotionId: string,
     codes: DeleteRulePromotionCodes[]
   ): Promise<{}>
+
+  GetCodeExportFile(promotionId:string, jobId: string): Promise<CodeFileHref>
 }
