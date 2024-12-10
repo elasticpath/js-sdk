@@ -50,7 +50,10 @@ class RulePromotionsEndpoint extends CRUDExtend {
         offset,
         filter
       }),
-      'GET'
+      'GET',
+      undefined,
+      undefined,
+      this
     )
   }
 
