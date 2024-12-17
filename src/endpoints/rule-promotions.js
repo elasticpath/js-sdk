@@ -57,6 +57,10 @@ class RulePromotionsEndpoint extends CRUDExtend {
     )
   }
 
+  CancelJob(promotionId, jobId) {
+    return this.request.send(`${this.endpoint}/${promotionId}/jobs/${jobId}/cancel`, 'POST')
+  }
+
   AddCodes(promotionId, codes) {
     return this.request.send(`${this.endpoint}/${promotionId}/codes`, 'POST', {
       type: 'promotion_codes',
