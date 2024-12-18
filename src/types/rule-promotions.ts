@@ -166,6 +166,8 @@ export interface RulePromotionsEndpoint
     body: RulePromotionCodesJob
   ): Promise<Resource<RulePromotionJob>>
 
+  CancelJob(promotionId: string, jobId: string): Promise<{}>
+
   DeleteCode(promotionId: string, codeId: string): Promise<{}>
 
   DeleteCodes(
