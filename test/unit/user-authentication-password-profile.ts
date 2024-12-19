@@ -88,7 +88,8 @@ describe('User Authentication Password Profile Info', () => {
       userAuthenticationPasswordProfileId,
       {
         data: body
-      }
+      },
+      'dummy-token'
     ).then(res => {
       assert.isObject(res)
     })
