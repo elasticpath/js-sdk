@@ -63,8 +63,8 @@ class UserAuthenticationPasswordProfileEndpoint extends CRUDExtend {
     userAuthenticationInfoId,
     userAuthenticationPasswordProfileId,
     body,
-    token = null,
-    accountManagementAuthenticationToken = null
+    accountManagementAuthenticationToken,
+    token = null
   ) {
     return this.request.send(
       `${this.endpoint
