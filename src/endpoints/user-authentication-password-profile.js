@@ -63,7 +63,8 @@ class UserAuthenticationPasswordProfileEndpoint extends CRUDExtend {
     userAuthenticationInfoId,
     userAuthenticationPasswordProfileId,
     body,
-    token = null
+    token = null,
+    accountManagementAuthenticationToken = null
   ) {
     return this.request.send(
       `${this.endpoint
@@ -74,7 +75,14 @@ class UserAuthenticationPasswordProfileEndpoint extends CRUDExtend {
         )}/${userAuthenticationPasswordProfileId}`,
       'PUT',
       body.data,
-      token
+      token,
+      this,
+      true,
+      'v2',
+      {
+        'EP-Account-Management-Authentication-Token':
+          accountManagementAuthenticationToken
+      }
     )
   }
 
