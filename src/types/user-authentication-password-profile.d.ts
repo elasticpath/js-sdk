@@ -101,8 +101,8 @@ export interface UserAuthenticationPasswordProfileEndpoint {
     userAuthenticationInfoId: string,
     userAuthenticationPasswordProfileId: string,
     body: { data: UserAuthenticationPasswordProfileUpdateBody },
-    accountManagementAuthenticationToken: string,
-    token?: string
+    token?: string | null,
+    accountManagementAuthenticationToken?: string | null
   ): Promise<UserAuthenticationPasswordProfileResponse>
 
   /**
