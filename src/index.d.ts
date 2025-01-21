@@ -70,6 +70,7 @@ import { SubscriptionProrationPoliciesEndpoint } from './types/subscription-pror
 import { SubscriptionInvoicesEndpoint } from './types/subscription-invoices'
 import { CustomRelationshipsEndpoint } from './types/custom-relationships'
 import { MultiLocationInventoriesEndpoint } from './types/multi-location-inventories'
+import { CustomApiRolePoliciesEndpoint } from './types/custom-api-role-policies'
 
 export * from './types/config'
 export * from './types/storage'
@@ -141,6 +142,7 @@ export * from './types/subscription-offerings'
 export * from './types/one-time-password-token-request'
 export * from './types/subscriptions'
 export * from './types/rule-promotions'
+export * from './types/custom-api-role-policies'
 export * from './types/subscription-subscribers'
 export * from './types/subscription-jobs'
 export * from './types/subscription-schedules'
@@ -214,6 +216,7 @@ export class ElasticPath {
   OneTimePasswordTokenRequest: OneTimePasswordTokenRequestEndpoint
   Subscriptions: SubscriptionsEndpoint
   RulePromotions: RulePromotionsEndpoint
+  CustomApiRolePolicies: CustomApiRolePoliciesEndpoint
   SubscriptionSubscribers: SubscriptionSubscribersEndpoint
   SubscriptionJobs: SubscriptionJobsEndpoint
   SubscriptionSchedules: SubscriptionSchedulesEndpoint
