@@ -24,6 +24,11 @@ export interface HierarchyBase {
   }
   meta?: {
     owner?: 'organization' | 'store'
+    breadcrumbs?: Array<{
+      id: string
+      name: string
+      slug?: string
+    }>
   }
 }
 

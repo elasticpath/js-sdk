@@ -29,6 +29,11 @@ export interface NodeBase {
   },
   meta?: {
     sort_order: number
+    breadcrumbs?: Array<{
+      id: string
+      name: string
+      slug?: string
+    }>
   }
 }
 
