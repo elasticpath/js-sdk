@@ -60,6 +60,7 @@ export interface RulePromotionBase {
   end: string
   stackable: boolean
   priority?: number | null | undefined
+  override_stacking?: boolean
   rule_set: {
     currencies: string[]
     catalog_ids: string[]
