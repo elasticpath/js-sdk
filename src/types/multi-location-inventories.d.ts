@@ -2,7 +2,9 @@
  * Multi Location Inventory
  */
 import { LocationsEndpoint } from './mli-locations'
-import { Identifiable, Resource, ResourcePage } from './core'
+import { Identifiable, Resource, ResourceList, ResourcePage } from './core'
+import { Inventory, InventoryActionTypes } from './inventory'
+import { InventoryResponse } from './inventory'
 
 /**
  * Multi Location Inventory Types
@@ -80,6 +82,20 @@ export interface MultiLocationInventoryFilter {
   }
 }
 
+export interface MultiLocationInventoryResponse extends Identifiable {
+  type: string
+  attributes: {
+    action: InventoryActionTypes
+    product_id: string
+    quantity: number
+  }
+  meta: {
+    timestamps: {
+      created_at: string
+    }
+  }
+}
+
 /**
  * Multi Location Inventories Endpoint Interface
  */
@@ -129,4 +145,88 @@ export interface MultiLocationInventoriesEndpoint {
   Offset(value: number): MultiLocationInventoriesEndpoint
 
   Filter(filter: MultiLocationInventoryFilter): MultiLocationInventoriesEndpoint
+
+  /**
+   * Increment Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  IncrementStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Decrement Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  DecrementStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Allocate Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  AllocateStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Deallocate Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  DeallocateStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Set Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  SetStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Get Transactions
+   * @param productId The ID for the product you're performing this action on.
+   */
+  GetTransactions(
+    productId: string
+  ): Promise<ResourceList<MultiLocationInventoryResponse>>
+
+  /**
+   * Get Transaction
+   * @param productId The ID for the product you're performing this action on.
+   * @param transactionId The ID for the transaction created on the product.
+   */
+  GetTransaction(
+    productId: string,
+    transactionId: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Get Stocks for Multiple Products
+   * @param productIds The array of unique identifier of the products.
+   */
+  GetMultipleStock(productIds: string[]): Promise<ResourceList<StockResponse>>
 }
