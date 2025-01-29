@@ -3,7 +3,7 @@
  */
 import { LocationsEndpoint } from './mli-locations'
 import { Identifiable, Resource, ResourceList, ResourcePage } from './core'
-import { Inventory } from './inventory'
+import { Inventory, InventoryActionTypes } from './inventory'
 import { InventoryResponse } from './inventory'
 
 /**
@@ -82,6 +82,20 @@ export interface MultiLocationInventoryFilter {
   }
 }
 
+export interface MultiLocationInventoryResponse extends Identifiable {
+  type: string
+  attributes: {
+    action: InventoryActionTypes
+    product_id: string
+    quantity: number
+  }
+  meta: {
+    timestamps: {
+      created_at: string
+    }
+  }
+}
+
 /**
  * Multi Location Inventories Endpoint Interface
  */
@@ -134,74 +148,85 @@ export interface MultiLocationInventoriesEndpoint {
 
   /**
    * Increment Stock
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/update-inventory.html#post-create-a-stock-transaction-for-a-product
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
    */
   IncrementStock(
     productId: string,
     quantity: number,
     location?: string
-  ): Promise<Resource<InventoryResponse>>
+  ): Promise<Resource<MultiLocationInventoryResponse>>
 
   /**
    * Decrement Stock
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/update-inventory.html#post-create-a-stock-transaction-for-a-product
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
    */
   DecrementStock(
     productId: string,
     quantity: number,
     location?: string
-  ): Promise<Resource<InventoryResponse>>
+  ): Promise<Resource<MultiLocationInventoryResponse>>
 
   /**
    * Allocate Stock
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/update-inventory.html#post-create-a-stock-transaction-for-a-product
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
    */
   AllocateStock(
     productId: string,
     quantity: number,
     location?: string
-  ): Promise<Resource<InventoryResponse>>
+  ): Promise<Resource<MultiLocationInventoryResponse>>
 
   /**
    * Deallocate Stock
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/update-inventory.html#post-create-a-stock-transaction-for-a-product
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
    */
   DeallocateStock(
     productId: string,
     quantity: number,
     location?: string
-  ): Promise<Resource<InventoryResponse>>
+  ): Promise<Resource<MultiLocationInventoryResponse>>
+
+  /**
+   * Set Stock
+   * @param productId The ID for the product you're performing this action on.
+   * @param quantity The amount of stock affected by this transaction.
+   * @param location The slug of the location that the transaction should act on.
+   */
+  SetStock(
+    productId: string,
+    quantity: number,
+    location?: string
+  ): Promise<Resource<MultiLocationInventoryResponse>>
 
   /**
    * Get Transactions
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/get-a-product-stock-transactions.html
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    */
-  GetTransactions(productId: string): Promise<ResourceList<InventoryResponse>>
+  GetTransactions(
+    productId: string
+  ): Promise<ResourceList<MultiLocationInventoryResponse>>
 
   /**
    * Get Transaction
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/get-a-product-stock-transaction.html
-   * @param productId The ID for the product you’re performing this action on.
+   * @param productId The ID for the product you're performing this action on.
    * @param transactionId The ID for the transaction created on the product.
    */
   GetTransaction(
     productId: string,
     transactionId: string
-  ): Promise<Resource<InventoryResponse>>
+  ): Promise<Resource<MultiLocationInventoryResponse>>
 
   /**
    * Get Stocks for Multiple Products
-   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/inventory/get-multiple-stocks.html#post-get-stocks-for-multiple-products
    * @param productIds The array of unique identifier of the products.
    */
-  GetMultipleStock(productIds: string[]): Promise<ResourceList<Inventory>>
+  GetMultipleStock(productIds: string[]): Promise<ResourceList<StockResponse>>
 }

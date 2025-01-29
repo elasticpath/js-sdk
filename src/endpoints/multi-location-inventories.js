@@ -135,6 +135,22 @@ class MultiLocationInventories {
     )
   }
 
+  SetStock(productId, quantity, location = null) {
+    return this.request.send(
+      `${this.endpoint}/${productId}/transactions`,
+      'POST',
+      {
+        attributes: {
+          type: 'stock-transaction',
+          action: 'set',
+          quantity,
+          product_id: productId,
+          ...(location && { location })
+        }
+      }
+    )
+  }
+
   GetTransactions(productId) {
     return this.request.send(
       `${this.endpoint}/${productId}/transactions`,
@@ -147,6 +163,11 @@ class MultiLocationInventories {
       `${this.endpoint}/${productId}/transactions/${transactionId}`,
       'GET'
     )
+  }
+
+  GetMultipleStock(productIds) {
+    const body = productIds.map(id => ({ id }))
+    return this.request.send(`${this.endpoint}/multiple`, 'POST', body)
   }
 }
 
