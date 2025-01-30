@@ -263,7 +263,7 @@ describe('Format query string', () => {
       ]
     })
     expect(res).to.equal(
-      'filter=(le(start,2025-01-29T23:31:08.400Z):gt(end,2025-01-29T23:31:08.400Z)|gt(start,2025-01-29T23:31:08.400Z):gt(end,2025-01-29T23:31:08.400Z))'
+      'filter=(le(start,"2025-01-29T23:31:08.400Z"):gt(end,"2025-01-29T23:31:08.400Z")|gt(start,"2025-01-29T23:31:08.400Z"):gt(end,"2025-01-29T23:31:08.400Z"))'
     )
   })
 })
