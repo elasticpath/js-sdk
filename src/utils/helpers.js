@@ -96,12 +96,11 @@ function formatFilterString(type, filter) {
 
     if (Array.isArray(value)) {
       queryString = `${key},${value.join(',')}`
-    } else if (typeof value === 'object') {
-      queryString = Object.keys(value).map(
-        attr => `${key}.${attr},${value[attr]}`
-      )
+    } else if (typeof value === 'object' && value !== null) {
+      queryString = Object.keys(value)
+        .map(attr => `${key}.${attr},${value[attr]}`)
+        .join(':')
     }
-
     return `${type}(${queryString})`
   })
 
@@ -114,6 +113,15 @@ function formatQueryString(key, value) {
   }
 
   if (key === 'filter') {
+    if (value.or && Array.isArray(value.or)) {
+      const orQueries = value.or.map(filterGroup =>
+        Object.keys(filterGroup)
+          .map(filterType => formatFilterString(filterType, filterGroup[filterType]))
+          .join(':')
+      )
+      return `${key}=(${orQueries.join('|')})`
+    }
+
     const filterValues = Object.keys(value).map(filter =>
       formatFilterString(filter, value[filter])
     )
