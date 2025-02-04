@@ -21,6 +21,8 @@ export interface HierarchyBase {
     created_at?: string
     updated_at?: string
     published_at?: string
+    admin_attributes?: { [key: string]: string }
+    shopper_attributes?: { [key: string]: string }
   }
   meta?: {
     owner?: 'organization' | 'store'

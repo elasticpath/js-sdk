@@ -18,6 +18,8 @@ export interface NodeBase {
     slug?: string
     curated_products?: string[]
     locales?: { [key in Locales]?: { name?: string; description?: string } }
+    admin_attributes?: { [key: string]: string }
+    shopper_attributes?: { [key: string]: string }
   }
   relationships?: {
     parent: {
