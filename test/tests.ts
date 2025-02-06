@@ -40,6 +40,7 @@ require('./unit/one-time-password-token-request')
 
 // Utilities
 require('./utils/helpers')
+require('./utils/formatQueryString')
 require('./utils/throttle')
 require('./utils/configFetch')
 
