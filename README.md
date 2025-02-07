@@ -1,6 +1,6 @@
 <img src="https://www.elasticpath.com/themes/custom/bootstrap_sass/logo.svg" alt="" width="400" />
 
-# Elastic Path Commerce Cloud JavaScript SDK
+# Elastic Path Commerce Cloud JavaScript SDK 
 
 [![npm version](https://img.shields.io/npm/v/@elasticpath/js-sdk.svg)](https://www.npmjs.com/package/@elasticpath/js-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
