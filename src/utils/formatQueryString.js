@@ -24,16 +24,23 @@ export function formatQueryString(key, value) {
   }
 
   if (key === 'filter') {
+    const filterValues = []
+    
+    // Handle 'or' conditions if they exist
     if (value.or && Array.isArray(value.or)) {
       const orQueries = value.or.map(filterGroup => Object.keys(filterGroup)
         .map(filterType => formatFilterString(filterType, filterGroup[filterType]))
         .join(':')
       )
-      return `${key}=(${orQueries.join('|')})`
+      filterValues.push(`(${orQueries.join('|')})`)
     }
 
-    const filterValues = Object.keys(value).map(filter => formatFilterString(filter, value[filter])
-    )
+    // Handle other filter types
+    Object.keys(value).forEach(filter => {
+      if (filter !== 'or') {
+        filterValues.push(formatFilterString(filter, value[filter]))
+      }
+    })
 
     return `${key}=${filterValues.join(':')}`
   }

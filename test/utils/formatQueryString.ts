@@ -41,19 +41,28 @@ describe('Format query string', () => {
 
   it('should handle complex OR conditions with multiple filter types', () => {
     const res = formatQueryString('filter', {
+      eq: {
+        enabled: '"true"',
+        stackable: '"true"'
+      },
       or: [
         {
-          eq: { category: 'hoodies' },
-          gt: { price: '10' }
+          le: {
+            start: '"2025-02-06T22:19:56.492Z"'
+          },
+          gt: {
+            end: '"2025-02-06T22:19:56.492Z"'
+          }
         },
         {
-          eq: { category: 't-shirts' },
-          lt: { price: '20' }
+          le: {
+            end: '"2025-02-06T22:19:56.492Z"'
+          }
         }
       ]
     })
     expect(res).to.equal(
-      'filter=(eq(category,hoodies):gt(price,10)|eq(category,t-shirts):lt(price,20))'
+      'filter=(le(start,"2025-02-06T22:19:56.492Z"):gt(end,"2025-02-06T22:19:56.492Z")|le(end,"2025-02-06T22:19:56.492Z")):eq(enabled,"true"):eq(stackable,"true")'
     )
   })
 
