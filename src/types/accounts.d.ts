@@ -40,7 +40,7 @@ export interface Account extends AccountBase, Identifiable {
 export interface AccountBase {
   type: string
   name: string
-  legal_name: string
+  legal_name?: string
   registration_id?: string
   parent_id?: string
   external_ref?: string
