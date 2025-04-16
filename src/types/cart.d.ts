@@ -71,6 +71,7 @@ export interface Cart {
   discount_settings: {
     custom_discounts_enabled: boolean
   }
+  snapshot_date?: string
 }
 
 export interface CartItemBase {
