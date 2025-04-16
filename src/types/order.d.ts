@@ -74,6 +74,7 @@ export interface OrderBase {
   shipping_address: OrderShippingAddress
   billing_address: OrderBillingAddress
   external_ref?: string
+  order_number?: string
 }
 
 export interface Order extends Identifiable, OrderBase {
