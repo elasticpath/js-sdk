@@ -1,4 +1,5 @@
 import CRUDExtend from '../extends/crud'
+import { buildURL } from '../utils/helpers'
 
 class CustomersEndpoint extends CRUDExtend {
   constructor(endpoint) {
@@ -43,6 +44,34 @@ class CustomersEndpoint extends CRUDExtend {
 
   Token(email, password) {
     return this.TokenViaPassword(email, password)
+  }
+
+  TotalMethod(totalMethod) {
+    this.total_method = totalMethod
+    return this
+  }
+
+  All(token = null) {
+    const { includes, sort, limit, offset, filter, total_method } = this
+
+    this.call = this.request.send(
+      buildURL(this.endpoint, {
+        includes,
+        sort,
+        limit,
+        offset,
+        filter,
+        total_method: total_method ?? 'exact'
+      }),
+      'GET',
+      undefined,
+      token,
+      this
+    )
+
+    this.total_method = undefined
+
+    return this.call
   }
 }
 export default CustomersEndpoint
