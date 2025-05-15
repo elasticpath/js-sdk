@@ -101,7 +101,7 @@ function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSl
     query.sort = `${sort}`
   }
 
-  if (limit) {
+  if (limit !== undefined && limit !== null) {
     query.limit = `[limit]=${limit}`
   }
 
@@ -136,7 +136,7 @@ export function buildURL(endpoint, params) {
   if (
     params.includes ||
     params.sort ||
-    params.limit ||
+    (params.limit !== undefined && params.limit !== null) ||
     params.offset ||
     params.filter ||
     params.useTemplateSlugs ||
