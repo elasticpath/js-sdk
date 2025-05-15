@@ -135,4 +135,12 @@ export interface CustomersEndpoint
     codeVerifier: string,
     headers?: object
   ): Promise<Resource<CustomerToken>>
+
+  /**
+   * Total Method
+   * Description: The total method to use for the customer endpoint.
+   * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/orders-and-customers/customers/index.html
+   * @param totalMethod [string] the total method to use for the customer endpoint
+   */
+  TotalMethod(totalMethod: string): this
 }
