@@ -61,7 +61,7 @@ class CustomersEndpoint extends CRUDExtend {
         limit,
         offset,
         filter,
-        total_method: total_method ?? 'exact'
+        ...(total_method && { total_method })
       }),
       'GET',
       undefined,
