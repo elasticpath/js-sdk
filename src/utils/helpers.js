@@ -90,7 +90,7 @@ export function parseJSON(response) {
   })
 }
 
-function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSlugs}) {
+function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSlugs, total_method }) {
   const query = {}
 
   if (includes) {
@@ -101,7 +101,7 @@ function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSl
     query.sort = `${sort}`
   }
 
-  if (limit) {
+  if (limit !== undefined && limit !== null) {
     query.limit = `[limit]=${limit}`
   }
 
@@ -115,6 +115,10 @@ function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSl
 
   if(useTemplateSlugs) {
     query.useTemplateSlugs = useTemplateSlugs
+  }
+
+  if(total_method) {
+    query.total_method = total_method
   }
 
   return Object.keys(query)
@@ -132,10 +136,11 @@ export function buildURL(endpoint, params) {
   if (
     params.includes ||
     params.sort ||
-    params.limit ||
+    (params.limit !== undefined && params.limit !== null) ||
     params.offset ||
     params.filter ||
-    params.useTemplateSlugs
+    params.useTemplateSlugs ||
+    params.total_method
   ) {
     const paramsString = buildQueryParams(params)
 

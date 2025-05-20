@@ -61,6 +61,7 @@ export interface ResourcePage<R, I = never> extends ResourceList<R> {
     }
     results: {
       total: number
+      total_method?: 'observed' | 'exact'
     }
   }
   included?: I

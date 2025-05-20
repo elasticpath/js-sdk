@@ -23,6 +23,10 @@ export function formatQueryString(key, value) {
     return `page${value}`
   }
 
+  if (key === 'total_method') {
+    return `page[total_method]=${value}`
+  }
+
   if (key === 'filter') {
     const filterValues = []
     
