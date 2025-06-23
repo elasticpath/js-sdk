@@ -18,6 +18,8 @@ export interface ActionLimitation {
   items?: {
     max_items?: number
     price_strategy?: string
+    auto_add?: boolean
+    show_suggestions?: boolean
   }
 }
 
