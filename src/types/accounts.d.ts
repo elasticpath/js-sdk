@@ -5,8 +5,10 @@ import {
   CrudQueryableResource,
   Identifiable,
   Resource,
-  ResourceList,
+  ResourcePage
 } from './core'
+import { AccountTag } from './account-tags'
+import { RelationshipToMany } from './core'
 
 /**
  * The Account object Interface
@@ -34,6 +36,7 @@ export interface Account extends AccountBase, Identifiable {
         }
       }
     ]
+    account_tags: RelationshipToMany<'account_tag'>
   }
 }
 
@@ -44,8 +47,10 @@ export interface AccountBase {
   registration_id?: string
   parent_id?: string
   external_ref?: string
+  relationships?: {
+    account_tags: RelationshipToMany<'account_tag'>
+  }
 }
-
 
 /**
  * filter for accounts
@@ -62,6 +67,7 @@ export interface AccountFilter {
     legal_name?: string
     registration_id?: string
     external_ref?: string
+    account_tags?: string[]
   }
 }
 export interface AccountUpdateBody extends Partial<AccountBase> {}
@@ -77,7 +83,7 @@ export interface AccountEndpoint
       AccountUpdateBody,
       AccountFilter,
       never,
-      never
+      'account_tags'
     >,
     'All' | 'Create' | 'Get' | 'Update'
   > {
@@ -89,7 +95,17 @@ export interface AccountEndpoint
    * @param token - The Bearer token to grant access to the API.
    * @param headers
    */
-  All(token?: string, headers?): Promise<ResourceList<Account>>
+  All(
+    token?: string,
+    headers?: {}
+  ): Promise<
+    ResourcePage<
+      Account,
+      {
+        account_tags: AccountTag[]
+      }
+    >
+  >
 
   /**
    * Get an Account by reference
@@ -103,8 +119,11 @@ export interface AccountEndpoint
    */
   Create(body: AccountBase): Promise<Resource<Account>>
 
- /**
+  /**
    * Update an Account
    */
-  Update(accountId: string, body: Partial<AccountBase>): Promise<Resource<Account>>
+  Update(
+    accountId: string,
+    body: Partial<AccountBase>
+  ): Promise<Resource<Account>>
 }
