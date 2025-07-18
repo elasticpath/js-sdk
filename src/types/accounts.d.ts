@@ -126,4 +126,26 @@ export interface AccountEndpoint
     accountId: string,
     body: Partial<AccountBase>
   ): Promise<Resource<Account>>
+
+  /**
+   * Add account tags to an Account
+   */
+  AddAccountTags(
+    accountId: string,
+    requestBody: Array<{
+      id: string
+      type: 'account_tag'
+    }>
+  ): Promise<void>
+
+  /**
+   * Delete account tags from an Account
+   */
+  DeleteAccountTags(
+    accountId: string,
+    requestBody: Array<{
+      id: string
+      type: 'account_tag'
+    }>
+  ): Promise<void>
 }

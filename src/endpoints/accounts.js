@@ -30,6 +30,22 @@ class AccountsEndpoint extends CRUDExtend {
 
     return this.call
   }
+
+  AddAccountTags(accountId, requestBody) {
+    return this.request.send(
+      `${this.endpoint}/${accountId}/relationships/account-tags`,
+      'POST',
+      requestBody
+    )
+  }
+
+  DeleteAccountTags(accountId, requestBody) {
+    return this.request.send(
+      `${this.endpoint}/${accountId}/relationships/account-tags`,
+      'DELETE',
+      requestBody
+    )
+  }
 }
 
 export default AccountsEndpoint
