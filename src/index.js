@@ -61,6 +61,7 @@ import SubscriptionProrationPoliciesEndpoint from './endpoints/subscription-pror
 import SubscriptionInvoicesEndpoint from './endpoints/subscription-invoices'
 import CustomRelationshipsEndpoint from './endpoints/custom-relationships'
 import MultiLocationInventoriesEndpoint from './endpoints/multi-location-inventories'
+import AccountTagsEndpoint from './endpoints/account-tags'
 
 import {
   cartIdentifier,
@@ -154,6 +155,7 @@ export default class ElasticPath {
     this.SubscriptionInvoices = new SubscriptionInvoicesEndpoint(config)
     this.CustomRelationships = new CustomRelationshipsEndpoint(config)
     this.MultiLocationInventories = new MultiLocationInventoriesEndpoint(config)
+    this.AccountTags = new AccountTagsEndpoint(config)
   }
 
   // Expose `Cart` class on ElasticPath class
