@@ -37,6 +37,42 @@ class HierarchiesEndpoint extends CRUDExtend {
       token
     )
   }
+
+  GetNodesByIds(nodeIds, token = null) {
+    if (!nodeIds || nodeIds.length === 0) {
+      return Promise.resolve({
+        data: [],
+        links: {},
+        meta: {
+          page: {
+            current: 1,
+            limit: 100,
+            offset: 0,
+            total: 0
+          },
+          results: {
+            total: 0
+          }
+        }
+      })
+    }
+
+    const filter = {
+      or: nodeIds.map(id => ({
+        eq: { id }
+      }))
+    }
+
+    return this.request.send(
+      buildURL('hierarchies/nodes', {
+        filter,
+        include_hierarchies: true
+      }),
+      'GET',
+      undefined,
+      token
+    )
+  }
 }
 
 export default HierarchiesEndpoint
