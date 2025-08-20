@@ -90,7 +90,8 @@ export function parseJSON(response) {
   })
 }
 
-function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSlugs, total_method }) {
+function buildQueryParams(params) {
+  const { includes, sort, limit, offset, filter, useTemplateSlugs, total_method, ...additionalParams } = params
   const query = {}
 
   if (includes) {
@@ -121,6 +122,13 @@ function buildQueryParams({ includes, sort, limit, offset, filter, useTemplateSl
     query.total_method = total_method
   }
 
+  // Add any additional parameters with URI encoding
+  Object.keys(additionalParams).forEach(key => {
+    if (additionalParams[key] !== undefined && additionalParams[key] !== null) {
+      query[key] = additionalParams[key]
+    }
+  })
+
   return Object.keys(query)
     .map(k => formatQueryString(k, query[k]))
     .join('&')
@@ -133,18 +141,17 @@ export function formatQueryParams(query) {
 }
 
 export function buildURL(endpoint, params) {
-  if (
-    params.includes ||
-    params.sort ||
-    (params.limit !== undefined && params.limit !== null) ||
-    params.offset ||
-    params.filter ||
-    params.useTemplateSlugs ||
-    params.total_method
-  ) {
+  // Check if any params are provided
+  const hasParams = Object.keys(params).some(key => 
+    params[key] !== undefined && params[key] !== null
+  )
+  
+  if (hasParams) {
     const paramsString = buildQueryParams(params)
-
-    return `${endpoint}?${paramsString}`
+    
+    if (paramsString) {
+      return `${endpoint}?${paramsString}`
+    }
   }
   return endpoint
 }

@@ -49,7 +49,7 @@ export interface DuplicateHierarchyBody {
   }
 }
 
-export type DuplicateHierarchyJob  = Identifiable & PcmJobBase
+export type DuplicateHierarchyJob = Identifiable & PcmJobBase
 
 export interface HierarchyFilter {
   // TODO
@@ -82,6 +82,7 @@ export interface HierarchiesEndpoint
     body: DuplicateHierarchyBody,
     token?: string
   ): Promise<Resource<DuplicateHierarchyJob>>
+  GetNodesByIds(nodeIds: string[], token?: string): Promise<ResourcePage<Node>>
   Limit(value: number): HierarchiesEndpoint
   Offset(value: number): HierarchiesEndpoint
 }
