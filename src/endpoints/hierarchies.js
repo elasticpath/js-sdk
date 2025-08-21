@@ -58,9 +58,9 @@ class HierarchiesEndpoint extends CRUDExtend {
     }
 
     const filter = {
-      or: nodeIds.map(id => ({
-        eq: { id }
-      }))
+      in: {
+        id: nodeIds
+      }
     }
 
     return this.request.send(
