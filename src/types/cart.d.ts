@@ -15,6 +15,7 @@ import { Address } from './address'
 import { Price, FormattedPrice } from './price'
 import { Order } from './order'
 import { PcmProductResponse } from './pcm'
+import { Promotion } from './promotions'
 
 export interface CheckoutCustomer {
   id: string
@@ -58,6 +59,7 @@ export interface Cart {
   links?: {}
   meta?: {
     display_price?: {
+      discount?: FormattedPrice
       with_tax?: FormattedPrice
       without_tax?: FormattedPrice
       tax?: FormattedPrice
@@ -165,6 +167,11 @@ export interface BulkAddOptions {
   add_all_or_nothing: boolean
 }
 
+export type AddProductsItem = {
+  quantity?: number
+  [key: string]: any
+} & ({ id: string; sku?: never } | { sku: string; id?: never })
+
 export interface BulkCustomDiscountOptions {
   add_all_or_nothing: boolean
 }
@@ -199,7 +206,7 @@ export interface CartTaxItemObject {
   }
 }
 
-export type CartInclude = 'items' | 'tax_items'
+export type CartInclude = 'items' | 'tax_items' | 'promotions'
 
 interface CartQueryableResource<R, F, S>
   extends QueryableResource<Cart, F, S, CartInclude> {
@@ -208,6 +215,7 @@ interface CartQueryableResource<R, F, S>
 
 export interface CartIncluded {
   items: CartItem[]
+  promotions: Promotion[]
 }
 
 export interface CartAdditionalHeaders {
@@ -385,6 +393,21 @@ export interface CartEndpoint
     additionalHeaders?: CartAdditionalHeaders
   ): Promise<CartItemsResponse>
 
+  /**
+   * Add Multiple Products to Cart
+   * Description: Add multiple products to cart in a single request. Each product can be identified by either ID or SKU.
+   * @param products Array of products to add, each with either an id or sku field
+   * @param options Optional bulk add options
+   * @param token Optional customer token
+   * @param additionalHeaders Optional additional headers
+   */
+  AddProducts(
+    products: AddProductsItem[],
+    options?: BulkAddOptions,
+    token?: string,
+    additionalHeaders?: CartAdditionalHeaders
+  ): Promise<CartItemsResponse>
+
   RemoveAllItems(): Promise<CartItemsResponse>
 
   /**
@@ -417,6 +440,14 @@ export interface CartEndpoint
    * @param code the promotion code.
    */
   AddPromotion(code: string): Promise<CartItemsResponse>
+
+  /**
+   * Remove promotion from Cart
+   * Description: Removes a manually applied promotion code from a cart. Does not work if the promotion is applied automatically.
+   * DOCS: https://developer.elasticpath.com/docs/api/carts/delete-a-promotion-via-promotion-code
+   * @param promoCode the promotion code to remove.
+   */
+  RemovePromotion(promoCode: string): Promise<{}>
 
   /**
    * Bulk Update Items to Cart

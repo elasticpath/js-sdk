@@ -7,9 +7,14 @@ import {
 } from '../utils/helpers'
 
 class CartEndpoint extends BaseExtend {
+  /**
+   * @param {import('../factories/request').default} request - The RequestFactory instance
+   * @param {string} id - The cart ID
+   */
   constructor(request, id) {
     super(...arguments)
 
+    /** @type {import('../factories/request').default} */
     this.request = request
     this.cartId = id
     this.endpoint = 'carts'
@@ -83,6 +88,38 @@ class CartEndpoint extends BaseExtend {
       token,
       null,
       true,
+      null,
+      additionalHeaders
+    )
+  }
+
+  AddProducts(products, options, token = null, additionalHeaders = {}) {
+    const items = products.map(product => {
+      const { id, sku, quantity = 1, ...rest } = product
+      const item = {
+        type: 'cart_item',
+        quantity,
+        ...rest
+      }
+      
+      if (id) {
+        item.id = id
+      } else if (sku) {
+        item.sku = sku
+      }
+      
+      return item
+    })
+
+    const body = options ? { data: items, options } : { data: items }
+
+    return this.request.send(
+      `${this.endpoint}/${this.cartId}/items`,
+      'POST',
+      body,
+      token,
+      null,
+      false,
       null,
       additionalHeaders
     )
@@ -173,6 +210,13 @@ class CartEndpoint extends BaseExtend {
       'POST',
       body,
       token
+    )
+  }
+
+  RemovePromotion(promoCode) {
+    return this.request.send(
+      `${this.endpoint}/${this.cartId}/discounts/${promoCode}`,
+      'DELETE'
     )
   }
 
