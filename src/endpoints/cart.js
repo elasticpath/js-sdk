@@ -202,14 +202,26 @@ class CartEndpoint extends BaseExtend {
     })
   }
 
-  AddPromotion(code, token = null) {
-    const body = buildCartItemData(code, null, 'promotion_item')
+  AddPromotion(code, token=null, currency = null) {
+
+    const additionalHeaders = currency
+      ? { 'X-MOLTIN-CURRENCY': currency }
+      : {}
 
     return this.request.send(
       `${this.endpoint}/${this.cartId}/items`,
       'POST',
-      body,
-      token
+      {
+        data: {
+          type: 'promotion_item',
+          code
+        }
+      },
+      token,
+      null,
+      null,
+      null,
+      additionalHeaders
     )
   }
 
