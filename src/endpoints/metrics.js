@@ -23,6 +23,40 @@ class MetricsEndpoint extends BaseExtend {
       'GET'
     )
   }
+
+  // V2 Metrics Endpoints
+
+  GetOrderMetricsSummary(query) {
+    const formattedString = formatQueryParams(query)
+    return this.request.send(
+      `${this.endpoint}/orders/summary?${formattedString}`,
+      'GET'
+    )
+  }
+
+  GetOrderCountTimeSeries(query) {
+    const formattedString = formatQueryParams(query)
+    return this.request.send(
+      `${this.endpoint}/orders/timeseries/count?${formattedString}`,
+      'GET'
+    )
+  }
+
+  GetOrderDiscountTimeSeries(query) {
+    const formattedString = formatQueryParams(query)
+    return this.request.send(
+      `${this.endpoint}/orders/timeseries/discount?${formattedString}`,
+      'GET'
+    )
+  }
+
+  GetOrderValueTimeSeries(query) {
+    const formattedString = formatQueryParams(query)
+    return this.request.send(
+      `${this.endpoint}/orders/timeseries/value?${formattedString}`,
+      'GET'
+    )
+  }
 }
 
 export default MetricsEndpoint
