@@ -21,7 +21,7 @@ export interface MetricsV2Query {
   start_date: string
   end_date: string
   currency: string
-  interval?: '1hr' | '1d'
+  interval?: '1hr' | '1d' | '1wk'
   filter?: MetricsFilter
 }
 
