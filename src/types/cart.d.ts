@@ -431,8 +431,10 @@ export interface CartEndpoint
    * @param code the promotion code.
    * @param token a customer token to apply customer specific promotions.
    * @param currency the currency to apply the promotion in.
+   * @param channel the channel to apply the promotion in.
+   * @param contextTag the context tag to apply the promotion in.
    */
-  AddPromotion(code: string, token?: string, currency?: string): Promise<CartItemsResponse>
+  AddPromotion(code: string, token?: string, currency?: string, channel?: string, contextTag?: string): Promise<CartItemsResponse>
 
   /**
    * Remove promotion from Cart

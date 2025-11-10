@@ -202,11 +202,13 @@ class CartEndpoint extends BaseExtend {
     })
   }
 
-  AddPromotion(code, token=null, currency = null) {
+  AddPromotion(code, token=null, currency = null, channel = null, contextTag = null) {
 
-    const additionalHeaders = currency
-      ? { 'X-MOLTIN-CURRENCY': currency }
-      : {}
+    const additionalHeaders = {
+      ...(currency && { 'X-MOLTIN-CURRENCY': currency }),
+      ...(channel && { 'EP-Channel': channel }),
+      ...(contextTag && { 'EP-Context-Tag': contextTag })
+    }
 
     return this.request.send(
       `${this.endpoint}/${this.cartId}/items`,
