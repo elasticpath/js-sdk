@@ -29,6 +29,7 @@ export interface OrderMetricsSummary {
   count: number
   total_value: number
   total_discount: number
+  updated_at: string
 }
 
 export interface OrderCountTimeSeries {
