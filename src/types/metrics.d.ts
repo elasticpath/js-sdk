@@ -20,6 +20,7 @@ export interface MetricsFilter {
 export interface MetricsV2Query {
   start_date: string
   end_date: string
+  timezone: string
   currency: string
   interval?: '1hr' | '1d' | '1wk'
   filter?: MetricsFilter
