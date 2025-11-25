@@ -39,6 +39,12 @@ export interface Settings {
   address_mandatory_fields: string[]
 
   include_organization_resources: boolean
+
+  /**
+   * Shopper Address Limit
+   * Description: This defines the maximum number of addresses a shopper can have.
+   */
+  shopper_address_limit: number
 }
 
 export interface TtlSettings {

@@ -56,7 +56,8 @@ describe('ElasticPath settings', () => {
             'country',
             'instructions'
           ],
-          include_organization_resources: false
+          include_organization_resources: false,
+          shopper_address_limit: 10
         }
       })
     })
@@ -114,7 +115,8 @@ describe('ElasticPath settings', () => {
             'country',
             'instructions'
           ],
-          include_organization_resources: false
+          include_organization_resources: false,
+          shopper_address_limit: 10
         }
       })
     })
