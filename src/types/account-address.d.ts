@@ -46,6 +46,29 @@ export interface AccountAddressEdit
     | 'country'
   > {}
 
+export interface AccountAddressFilterAttributes {
+  first_name?: string
+  last_name?: string
+  name?: string
+  phone_number?: string
+  instructions?: string
+  company_name?: string
+  line_1?: string
+  line_2?: string
+  city?: string
+  county?: string
+  region?: string
+  postcode?: string
+  country?: string
+}
+
+export interface AccountAddressFilter {
+  ilike?: AccountAddressFilterAttributes
+  eq?: AccountAddressFilterAttributes
+  in?: AccountAddressFilterAttributes
+  text?: AccountAddressFilterAttributes
+}
+
 /**
  * Address Endpoints
  * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/orders-and-customers/addresss/index.html
@@ -93,4 +116,6 @@ export interface AccountAddressesEndpoint {
   Limit(value: number): AccountAddressesEndpoint
 
   Offset(value: number): AccountAddressesEndpoint
+
+  Filter(filter: AccountAddressFilter): AccountAddressesEndpoint
 }
