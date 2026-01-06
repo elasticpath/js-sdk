@@ -58,6 +58,7 @@ export interface CartSettings {
   discounts?: {
     custom_discounts_enabled?: boolean
   }
+  show_all_carts: boolean
 }
 
 export interface SubscriptionSettings {
@@ -112,6 +113,7 @@ export interface SettingsEndpoint {
    * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/advanced/settings/cart-settings.html#put-cart-settings
    * @param body.type - The type is settings.
    * @param body.cart_expiry_days - The number of days in which the cart will expire.
+   * @param body.show_all_carts - When true, admins (users with admin scope) can retrieve all carts in the store via GET /v2/carts, regardless of customer or account associations. When false, admins can only see carts that are registered (associated with customers or accounts).
    */
   UpdateCart(body: CartSettings): Promise<Resource<CartSettings>>
 
@@ -125,7 +127,9 @@ export interface SettingsEndpoint {
    * Update Subscriptions Settings
    * Description: You can update the Subscriptions Settings using this endpoint
    */
-  UpdateSubscriptions(body: SubscriptionSettings): Promise<Resource<SubscriptionSettings>>
+  UpdateSubscriptions(
+    body: SubscriptionSettings
+  ): Promise<Resource<SubscriptionSettings>>
 
   /**
    * Get Promotions Settings
