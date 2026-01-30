@@ -55,10 +55,15 @@ export type CustomFieldValidation =
       immutable?: boolean 
       } 
     }
-  | { boolean: { 
-      allow_null_values?: boolean, 
-      immutable?: boolean 
-      } 
+  | { boolean: {
+      allow_null_values?: boolean,
+      immutable?: boolean
+      }
+    }
+  | { any: {
+      allow_null_values?: boolean,
+      immutable?: boolean
+      }
     }
 
 export interface CustomApiFieldBase {
