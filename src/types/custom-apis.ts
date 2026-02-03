@@ -30,49 +30,103 @@ export interface CustomApi extends Identifiable, CustomApiBase {
   }
 }
 
-export type CustomFieldValidation = 
-  | { string: { 
-      min_length?: number | null, 
-      max_length?: number | null, 
-      regex?: string | null, 
-      allow_null_values?: boolean, 
-      immutable?: boolean, 
-      unique: "yes" | "no", 
-      unique_case_insensitivity?: boolean 
-      } 
-    }
-  | { integer: { 
-      min_value?: number | null, 
-      max_value?: number | null, 
-      allow_null_values?: boolean, 
-      immutable?: boolean 
-      } 
-    }
-  | { float: { 
-      min_value?: number | null, 
-      max_value?: number | null, 
-      allow_null_values?: boolean, 
-      immutable?: boolean 
-      } 
-    }
-  | { boolean: { 
-      allow_null_values?: boolean, 
-      immutable?: boolean 
-      } 
-    }
+// ============================================================================
+// Field Types & Validation
+// ============================================================================
 
-export interface CustomApiFieldBase {
+/** All supported field types */
+export type FieldType = 'string' | 'integer' | 'float' | 'boolean' | 'any' | 'list'
+
+/** Common validation options shared by all field types */
+export interface CommonValidationOptions {
+  allow_null_values?: boolean
+  immutable?: boolean
+}
+
+/** Validation options for string fields */
+export interface StringValidationOptions extends CommonValidationOptions {
+  min_length?: number | null
+  max_length?: number | null
+  regex?: string | null
+  unique: 'yes' | 'no'
+  unique_case_insensitivity?: boolean
+}
+
+/** Validation options for integer fields */
+export interface IntegerValidationOptions extends CommonValidationOptions {
+  min_value?: number | null
+  max_value?: number | null
+}
+
+/** Validation options for float fields */
+export interface FloatValidationOptions extends CommonValidationOptions {
+  min_value?: number | null
+  max_value?: number | null
+}
+
+/** Validation options for boolean fields */
+export interface BooleanValidationOptions extends CommonValidationOptions {}
+
+/** Validation options for any fields */
+export interface AnyValidationOptions extends CommonValidationOptions {}
+
+/** Validation options for list fields */
+export interface ListValidationOptions extends CommonValidationOptions {
+  allowed_type?: 'any' | 'string' | 'integer' | 'float' | 'boolean'
+  min_length?: number | null
+  max_length?: number | null
+}
+
+/** Maps field types to their validation options for programmatic access */
+export type ValidationOptionsMap = {
+  string: StringValidationOptions
+  integer: IntegerValidationOptions
+  float: FloatValidationOptions
+  boolean: BooleanValidationOptions
+  any: AnyValidationOptions
+  list: ListValidationOptions
+}
+
+/**
+ * Union type matching the API response shape.
+ * Each variant has a single key matching the field type.
+ */
+export type CustomFieldValidation =
+  | { string: StringValidationOptions }
+  | { integer: IntegerValidationOptions }
+  | { float: FloatValidationOptions }
+  | { boolean: BooleanValidationOptions }
+  | { any: AnyValidationOptions }
+  | { list: ListValidationOptions }
+
+// ============================================================================
+// Custom API Fields
+// ============================================================================
+
+/** Common properties shared by all field types */
+interface CustomApiFieldCommon {
   name: string
   description: string
-  field_type: string
   type: string
   slug: string
-  validation?: CustomFieldValidation,
-  use_as_url_slug: boolean,
+  use_as_url_slug: boolean
   presentation?: Presentation
 }
 
-export interface CustomApiField extends Identifiable, CustomApiFieldBase {
+/**
+ * Discriminated union for field base types.
+ * Narrowing on `field_type` gives you the correctly typed `validation`.
+ */
+export type CustomApiFieldBase =
+  | (CustomApiFieldCommon & { field_type: 'string'; validation?: { string: StringValidationOptions } })
+  | (CustomApiFieldCommon & { field_type: 'integer'; validation?: { integer: IntegerValidationOptions } })
+  | (CustomApiFieldCommon & { field_type: 'float'; validation?: { float: FloatValidationOptions } })
+  | (CustomApiFieldCommon & { field_type: 'boolean'; validation?: { boolean: BooleanValidationOptions } })
+  | (CustomApiFieldCommon & { field_type: 'any'; validation?: { any: AnyValidationOptions } })
+  | (CustomApiFieldCommon & { field_type: 'list'; validation?: { list: ListValidationOptions } })
+
+/** Full field type with ID and metadata (from API response) */
+export type CustomApiField = Identifiable & CustomApiFieldBase & {
   links: {
     self: string
   }
@@ -83,7 +137,6 @@ export interface CustomApiField extends Identifiable, CustomApiFieldBase {
     }
   }
 }
-
 export interface CustomApisEndpoint {
   endpoint: 'settings/extensions/custom-apis'
   entriesEndpoint: 'extensions'
