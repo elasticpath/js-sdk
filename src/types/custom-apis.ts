@@ -60,9 +60,19 @@ export type CustomFieldValidation =
       immutable?: boolean
       }
     }
-  | { any: {
-      allow_null_values?: boolean,
-      immutable?: boolean
+  | {
+      any: {
+        allow_null_values?: boolean
+        immutable?: boolean
+      }
+    }
+  | {
+      list: {
+        allowed_type?: 'any' | 'string' | 'integer' | 'float' | 'boolean'
+        min_length?: number | null
+        max_length?: number | null
+        allow_null_values?: boolean
+        immutable?: boolean
       }
     }
 
