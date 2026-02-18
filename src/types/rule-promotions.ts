@@ -17,6 +17,7 @@ export interface ActionLimitation {
   max_quantity?: number
   items?: {
     max_items?: number
+    max_units?: number
     price_strategy?: string
     auto_add?: boolean
     show_suggestions?: boolean
