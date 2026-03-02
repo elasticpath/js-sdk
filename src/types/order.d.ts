@@ -108,6 +108,7 @@ export interface ShippingGroupBase extends Identifiable {
   relation: 'order'
   order_id?: string
   cart_id?: string
+  external_ref?: string
   shipping_type?: string
   tracking_reference?: string
   address?: OrderShippingAddress
