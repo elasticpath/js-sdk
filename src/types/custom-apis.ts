@@ -68,13 +68,22 @@ export interface FloatValidationOptions extends CommonValidationOptions {
 export interface BooleanValidationOptions extends CommonValidationOptions {}
 
 /** Validation options for any fields */
-export interface AnyValidationOptions extends CommonValidationOptions {}
+export interface AnyValidationOptions extends CommonValidationOptions {
+  json_schema?: {
+    version: string
+    schema: string
+  } | null
+}
 
 /** Validation options for list fields */
 export interface ListValidationOptions extends CommonValidationOptions {
   allowed_type?: 'any' | 'string' | 'integer' | 'float' | 'boolean'
   min_length?: number | null
   max_length?: number | null
+  json_schema?: {
+    version: string
+    schema: string
+  } | null
 }
 
 /** Maps field types to their validation options for programmatic access */
