@@ -196,4 +196,26 @@ export interface CustomApisEndpoint {
   ): Promise<ResponseBody>
 
   DeleteEntry<T = any>(customApiId: string, customApiEntryId: string): Promise<T>
+
+  GetEntriesBySlug<T = any>(slug: string): Promise<T>
+
+  GetEntryBySlug<T = any>(slug: string, entryId: string): Promise<T>
+
+  CreateEntryBySlug<RequestBody = any, ResponseBody = any>(
+    slug: string,
+    body: RequestBody
+  ): Promise<ResponseBody>
+
+  UpdateEntryBySlug<RequestBody = any, ResponseBody = any>(
+    slug: string,
+    entryId: string,
+    body: RequestBody
+  ): Promise<ResponseBody>
+
+  DeleteEntryBySlug<T = any>(slug: string, entryId: string): Promise<T>
+
+  Filter(filter: any): CustomApisEndpoint
+  Limit(value: number): CustomApisEndpoint
+  Offset(value: number): CustomApisEndpoint
+  Sort(value: string): CustomApisEndpoint
 }

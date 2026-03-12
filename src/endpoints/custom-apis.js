@@ -111,6 +111,33 @@ class CustomApisEndpoint extends CRUDExtend {
       'DELETE'
     )
   }
+
+  GetEntriesBySlug(slug) {
+    const { limit, offset, sort, filter } = this
+    return this.request.send(
+      buildURL(`extensions/${slug}`, { limit, offset, sort, filter }),
+      'GET',
+      undefined,
+      undefined,
+      this
+    )
+  }
+
+  GetEntryBySlug(slug, entryId) {
+    return this.request.send(`extensions/${slug}/${entryId}`, 'GET')
+  }
+
+  CreateEntryBySlug(slug, body) {
+    return this.request.send(`extensions/${slug}`, 'POST', body)
+  }
+
+  UpdateEntryBySlug(slug, entryId, body) {
+    return this.request.send(`extensions/${slug}/${entryId}`, 'PUT', body)
+  }
+
+  DeleteEntryBySlug(slug, entryId) {
+    return this.request.send(`extensions/${slug}/${entryId}`, 'DELETE')
+  }
 }
 
 export default CustomApisEndpoint
