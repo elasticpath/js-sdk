@@ -1,20 +1,29 @@
 function formatFilterString(type, filter) {
-    const filterStringArray = Object.keys(filter).map(key => {
-      const value = filter[key]
-      let queryString = `${key},${value}`
-  
-      if (Array.isArray(value)) {
-        queryString = `${key},${value.join(',')}`
-      } else if (typeof value === 'object' && value !== null) {
-        queryString = Object.keys(value)
-          .map(attr => `${key}.${attr},${value[attr]}`)
-          .join(':')
-      }
-      return `${type}(${queryString})`
-    })
-  
-    return filterStringArray.join(':')
+  // Handle is_null filter  usage { is_null: field } or { is_null: [field1, field2] }
+  if (type === 'is_null') {
+    if (Array.isArray(filter)) {
+      return filter.map(item => `${type}(${item})`).join(':')
+    }
+
+    return `${type}(${filter})`
   }
+
+  const filterStringArray = Object.keys(filter).map(key => {
+    const value = filter[key]
+    let queryString = `${key},${value}`
+
+    if (Array.isArray(value)) {
+      queryString = `${key},${value.join(',')}`
+    } else if (typeof value === 'object' && value !== null) {
+      queryString = Object.keys(value)
+        .map(attr => `${key}.${attr},${value[attr]}`)
+        .join(':')
+    }
+    return `${type}(${queryString})`
+  })
+
+  return filterStringArray.join(':')
+}
   
   
 
