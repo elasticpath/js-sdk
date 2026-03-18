@@ -123,4 +123,14 @@ describe('Format filter string', () => {
     })
     expect(res).to.equal('eq(price.gt,100:price.lt,200)')
   })
+
+  it('should handle is_null with a single field', () => {
+    const res = formatFilterString('is_null', 'name')
+    expect(res).to.equal('is_null(name)')
+  })
+
+  it('should handle is_null with an array of fields', () => {
+    const res = formatFilterString('is_null', ['name', 'description'])
+    expect(res).to.equal('is_null(name):is_null(description)')
+  })
 })
