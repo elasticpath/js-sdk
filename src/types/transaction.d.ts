@@ -68,6 +68,7 @@ export interface TransactionBase {
   transaction_type: 'purchase' | 'capture' | 'authorize' | 'refund'
   status: 'complete' | 'failed' | 'pending' | 'cancelled'
   relationships: any
+  failure_details?: { code?: string; reason?: string }
   meta: {
     display_price: {
       amount: number
