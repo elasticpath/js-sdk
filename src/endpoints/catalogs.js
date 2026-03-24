@@ -273,6 +273,24 @@ class Releases extends CRUDExtend {
       token
     )
   }
+
+  Delete({ catalogId, releaseId, token = null }) {
+    return this.request.send(
+      `catalogs/${catalogId}/${this.endpoint}/${releaseId}`,
+      'DELETE',
+      undefined,
+      token
+    )
+  }
+
+  DeleteAll({ catalogId, token = null }) {
+    return this.request.send(
+      `catalogs/${catalogId}/${this.endpoint}`,
+      'DELETE',
+      undefined,
+      token
+    )
+  }
 }
 
 class Rules extends CRUDExtend {
