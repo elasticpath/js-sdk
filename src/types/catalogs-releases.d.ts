@@ -48,6 +48,17 @@ export interface CatalogsReleasesEndpoint {
     token?: string
   }): Promise<Resource<ReleaseBase>>
 
+  Delete(options: {
+    catalogId: string
+    releaseId: string
+    token?: string
+  }): Promise<{}>
+
+  DeleteAll(options: {
+    catalogId: string
+    token?: string
+  }): Promise<{}>
+
   Limit(value: number): CatalogsReleasesEndpoint
 
   Offset(value: number): CatalogsReleasesEndpoint
