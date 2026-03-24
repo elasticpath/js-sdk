@@ -232,7 +232,7 @@ class Releases extends CRUDExtend {
 
   All({ catalogId, token = null }) {
     return this.request.send(
-      `catalogs/${this.endpoint}/${catalogId}`,
+      `catalogs/${catalogId}/${this.endpoint}`,
       'GET',
       undefined,
       token
