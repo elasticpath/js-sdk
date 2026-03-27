@@ -16,6 +16,10 @@ export interface CustomApiBase {
   type: string
   slug: string
   allow_upserts: boolean
+  presentation?: {
+    page?: string | null
+    section?: string | null
+  }
 }
 
 export interface CustomApi extends Identifiable, CustomApiBase {
