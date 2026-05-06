@@ -22,6 +22,14 @@ export interface ReleaseBodyBase {
   export_full_delta?: boolean
 }
 
+export type ReleaseIndexingStatus = 'succeeded' | 'failed'
+
+export interface ReleaseIndexingCompleteData {
+  data: {
+    status: ReleaseIndexingStatus
+  }
+}
+
 export interface CatalogsReleasesEndpoint {
   endpoint: 'releases'
 
