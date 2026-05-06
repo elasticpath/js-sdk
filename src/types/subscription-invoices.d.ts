@@ -12,7 +12,7 @@ import {
   ResourcePage
 } from './core'
 import { ItemTaxObject } from './cart'
-import { Price } from './price'
+import { FormattedPrice, Price } from './price'
 
 interface SubscriptionInvoiceItemPrice extends Omit<Price, 'includes_tax'> {
   includes_tax?: boolean
@@ -66,6 +66,11 @@ export interface SubscriptionInvoice
     subscription_id?: string
     subscriber_id?: string
     price?: SubscriptionInvoiceItemPrice
+    display_price?: {
+      with_tax: FormattedPrice
+      without_tax: FormattedPrice
+      tax: FormattedPrice
+    }
     timestamps: {
       updated_at: string
       created_at: string
