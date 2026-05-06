@@ -41,6 +41,8 @@ export interface PcmProductBase extends PcmProductRelationships {
     components?: ProductComponents
     custom_inputs?: CustomInputs
     tags?: string[]
+    admin_attributes?: { [key: string]: string }
+    shopper_attributes?: { [key: string]: string }
   }
 }
 
