@@ -259,7 +259,19 @@ export interface PcmProductsEndpoint
   /**
    * Export products
    * @param filter - products filters
+   * @param useTemplateSlugs - use template slugs instead of template IDs
+   * @param columns - select which columns to include in the exported CSV. Supports
+   *  individual keys (e.g. `admin_attributes.cost_of_goods`) and wildcards
+   *  (e.g. `admin_attributes.*`).
    * @constructor
    */
-  ExportProducts(filter?: PcmProductFilter, useTemplateSlugs?: boolean): Promise<Resource<PcmJob>>
+  ExportProducts(
+    filter?: PcmProductFilter,
+    useTemplateSlugs?: boolean,
+    columns?: PcmProductExportColumns
+  ): Promise<Resource<PcmJob>>
+}
+
+export interface PcmProductExportColumns {
+  include: string[]
 }
