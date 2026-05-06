@@ -348,6 +348,20 @@ class Rules extends CRUDExtend {
       token
     )
   }
+
+  Validate(body, token = null) {
+    const { limit, offset } = this
+
+    return this.request.send(
+      buildURL(`catalogs/${this.endpoint}/validate`, {
+        limit,
+        offset
+      }),
+      'POST',
+      body,
+      token
+    )
+  }
 }
 
 class CatalogsEndpoint extends CRUDExtend {
