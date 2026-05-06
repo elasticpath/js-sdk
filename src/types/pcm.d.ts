@@ -88,6 +88,8 @@ export interface ProductComponentOption {
   id: string
   quantity: number
   type: string
+  min?: number | null
+  max?: number | null
   sort_order?: number | null
   default?: boolean
   meta: {
