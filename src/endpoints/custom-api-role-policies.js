@@ -11,8 +11,8 @@ class CustomApiRolePoliciesEndpoint extends CRUDExtend {
 
   CreateCustomApiRolePolicy(body) {
     return this.request.send(
-      `${this.endpoint}/custom-api-role-policies`, 
-      'POST', 
+      `${this.endpoint}/custom-api-role-policies`,
+      'POST',
       body
     )
   }
@@ -25,11 +25,13 @@ class CustomApiRolePoliciesEndpoint extends CRUDExtend {
     )
   }
 
-  GetCustomApiRolePolicies({ customApiId }) {
+  GetCustomApiRolePolicies({ customApiId, include } = {}) {
     const { limit, offset, sort } = this
 
     return this.request.send(
-      buildURL(`${this.endpoint}/custom-api-role-policies?filter=eq(custom_api_id,${customApiId})`, {
+      buildURL(`${this.endpoint}/custom-api-role-policies`, {
+        filter: { eq: { custom_api_id: customApiId } },
+        ...(include === 'role' && { include }),
         limit,
         offset,
         sort
@@ -38,9 +40,16 @@ class CustomApiRolePoliciesEndpoint extends CRUDExtend {
     )
   }
 
-  GetBuiltInRoles() {
+  GetStandardUserRoles() {
     return this.request.send(
-      `${this.endpoint}/built-in-roles`,
+      `${this.endpoint}/standard-user-roles`,
+      'GET'
+    )
+  }
+
+  GetStandardShopperRoles() {
+    return this.request.send(
+      `${this.endpoint}/standard-shopper-roles`,
       'GET'
     )
   }
