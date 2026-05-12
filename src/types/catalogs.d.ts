@@ -74,6 +74,8 @@ export interface CatalogsEndpoint
   Products: CatalogsProductsEndpoint
   Releases: CatalogsReleasesEndpoint
   Rules: CatalogsRulesEndpoint
+  Limit(value: number): CatalogsEndpoint
+  Offset(value: number): CatalogsEndpoint
   GetCatalogReleases(
     catalogId: string,
     token?: string

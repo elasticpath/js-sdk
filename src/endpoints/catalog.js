@@ -128,8 +128,13 @@ class Hierarchies extends ShopperCatalogQuery {
   }
 
   All({ token = null, additionalHeaders = null } = {}) {
+    const { limit, offset } = this
+
     return this.request.send(
-      `catalog/${this.endpoint}`,
+      buildURL(`catalog/${this.endpoint}`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token,
@@ -157,8 +162,13 @@ class Hierarchies extends ShopperCatalogQuery {
     token = null,
     additionalHeaders = null
   }) {
+    const { limit, offset } = this
+
     return this.request.send(
-      `catalog/${this.endpoint}/${hierarchyId}/children`,
+      buildURL(`catalog/${this.endpoint}/${hierarchyId}/children`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token,
@@ -174,8 +184,13 @@ class Hierarchies extends ShopperCatalogQuery {
     token = null,
     additionalHeaders = null
   } = {}) {
+    const { limit, offset } = this
+
     return this.request.send(
-      `catalog/${this.endpoint}/${hierarchyId}/nodes`,
+      buildURL(`catalog/${this.endpoint}/${hierarchyId}/nodes`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token,

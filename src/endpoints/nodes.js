@@ -10,10 +10,13 @@ class NodesEndpoint {
     this.endpoint = 'nodes'
   }
 
-  // TODO: API - currently not working! (can get from hierarchy relationships)
   All({ hierarchyId, token = null }) {
+    const { limit, offset } = this
     return this.request.send(
-      `hierarchies/${hierarchyId}/${this.endpoint}`,
+      buildURL(`hierarchies/${hierarchyId}/${this.endpoint}`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token

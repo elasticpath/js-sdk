@@ -12,8 +12,12 @@ class Nodes extends CRUDExtend {
   }
 
   All({ token = null }) {
+    const { limit, offset } = this
     return this.request.send(
-      `catalogs/${this.endpoint}`,
+      buildURL(`catalogs/${this.endpoint}`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token
@@ -231,8 +235,12 @@ class Releases extends CRUDExtend {
   }
 
   All({ catalogId, token = null }) {
+    const { limit, offset } = this
     return this.request.send(
-      `catalogs/${catalogId}/${this.endpoint}`,
+      buildURL(`catalogs/${this.endpoint}/${catalogId}`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token
@@ -397,8 +405,12 @@ class CatalogsEndpoint extends CRUDExtend {
   }
 
   GetCatalogReleases(catalogId, token = null) {
+    const { limit, offset } = this
     return this.request.send(
-      `${this.endpoint}/${catalogId}/releases`,
+      buildURL(`${this.endpoint}/${catalogId}/releases`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token

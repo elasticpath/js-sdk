@@ -84,7 +84,6 @@ export interface NodesEndpoint {
     token?: string
   }): Promise<Resource<Node>>
 
-  // TODO: API - currently not working! (can get from hierarchy relationships)
   All(options: {
     hierarchyId: string
     token?: string
