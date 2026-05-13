@@ -41,8 +41,6 @@ export interface PcmProductBase extends PcmProductRelationships {
     components?: ProductComponents
     custom_inputs?: CustomInputs
     tags?: string[]
-    admin_attributes?: { [key: string]: string }
-    shopper_attributes?: { [key: string]: string }
   }
 }
 
@@ -88,8 +86,6 @@ export interface ProductComponentOption {
   id: string
   quantity: number
   type: string
-  min?: number | null
-  max?: number | null
   sort_order?: number | null
   default?: boolean
   meta: {
@@ -259,19 +255,7 @@ export interface PcmProductsEndpoint
   /**
    * Export products
    * @param filter - products filters
-   * @param useTemplateSlugs - use template slugs instead of template IDs
-   * @param columns - select which columns to include in the exported CSV. Supports
-   *  individual keys (e.g. `admin_attributes.cost_of_goods`) and wildcards
-   *  (e.g. `admin_attributes.*`).
    * @constructor
    */
-  ExportProducts(
-    filter?: PcmProductFilter,
-    useTemplateSlugs?: boolean,
-    columns?: PcmProductExportColumns
-  ): Promise<Resource<PcmJob>>
-}
-
-export interface PcmProductExportColumns {
-  include: string[]
+  ExportProducts(filter?: PcmProductFilter, useTemplateSlugs?: boolean): Promise<Resource<PcmJob>>
 }
