@@ -12,8 +12,12 @@ class Nodes extends CRUDExtend {
   }
 
   All({ token = null }) {
+    const { limit, offset } = this
     return this.request.send(
-      `catalogs/${this.endpoint}`,
+      buildURL(`catalogs/${this.endpoint}`, {
+        limit,
+        offset
+      }),
       'GET',
       undefined,
       token
