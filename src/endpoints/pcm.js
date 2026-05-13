@@ -64,18 +64,13 @@ class PCMEndpoint extends CRUDExtend {
     return this.request.send(`${this.endpoint}/detach_nodes`, 'POST', body)
   }
 
-  ExportProducts(filter, useTemplateSlugs, columns) {
-    const body = columns
-      ? { data: { type: 'product', attributes: { columns } } }
-      : undefined
-
+  ExportProducts(filter, useTemplateSlugs) {
     return this.request.send(
         buildURL(`${this.endpoint}/export`, {
           filter,
           useTemplateSlugs
         }),
-        'POST',
-        body
+        'POST'
     )
   }
 }

@@ -9,44 +9,6 @@ export interface CatalogsProductVariation
   options: Omit<Option, 'modifiers'>[]
 }
 
-export interface PriceTier {
-  minimum_quantity: number
-  amount: {
-    [currency: string]: {
-      amount: number
-      includes_tax: boolean
-    }
-  }
-}
-
-export interface AvailablePrice {
-  pricebook_id: string
-  shopper_attributes?: { [key: string]: string }
-  sale_id?: string
-  sale_expires?: string
-  price?: {
-    [currency: string]: {
-      amount: number
-      includes_tax: boolean
-    }
-  }
-  tiers?: { [tier: string]: PriceTier }
-}
-
-export interface AlternativePrice extends AvailablePrice {
-  name: string
-  display_price?: {
-    without_tax?: FormattedPrice
-    with_tax?: FormattedPrice
-  }
-  original_price?: {
-    [currency: string]: {
-      amount: number
-      includes_tax: boolean
-    }
-  }
-}
-
 export interface ProductResponse extends Identifiable {
   type: 'product'
   attributes: {
@@ -76,9 +38,6 @@ export interface ProductResponse extends Identifiable {
     weight: string
     manufacturer_part_num?: string
     extensions?: Extensions
-    available_prices?: AvailablePrice[]
-    alternative_prices?: { [name: string]: AlternativePrice }
-    available_pricebook_ids?: string[]
   }
   meta: {
     catalog_id?: string
@@ -117,7 +76,6 @@ export interface ProductResponse extends Identifiable {
           }
         }
         pricebook_id: string
-        alternative_prices?: { [name: string]: AlternativePrice }
       }
     }
   }
