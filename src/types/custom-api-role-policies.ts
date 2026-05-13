@@ -1,14 +1,23 @@
-import { Resource } from './core'
+import { Resource, ResourceList } from './core'
 
-export interface BuiltInRolePolicy {
+export interface StandardUserRole {
   id: string
-  type: 'built_in_role'
-  links: {
-    self: string
-  }
+  type: 'standard_user_role'
+  links: { self: string }
   name: string
-  cm_user_assignable: boolean
 }
+
+export interface StandardShopperRole {
+  id: string
+  type: 'standard_shopper_role'
+  links: { self: string }
+  name: string
+}
+
+export type StandardRole = StandardUserRole | StandardShopperRole
+export type StandardRoleType = StandardRole['type']
+
+export type IncludedRole = Omit<StandardRole, 'links'>
 
 export interface CustomApiRolePolicyBase {
   data: {
@@ -29,18 +38,8 @@ export interface CustomApiRolePolicyRequestBody {
   update: boolean
   delete: boolean
   relationships: {
-    custom_api: {
-      data: {
-        type: 'custom_api'
-        id: string
-      }
-    }
-    role: {
-      data: {
-        type: 'built_in_role'
-        id: string
-      }
-    }
+    custom_api: { data: { type: 'custom_api'; id: string } }
+    role: { data: { type: StandardRoleType; id: string } }
   }
 }
 
@@ -48,22 +47,10 @@ export interface CustomApiRolePolicy {
   id: string
   type: 'custom_api_role_policy'
   relationships: {
-    custom_api: {
-      data: {
-        type: 'custom_api'
-        id: string
-      }
-    }
-    role: {
-      data: {
-        type: 'built_in_role'
-        id: string
-      }
-    }
+    custom_api: { data: { type: 'custom_api'; id: string } }
+    role: { data: { type: StandardRoleType; id: string } }
   }
-  links: {
-    self: string
-  }
+  links: { self: string }
   meta: {
     timestamps: {
       created_at: string
@@ -75,6 +62,14 @@ export interface CustomApiRolePolicy {
   read: boolean
   update: boolean
   delete: boolean
+}
+
+export interface CustomApiRolePoliciesIncluded {
+  role: IncludedRole[]
+}
+
+export interface CustomApiRolePoliciesResponse extends ResourceList<CustomApiRolePolicy> {
+  included?: CustomApiRolePoliciesIncluded
 }
 
 export interface CustomApiRolePoliciesEndpoint {
@@ -91,9 +86,12 @@ export interface CustomApiRolePoliciesEndpoint {
 
   GetCustomApiRolePolicies(args: {
     customApiId: string
-  }): Promise<Resource<Array<CustomApiRolePolicy>>>
+    include?: 'role'
+  }): Promise<CustomApiRolePoliciesResponse>
 
-  GetBuiltInRoles(): Promise<Resource<Array<BuiltInRolePolicy>>>
+  GetStandardUserRoles(): Promise<ResourceList<StandardUserRole>>
+
+  GetStandardShopperRoles(): Promise<ResourceList<StandardShopperRole>>
 
   DeleteCustomApiRolePolicy(policyId: string): Promise<void>
 }
