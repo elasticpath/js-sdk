@@ -36,6 +36,7 @@ export interface ActionCondition {
 }
 
 export interface Action {
+  id?: string
   strategy: string
   args: any[]
   limitations?: ActionLimitation
