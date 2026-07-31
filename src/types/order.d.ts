@@ -38,6 +38,7 @@ export interface OrderAddressBase {
   company_name?: string
   line_1: string
   line_2?: string
+  line_3?: string
   city?: string
   postcode: string
   county?: string
