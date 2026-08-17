@@ -40,6 +40,7 @@ require('./unit/account-authentication-settings')
 require('./unit/account-membership-settings')
 require('./unit/account-memberships')
 require('./unit/application-keys')
+require('./unit/custom-user-roles')
 require('./unit/one-time-password-token-request')
 
 // Utilities
