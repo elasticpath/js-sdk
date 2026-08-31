@@ -31,12 +31,19 @@ export interface UpdateCustomUserRoleBody {
   access_levels?: Record<string, string>
 }
 
+export interface CustomUserRoleFilter {
+  eq?: {
+    name?: string
+  }
+}
+
 export interface CustomUserRolesEndpoint {
   endpoint: 'permissions'
 
   GetCustomUserRoles(args?: {
     limit?: number
     offset?: number
+    filter?: CustomUserRoleFilter
   }): Promise<ResourcePage<CustomUserRole>>
 
   GetCustomUserRole(roleId: string): Promise<Resource<CustomUserRole>>

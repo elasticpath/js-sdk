@@ -2,6 +2,19 @@ import CRUDExtend from '../extends/crud'
 
 import { buildURL } from '../utils/helpers'
 
+function withQuotedName(filter) {
+  const name = filter && filter.eq ? filter.eq.name : undefined
+  if (name === undefined || name === null) return filter
+
+  return {
+    ...filter,
+    eq: {
+      ...filter.eq,
+      name: `"${encodeURIComponent(String(name).replace(/"/g, '\\"'))}"`
+    }
+  }
+}
+
 class CustomUserRolesEndpoint extends CRUDExtend {
   constructor(endpoint) {
     super(endpoint)
@@ -9,11 +22,12 @@ class CustomUserRolesEndpoint extends CRUDExtend {
     this.endpoint = 'permissions'
   }
 
-  GetCustomUserRoles({ limit, offset } = {}) {
+  GetCustomUserRoles({ limit, offset, filter } = {}) {
     return this.request.send(
       buildURL(`${this.endpoint}/custom-user-roles`, {
         limit: limit !== undefined ? limit : this.limit,
-        offset: offset !== undefined ? offset : this.offset
+        offset: offset !== undefined ? offset : this.offset,
+        filter: withQuotedName(filter !== undefined ? filter : this.filter)
       }),
       'GET'
     )

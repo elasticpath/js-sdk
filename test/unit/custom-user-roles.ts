@@ -44,6 +44,65 @@ describe('ElasticPath custom user roles', () => {
     })
   })
 
+  it('should filter custom user roles by exact name', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get('/permissions/custom-user-roles')
+      .query({ filter: 'eq(name,"Inventory Controller")' })
+      .reply(200, { data: [customUserRole] })
+
+    return ElasticPath.CustomUserRoles.GetCustomUserRoles({
+      filter: { eq: { name: 'Inventory Controller' } }
+    }).then(response => {
+      assert.lengthOf(response.data, 1)
+      assert.propertyVal(response.data[0], 'name', 'Inventory Controller')
+    })
+  })
+
+  it('should escape quotes and encode reserved characters in the name', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get('/permissions/custom-user-roles')
+      // decodes server-side to eq(name,"Ops & \"Fulfilment\"")
+      .query({ filter: 'eq(name,"Ops & \\"Fulfilment\\"")' })
+      .reply(200, { data: [] })
+
+    return ElasticPath.CustomUserRoles.GetCustomUserRoles({
+      filter: { eq: { name: 'Ops & "Fulfilment"' } }
+    }).then(response => {
+      assert.lengthOf(response.data, 0)
+    })
+  })
+
+  it('should send the name filter alongside pagination', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get('/permissions/custom-user-roles')
+      .query({
+        'page[limit]': '100',
+        'page[offset]': '100',
+        filter: 'eq(name,"Inventory Controller")'
+      })
+      .reply(200, { data: [customUserRole] })
+
+    return ElasticPath.CustomUserRoles.GetCustomUserRoles({
+      limit: 100,
+      offset: 100,
+      filter: { eq: { name: 'Inventory Controller' } }
+    }).then(response => {
+      assert.lengthOf(response.data, 1)
+    })
+  })
+
   it('should return all custom user roles without params', () => {
     nock(apiUrl, {
       reqheaders: {
