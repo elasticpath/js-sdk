@@ -1,15 +1,54 @@
 import { assert } from 'chai'
 import nock from 'nock'
 import { gateway as ElasticPathGateway } from '../../src'
+import type {
+  AccessLevels,
+  CreateCustomUserRoleBody,
+  CustomUserRole,
+  UpdateCustomUserRoleBody
+} from '../../src/types/custom-user-roles'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 
-const customUserRole = {
+// The API requires every permission group on create, so a complete set is the
+// only valid starting point for a create body.
+const accessLevels: AccessLevels = {
+  accounts: 'none',
+  application_keys: 'none',
+  authentication: 'none',
+  catalog_releases: 'none',
+  catalog_search: 'none',
+  catalogs: 'none',
+  composer: 'none',
+  content_and_pages: 'none',
+  currencies: 'none',
+  custom_actions: 'none',
+  custom_apis: 'none',
+  flows: 'none',
+  inventories: 'manage',
+  legacy_catalogs: 'none',
+  metrics: 'none',
+  orders: 'view',
+  payment_gateways: 'none',
+  personal_data: 'none',
+  price_books: 'none',
+  products: 'none',
+  promotions: 'none',
+  settings: 'none',
+  subscription_billing: 'none',
+  subscription_jobs: 'none',
+  subscription_offerings: 'none',
+  subscription_subscribers: 'none',
+  team: 'none',
+  webhooks: 'none'
+}
+
+const customUserRole: CustomUserRole = {
   id: 'role-1',
   type: 'custom_user_role',
   name: 'Inventory Controller',
   description: 'Manage all inventory operations.',
-  access_levels: { orders: 'view', inventories: 'manage' },
+  access_levels: accessLevels,
   links: { self: `${apiUrl}/permissions/custom-user-roles/role-1` },
   meta: {
     timestamps: {
@@ -19,6 +58,18 @@ const customUserRole = {
     owner: 'store'
   }
 }
+
+// Compile-time coverage: the API rejects these bodies, so the types should too.
+// @ts-expect-error 'read' is not a valid access level
+const invalidLevel: AccessLevels = { ...accessLevels, orders: 'read' }
+// @ts-expect-error a custom user role may only hold 'none' for team
+const invalidTeamLevel: AccessLevels = { ...accessLevels, team: 'manage' }
+// @ts-expect-error metrics has no 'manage' level
+const invalidMetricsLevel: AccessLevels = { ...accessLevels, metrics: 'manage' }
+// @ts-expect-error inventores is not a permission group
+const unknownGroup: AccessLevels = { ...accessLevels, inventores: 'view' }
+
+void [invalidLevel, invalidTeamLevel, invalidMetricsLevel, unknownGroup]
 
 describe('ElasticPath custom user roles', () => {
   const ElasticPath = ElasticPathGateway({
@@ -219,11 +270,11 @@ describe('ElasticPath custom user roles', () => {
   })
 
   it('should create a custom user role passing the body through untouched', () => {
-    const body = {
-      type: 'custom_user_role' as const,
+    const body: CreateCustomUserRoleBody = {
+      type: 'custom_user_role',
       name: 'Inventory Controller',
       description: 'Manage all inventory operations.',
-      access_levels: { orders: 'view', inventories: 'manage' }
+      access_levels: accessLevels
     }
 
     nock(apiUrl, {
@@ -231,7 +282,7 @@ describe('ElasticPath custom user roles', () => {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
       }
     })
-      .post('/permissions/custom-user-roles', { data: body })
+      .post('/permissions/custom-user-roles', { data: { ...body } })
       .reply(201, { data: customUserRole })
 
     return ElasticPath.CustomUserRoles.CreateCustomUserRole(body).then(
@@ -242,8 +293,8 @@ describe('ElasticPath custom user roles', () => {
   })
 
   it('should update a custom user role with a sparse body', () => {
-    const body = {
-      type: 'custom_user_role' as const,
+    const body: UpdateCustomUserRoleBody = {
+      type: 'custom_user_role',
       access_levels: { inventories: 'manage' }
     }
 
@@ -252,7 +303,7 @@ describe('ElasticPath custom user roles', () => {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
       }
     })
-      .put('/permissions/custom-user-roles/role-1', { data: body })
+      .put('/permissions/custom-user-roles/role-1', { data: { ...body } })
       .reply(200, { data: customUserRole })
 
     return ElasticPath.CustomUserRoles.UpdateCustomUserRole(
