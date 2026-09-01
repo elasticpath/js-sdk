@@ -141,6 +141,30 @@ describe('ElasticPath custom user roles', () => {
       })
   })
 
+  it('should not reuse a Filter() after fetching a single role', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get('/permissions/custom-user-roles/role-1')
+      .reply(200, { data: customUserRole })
+      .get('/permissions/custom-user-roles')
+      .reply(200, { data: [customUserRole, customUserRole] })
+
+    const roles = ElasticPath.CustomUserRoles as unknown as {
+      Filter(filter: object): typeof ElasticPath.CustomUserRoles
+    }
+
+    roles.Filter({ eq: { name: 'Inventory Controller' } })
+
+    return ElasticPath.CustomUserRoles.GetCustomUserRole('role-1')
+      .then(() => ElasticPath.CustomUserRoles.GetCustomUserRoles())
+      .then(response => {
+        assert.lengthOf(response.data, 2)
+      })
+  })
+
   it('should send the name filter alongside pagination', () => {
     nock(apiUrl, {
       reqheaders: {

@@ -44,26 +44,40 @@ class CustomUserRolesEndpoint extends CRUDExtend {
   GetCustomUserRole(roleId) {
     return this.request.send(
       `${this.endpoint}/custom-user-roles/${roleId}`,
-      'GET'
+      'GET',
+      undefined,
+      undefined,
+      this
     )
   }
 
   CreateCustomUserRole(body) {
-    return this.request.send(`${this.endpoint}/custom-user-roles`, 'POST', body)
+    return this.request.send(
+      `${this.endpoint}/custom-user-roles`,
+      'POST',
+      body,
+      undefined,
+      this
+    )
   }
 
   UpdateCustomUserRole(roleId, body) {
     return this.request.send(
       `${this.endpoint}/custom-user-roles/${roleId}`,
       'PUT',
-      body
+      body,
+      undefined,
+      this
     )
   }
 
   DeleteCustomUserRole(roleId) {
     return this.request.send(
       `${this.endpoint}/custom-user-roles/${roleId}`,
-      'DELETE'
+      'DELETE',
+      undefined,
+      undefined,
+      this
     )
   }
 }
