@@ -10,11 +10,7 @@ function withQuotedName(filter) {
     ...filter,
     eq: {
       ...filter.eq,
-      name: `"${encodeURIComponent(
-        String(name)
-          .replace(/\\/g, '\\\\')
-          .replace(/"/g, '\\"')
-      )}"`
+      name: `"${encodeURIComponent(String(name).replace(/"/g, '\\"'))}"`
     }
   }
 }

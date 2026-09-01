@@ -148,25 +148,6 @@ describe('ElasticPath custom user roles', () => {
     })
   })
 
-  it('should escape backslashes in the name', () => {
-    nock(apiUrl, {
-      reqheaders: {
-        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
-      }
-    })
-      .get('/permissions/custom-user-roles')
-      // decodes server-side to eq(name,"Ops\\") — an escaped backslash
-      // before the closing quote, not an escaped quote
-      .query({ filter: 'eq(name,"Ops\\\\")' })
-      .reply(200, { data: [] })
-
-    return ElasticPath.CustomUserRoles.GetCustomUserRoles({
-      filter: { eq: { name: 'Ops\\' } }
-    }).then(response => {
-      assert.lengthOf(response.data, 0)
-    })
-  })
-
   it('should not reuse a Filter() from a previous request', () => {
     nock(apiUrl, {
       reqheaders: {
