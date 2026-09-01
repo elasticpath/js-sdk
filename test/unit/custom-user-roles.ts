@@ -80,6 +80,23 @@ describe('ElasticPath custom user roles', () => {
     })
   })
 
+  it('should sort custom user roles by name', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get('/permissions/custom-user-roles')
+      .query({ sort: '-name' })
+      .reply(200, { data: [customUserRole] })
+
+    return ElasticPath.CustomUserRoles.GetCustomUserRoles({
+      sort: '-name'
+    }).then(response => {
+      assert.lengthOf(response.data, 1)
+    })
+  })
+
   it('should escape backslashes in the name', () => {
     nock(apiUrl, {
       reqheaders: {

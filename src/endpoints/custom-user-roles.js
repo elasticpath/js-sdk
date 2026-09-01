@@ -26,12 +26,13 @@ class CustomUserRolesEndpoint extends CRUDExtend {
     this.endpoint = 'permissions'
   }
 
-  GetCustomUserRoles({ limit, offset, filter } = {}) {
+  GetCustomUserRoles({ limit, offset, filter, sort } = {}) {
     return this.request.send(
       buildURL(`${this.endpoint}/custom-user-roles`, {
         limit: limit !== undefined ? limit : this.limit,
         offset: offset !== undefined ? offset : this.offset,
-        filter: withQuotedName(filter !== undefined ? filter : this.filter)
+        filter: withQuotedName(filter !== undefined ? filter : this.filter),
+        sort: sort !== undefined ? sort : this.sort
       }),
       'GET',
       undefined,

@@ -44,6 +44,7 @@ export interface CustomUserRolesEndpoint {
     limit?: number
     offset?: number
     filter?: CustomUserRoleFilter
+    sort?: string
   }): Promise<ResourcePage<CustomUserRole>>
 
   GetCustomUserRole(roleId: string): Promise<Resource<CustomUserRole>>
