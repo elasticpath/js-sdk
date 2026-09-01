@@ -10,7 +10,11 @@ function withQuotedName(filter) {
     ...filter,
     eq: {
       ...filter.eq,
-      name: `"${encodeURIComponent(String(name).replace(/"/g, '\\"'))}"`
+      name: `"${encodeURIComponent(
+        String(name)
+          .replace(/\\/g, '\\\\')
+          .replace(/"/g, '\\"')
+      )}"`
     }
   }
 }
@@ -29,7 +33,10 @@ class CustomUserRolesEndpoint extends CRUDExtend {
         offset: offset !== undefined ? offset : this.offset,
         filter: withQuotedName(filter !== undefined ? filter : this.filter)
       }),
-      'GET'
+      'GET',
+      undefined,
+      undefined,
+      this
     )
   }
 
