@@ -1,4 +1,5 @@
 import { Resource, ResourceList } from './core'
+import { CustomUserRole } from './custom-user-roles'
 
 export interface StandardUserRole {
   id: string
@@ -17,7 +18,13 @@ export interface StandardShopperRole {
 export type StandardRole = StandardUserRole | StandardShopperRole
 export type StandardRoleType = StandardRole['type']
 
-export type IncludedRole = Omit<StandardRole, 'links'>
+export type CustomApiRolePolicyRoleType =
+  | StandardRoleType
+  | CustomUserRole['type']
+
+export type IncludedRole =
+  | Omit<StandardRole, 'links'>
+  | Omit<CustomUserRole, 'links'>
 
 export interface CustomApiRolePolicyBase {
   data: {
@@ -39,7 +46,7 @@ export interface CustomApiRolePolicyRequestBody {
   delete: boolean
   relationships: {
     custom_api: { data: { type: 'custom_api'; id: string } }
-    role: { data: { type: StandardRoleType; id: string } }
+    role: { data: { type: CustomApiRolePolicyRoleType; id: string } }
   }
 }
 
@@ -48,7 +55,7 @@ export interface CustomApiRolePolicy {
   type: 'custom_api_role_policy'
   relationships: {
     custom_api: { data: { type: 'custom_api'; id: string } }
-    role: { data: { type: StandardRoleType; id: string } }
+    role: { data: { type: CustomApiRolePolicyRoleType; id: string } }
   }
   links: { self: string }
   meta: {
