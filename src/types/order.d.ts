@@ -79,6 +79,7 @@ export interface OrderBase {
 }
 
 export interface Order extends Identifiable, OrderBase {
+  extended_attributes?: Record<string, string>
   meta: {
     display_price: {
       authorized: FormattedPrice
@@ -229,6 +230,11 @@ export interface CustomDiscount {
   discount_code: string
 }
 
+/**
+ * Merged into the existing map: keys set to null are removed, omitted keys are kept.
+ */
+export type ExtendedAttributesUpdate = Record<string, string | null>
+
 export interface OrderItem extends Identifiable, OrderItemBase {
   links: any
   meta?: {
@@ -294,6 +300,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
   custom_inputs?: Record<string, any>
   shipping_group_id?: string
   promotion_source?: string
+  extended_attributes?: Record<string, string>
 }
 
 export type PurchasePaymentMethod = 'purchase'
@@ -574,7 +581,10 @@ export interface OrdersEndpoint
    * @param body
    * @constructor
    */
-  Update(id: string, body: Subset<OrderBase>): Promise<Resource<Order>>
+  Update(
+    id: string,
+    body: Subset<OrderBase> & { extended_attributes?: ExtendedAttributesUpdate }
+  ): Promise<Resource<Order>>
 
   /**
    * anonymize an Order
