@@ -79,6 +79,7 @@ export interface OrderBase {
 }
 
 export interface Order extends Identifiable, OrderBase {
+  extended_attributes?: Record<string, string>
   meta: {
     display_price: {
       authorized: FormattedPrice
@@ -229,6 +230,34 @@ export interface CustomDiscount {
   discount_code: string
 }
 
+/**
+ * Merged into the existing map: keys set to null are removed, omitted keys are kept.
+ */
+export type ExtendedAttributesUpdate = Record<string, string | null>
+
+export interface UpdateOrderItemBody {
+  extended_attributes: ExtendedAttributesUpdate
+}
+
+export interface UpdateOrderItemsBodyItem extends UpdateOrderItemBody {
+  id: string
+}
+
+export interface UpdateOrderItemsOptions {
+  update_all_or_nothing?: boolean
+}
+
+export interface UpdateOrderItemsResponse {
+  data: OrderItem[]
+  errors?: {
+    status: string | number
+    title: string
+    detail?: string
+    source?: string
+    meta?: Record<string, any>
+  }[]
+}
+
 export interface OrderItem extends Identifiable, OrderItemBase {
   links: any
   meta?: {
@@ -250,6 +279,10 @@ export interface OrderItem extends Identifiable, OrderItemBase {
         value: FormattedPrice
       }
       without_discount?: {
+        unit: FormattedPrice
+        value: FormattedPrice
+      }
+      original_price?: {
         unit: FormattedPrice
         value: FormattedPrice
       }
@@ -290,6 +323,7 @@ export interface OrderItem extends Identifiable, OrderItemBase {
   custom_inputs?: Record<string, any>
   shipping_group_id?: string
   promotion_source?: string
+  extended_attributes?: Record<string, string>
 }
 
 export type PurchasePaymentMethod = 'purchase'
@@ -570,7 +604,36 @@ export interface OrdersEndpoint
    * @param body
    * @constructor
    */
-  Update(id: string, body: Subset<OrderBase>): Promise<Resource<Order>>
+  Update(
+    id: string,
+    body: Subset<OrderBase> & { extended_attributes?: ExtendedAttributesUpdate }
+  ): Promise<Resource<Order>>
+
+  /**
+   * Update an Order Item
+   * Description: extended_attributes is the only writable field on a placed order item.
+   * @param orderId - The ID of the order
+   * @param itemId - The ID of the order item
+   * @param body - The extended attributes to merge into the item
+   */
+  UpdateItem(
+    orderId: string,
+    itemId: string,
+    body: UpdateOrderItemBody
+  ): Promise<Resource<OrderItem>>
+
+  /**
+   * Bulk Update Order Items
+   * Description: Defaults to all-or-nothing; set update_all_or_nothing to false to apply valid items and report the rest in errors.
+   * @param orderId - The ID of the order
+   * @param items - The items to update, each with its ID and extended attributes
+   * @param options - Bulk update options
+   */
+  UpdateItems(
+    orderId: string,
+    items: UpdateOrderItemsBodyItem[],
+    options?: UpdateOrderItemsOptions
+  ): Promise<UpdateOrderItemsResponse>
 
   /**
    * anonymize an Order
