@@ -125,6 +125,10 @@ export interface CartItem extends CartItemBase {
         unit: FormattedPrice
         value: FormattedPrice
       }
+      original_price?: {
+        unit: FormattedPrice
+        value: FormattedPrice
+      }
       discounts?: FormattedPrice
     }
     timestamps: {
