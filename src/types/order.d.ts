@@ -135,6 +135,7 @@ export interface ShippingGroupBase extends Identifiable {
       base: FormattedPrice
       tax: FormattedPrice
       fees: FormattedPrice
+      discount?: FormattedPrice
     }
     total_display_price: {
       with_tax: FormattedPrice
@@ -146,7 +147,23 @@ export interface ShippingGroupBase extends Identifiable {
       authorized: FormattedPrice
       without_discount: FormattedPrice
       shipping: FormattedPrice
+      shipping_discount?: FormattedPrice
     }
+  }
+}
+
+/**
+ * Fields accepted by PUT /v2/orders/:id/shipping-groups/:id.
+ * `delivery_estimate` is replaced wholesale: omit it and the API clears it.
+ */
+export interface ShippingGroupUpdateBody {
+  address?: OrderShippingAddress
+  shipping_type?: string
+  tracking_reference?: string
+  external_ref?: string
+  delivery_estimate?: {
+    start: string
+    end: string
   }
 }
 
@@ -586,5 +603,12 @@ export interface OrdersEndpoint
   AllShippingGroups(id:string): Promise<ResourceList<ShippingGroupBase>>
 
   GetShippingGroup(id:string, ShippingGroupId: string): Promise<ResourceIncluded<ShippingGroupBase, ShippingIncluded>>
+
+  /**
+   * Update a Shipping Group on an Order
+   * Description: Updates the address, shipping type, tracking reference, external ref or delivery estimate of a shipping group.
+   * DOCS: https://elasticpath.dev/docs/api/carts/update-order-shipping-group
+   */
+  UpdateShippingGroup(id: string, ShippingGroupId: string, body: ShippingGroupUpdateBody): Promise<Resource<ShippingGroupBase>>
 
 }

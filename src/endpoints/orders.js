@@ -29,6 +29,17 @@ class OrdersEndpoint extends BaseExtend {
     )
   }
 
+  UpdateShippingGroup(orderId, shippingGroupId, body) {
+    return this.request.send(
+      `${this.endpoint}/${orderId}/shipping-groups/${shippingGroupId}`,
+      'PUT',
+      {
+        ...body,
+        type: 'shipping_group'
+      }
+    )
+  }
+
   Payment(orderId, body) {
     return this.request.send(`${this.endpoint}/${orderId}/payments`, 'POST', {
       data: body,

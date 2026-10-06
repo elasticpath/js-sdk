@@ -292,6 +292,58 @@ describe('ElasticPath orders', () => {
       })
   })
 
+  it('should update a shipping group on an order', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    const address = {
+      first_name: 'John',
+      last_name: 'Doe',
+      line_1: '1 Main Street',
+      city: 'Springfield',
+      postcode: '12345',
+      county: 'Hampden',
+      region: 'MA',
+      country: 'US'
+    }
+
+    // Intercept the API request
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/shipping-groups/shipping-group-1', {
+        data: {
+          type: 'shipping_group',
+          address,
+          delivery_estimate: {
+            start: '2026-09-10T00:00:00Z',
+            end: '2026-09-17T00:00:00Z'
+          }
+        }
+      })
+      .reply(200, {
+        data: {
+          id: 'shipping-group-1',
+          type: 'shipping_group',
+          address
+        }
+      })
+
+    return ElasticPath.Orders.UpdateShippingGroup('order-1', 'shipping-group-1', {
+      address,
+      delivery_estimate: {
+        start: '2026-09-10T00:00:00Z',
+        end: '2026-09-17T00:00:00Z'
+      }
+    }).then(response => {
+      assert.propertyVal(response.data, 'id', 'shipping-group-1')
+      assert.propertyVal(response.data.address, 'city', 'Springfield')
+    })
+  })
+
   it('should get orders attributes', () => {
     const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
