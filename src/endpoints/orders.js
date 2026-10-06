@@ -69,6 +69,30 @@ class OrdersEndpoint extends BaseExtend {
     })
   }
 
+  UpdateItem(orderId, itemId, body) {
+    return this.request.send(
+      `${this.endpoint}/${orderId}/items/${itemId}`,
+      'PUT',
+      {
+        ...body,
+        type: 'order_item'
+      }
+    )
+  }
+
+  UpdateItems(orderId, items, options) {
+    const data = items.map(item => ({ ...item, type: 'order_item' }))
+
+    return this.request.send(
+      `${this.endpoint}/${orderId}/items`,
+      'PUT',
+      { data, ...(options && { options }) },
+      null,
+      null,
+      false
+    )
+  }
+
   anonymize(ids) {
     return this.request.send(`${this.endpoint}/anonymize`, 'POST', ids)
   }

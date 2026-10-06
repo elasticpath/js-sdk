@@ -268,6 +268,99 @@ describe('ElasticPath orders', () => {
     })
   })
 
+  it('should update an order item', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items/item-1', {
+        data: {
+          type: 'order_item',
+          extended_attributes: { gift_wrap: 'true', note: null }
+        }
+      })
+      .reply(200, {
+        data: { id: 'item-1', extended_attributes: { gift_wrap: 'true' } }
+      })
+
+    return ElasticPath.Orders.UpdateItem('order-1', 'item-1', {
+      extended_attributes: { gift_wrap: 'true', note: null }
+    }).then(response => {
+      assert.deepEqual(response.data.extended_attributes, { gift_wrap: 'true' })
+    })
+  })
+
+  it('should bulk update order items', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items', {
+        data: [
+          {
+            type: 'order_item',
+            id: 'item-1',
+            extended_attributes: { gift_wrap: 'true' }
+          }
+        ]
+      })
+      .reply(200, {
+        data: [{ id: 'item-1', extended_attributes: { gift_wrap: 'true' } }]
+      })
+
+    return ElasticPath.Orders.UpdateItems('order-1', [
+      { id: 'item-1', extended_attributes: { gift_wrap: 'true' } }
+    ]).then(response => {
+      assert.lengthOf(response.data, 1)
+    })
+  })
+
+  it('should bulk update order items with options', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items', {
+        data: [
+          {
+            type: 'order_item',
+            id: 'item-1',
+            extended_attributes: { gift_wrap: 'true' }
+          }
+        ],
+        options: { update_all_or_nothing: false }
+      })
+      .reply(200, {
+        data: [],
+        errors: [{ status: '422', title: 'Unprocessable Entity' }]
+      })
+
+    return ElasticPath.Orders.UpdateItems(
+      'order-1',
+      [{ id: 'item-1', extended_attributes: { gift_wrap: 'true' } }],
+      { update_all_or_nothing: false }
+    ).then(response => {
+      assert.deepEqual(response.errors, [
+        { status: '422', title: 'Unprocessable Entity' }
+      ])
+    })
+  })
+
   it('should not persist the includes property after request', () => {
     const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
