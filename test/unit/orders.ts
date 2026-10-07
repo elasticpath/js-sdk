@@ -344,6 +344,222 @@ describe('ElasticPath orders', () => {
     })
   })
 
+  it('should update the extended attributes and flow fields of an order item', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items/item-1', {
+        data: {
+          type: 'order_item',
+          gift_message: 'Happy birthday',
+          extended_attributes: {
+            supplier_code: 'SUP-001',
+            weight_g: null
+          }
+        }
+      })
+      .reply(200, {
+        data: {
+          id: 'item-1',
+          type: 'order_item',
+          gift_message: 'Happy birthday',
+          extended_attributes: { supplier_code: 'SUP-001' }
+        }
+      })
+
+    return ElasticPath.Orders.UpdateItem('order-1', 'item-1', {
+      gift_message: 'Happy birthday',
+      extended_attributes: { supplier_code: 'SUP-001', weight_g: null }
+    }).then(response => {
+      assert.propertyVal(response.data, 'id', 'item-1')
+      assert.deepEqual(response.data.extended_attributes, {
+        supplier_code: 'SUP-001'
+      })
+    })
+  })
+
+  it('should update several order items with options next to data', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items', {
+        data: [
+          {
+            id: 'item-1',
+            type: 'order_item',
+            extended_attributes: { supplier_code: 'SUP-001' }
+          },
+          {
+            id: 'item-2',
+            type: 'order_item',
+            gift_message: 'Hi',
+            extended_attributes: {}
+          }
+        ],
+        options: { update_all_or_nothing: true }
+      })
+      .reply(200, {
+        data: [
+          {
+            id: 'item-1',
+            type: 'order_item',
+            extended_attributes: { supplier_code: 'SUP-001' }
+          },
+          { id: 'item-2', type: 'order_item', gift_message: 'Hi' }
+        ]
+      })
+
+    return ElasticPath.Orders.UpdateItems(
+      'order-1',
+      [
+        { id: 'item-1', extended_attributes: { supplier_code: 'SUP-001' } },
+        { id: 'item-2', gift_message: 'Hi', extended_attributes: {} }
+      ],
+      { update_all_or_nothing: true }
+    ).then(response => {
+      assert.lengthOf(response.data, 2)
+      assert.isUndefined(response.errors)
+    })
+  })
+
+  it('should return per-item errors when update_all_or_nothing is false', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items', {
+        data: [
+          {
+            id: 'item-1',
+            type: 'order_item',
+            extended_attributes: { gift: 'yes' }
+          },
+          {
+            id: 'missing-item',
+            type: 'order_item',
+            extended_attributes: { gift: 'yes' }
+          }
+        ],
+        options: { update_all_or_nothing: false }
+      })
+      .reply(200, {
+        data: [{ id: 'item-1', type: 'order_item' }],
+        errors: [
+          {
+            status: 404,
+            title: 'Not Found',
+            detail: 'The order item does not exist',
+            meta: { id: 'missing-item', ids: ['missing-item'] }
+          }
+        ]
+      })
+
+    return ElasticPath.Orders.UpdateItems(
+      'order-1',
+      [
+        { id: 'item-1', extended_attributes: { gift: 'yes' } },
+        { id: 'missing-item', extended_attributes: { gift: 'yes' } }
+      ],
+      { update_all_or_nothing: false }
+    ).then(response => {
+      assert.lengthOf(response.data, 1)
+      const errors = response.errors ?? []
+      assert.lengthOf(errors, 1)
+      assert.propertyVal(errors[0].meta, 'id', 'missing-item')
+    })
+  })
+
+  it('should omit options and reject the whole request when an item fails', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/items', {
+        data: [
+          {
+            id: 'missing-item',
+            type: 'order_item',
+            extended_attributes: { gift: 'yes' }
+          }
+        ]
+      })
+      .reply(404, {
+        errors: [
+          {
+            status: 404,
+            title: 'Not Found',
+            detail: 'The order item does not exist',
+            meta: { id: 'missing-item', ids: ['missing-item'] }
+          }
+        ]
+      })
+
+    return ElasticPath.Orders.UpdateItems('order-1', [
+      { id: 'missing-item', extended_attributes: { gift: 'yes' } }
+    ]).then(
+      () => assert.fail('expected the request to be rejected'),
+      error => {
+        assert.lengthOf(error.errors, 1)
+        assert.propertyVal(error.errors[0], 'status', 404)
+      }
+    )
+  })
+
+  it('should send extended attributes when updating an order', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1', {
+        data: {
+          type: 'order',
+          extended_attributes: { procurement_id: 'P-1', old_key: null }
+        }
+      })
+      .reply(200, {
+        data: {
+          id: 'order-1',
+          type: 'order',
+          extended_attributes: { procurement_id: 'P-1' }
+        }
+      })
+
+    return ElasticPath.Orders.Update('order-1', {
+      extended_attributes: { procurement_id: 'P-1', old_key: null }
+    }).then(response => {
+      assert.deepEqual(response.data.extended_attributes, {
+        procurement_id: 'P-1'
+      })
+    })
+  })
+
   it('should get orders attributes', () => {
     const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'
