@@ -87,11 +87,13 @@ export interface OrderBase {
 }
 
 /**
- * Fields accepted by PUT /v2/orders/:id. Flow field values are sent as extra keys.
+ * Fields accepted by PUT /v2/orders/:id. Flow field values are sent as extra
+ * keys; an object literal rejects unknown keys, so build flow field values in
+ * a `Record<string, unknown>` and spread them into the body.
  */
 export type OrderUpdateBody = Subset<Omit<OrderBase, 'extended_attributes'>> & {
   extended_attributes?: ExtendedAttributesUpdate
-} & Record<string, unknown>
+}
 
 /**
  * Fields accepted by PUT /v2/orders/:id/items/:itemId. The API requires
@@ -115,7 +117,6 @@ export interface OrderItemsUpdateError {
   status: number
   title: string
   detail: string
-  source?: string
   meta?: {
     id?: string
     ids?: string[]
