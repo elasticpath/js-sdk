@@ -107,8 +107,9 @@ export type OrderItemsUpdateItem = OrderItemUpdateBody & { id: string }
 
 export interface OrderItemsUpdateOptions {
   /**
-   * `true` rejects the whole request when any item fails. `false` applies the
-   * valid items and returns the failures in `errors` with a 200 response.
+   * `true` (the default) rejects the whole request when any item fails, with
+   * the first error's status. `false` applies the valid items and returns the
+   * failures in `errors` with a 200 response.
    */
   update_all_or_nothing?: boolean
 }
