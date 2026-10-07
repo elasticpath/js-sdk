@@ -101,6 +101,36 @@ export type OrderItemUpdateBody = {
   extended_attributes: ExtendedAttributesUpdate
 } & Record<string, unknown>
 
+export type OrderItemsUpdateItem = OrderItemUpdateBody & { id: string }
+
+export interface OrderItemsUpdateOptions {
+  /**
+   * `true` rejects the whole request when any item fails. `false` applies the
+   * valid items and returns the failures in `errors` with a 200 response.
+   */
+  update_all_or_nothing?: boolean
+}
+
+export interface OrderItemsUpdateError {
+  status: number
+  title: string
+  detail: string
+  source?: string
+  meta?: {
+    id?: string
+    ids?: string[]
+  }
+}
+
+/**
+ * `data` holds every item on the order after the update. `errors` lists the
+ * items that could not be updated when `update_all_or_nothing` is false.
+ */
+export interface OrderItemsUpdateResponse {
+  data: OrderItem[]
+  errors?: OrderItemsUpdateError[]
+}
+
 export interface Order extends Identifiable, OrderBase {
   meta: {
     is_manual?: boolean
@@ -639,8 +669,13 @@ export interface OrdersEndpoint
   /**
    * Update an Order Item
    * Description: Updates the extended attributes and flow fields of an order item. Manual orders cannot be updated.
-   * DOCS: https://elasticpath.dev/docs/api/carts/update-an-order-item
    */
   UpdateItem(id: string, itemId: string, body: OrderItemUpdateBody): Promise<Resource<OrderItem>>
+
+  /**
+   * Update Order Items
+   * Description: Updates the extended attributes and flow fields of several order items in one request. Manual orders cannot be updated.
+   */
+  UpdateItems(id: string, items: OrderItemsUpdateItem[], options?: OrderItemsUpdateOptions): Promise<OrderItemsUpdateResponse>
 
 }
