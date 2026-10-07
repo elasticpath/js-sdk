@@ -53,6 +53,13 @@ export interface OrderShippingAddress extends OrderAddressBase {
 
 export interface OrderBillingAddress extends OrderAddressBase {}
 
+export type ExtendedAttributes = Record<string, string>
+
+/**
+ * A `null` value removes the key; keys that are not sent are kept.
+ */
+export type ExtendedAttributesUpdate = Record<string, string | null>
+
 /**
  * Core Object Base Interface
  * For custom flows, extend this interface
@@ -76,10 +83,27 @@ export interface OrderBase {
   billing_address: OrderBillingAddress
   external_ref?: string
   order_number?: string
+  extended_attributes?: ExtendedAttributes
 }
+
+/**
+ * Fields accepted by PUT /v2/orders/:id. Flow field values are sent as extra keys.
+ */
+export type OrderUpdateBody = Subset<Omit<OrderBase, 'extended_attributes'>> & {
+  extended_attributes?: ExtendedAttributesUpdate
+} & Record<string, unknown>
+
+/**
+ * Fields accepted by PUT /v2/orders/:id/items/:itemId. The API requires
+ * `extended_attributes`; send `{}` to change only flow fields.
+ */
+export type OrderItemUpdateBody = {
+  extended_attributes: ExtendedAttributesUpdate
+} & Record<string, unknown>
 
 export interface Order extends Identifiable, OrderBase {
   meta: {
+    is_manual?: boolean
     display_price: {
       authorized: FormattedPrice
       balance_owing: FormattedPrice
@@ -228,6 +252,7 @@ export interface OrderFilter {
  */
 export interface OrderItemBase {
   type: string
+  extended_attributes?: ExtendedAttributes
   product_id: string
   name: string
   sku: string
@@ -581,13 +606,13 @@ export interface OrdersEndpoint
 
   /**
    * Update an Order
-   * Description: You can only update custom data, shipping and shipping_address on orders. Everything else inside the order object is immutable.
+   * Description: Updates custom data, shipping, shipping_address, extended attributes and flow field values on an order. Everything else inside the order object is immutable. Manual orders cannot be updated.
    * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/orders-and-customers/orders/update-an-order.html
    * @param id
    * @param body
    * @constructor
    */
-  Update(id: string, body: Subset<OrderBase>): Promise<Resource<Order>>
+  Update(id: string, body: OrderUpdateBody): Promise<Resource<Order>>
 
   /**
    * anonymize an Order
@@ -610,5 +635,12 @@ export interface OrdersEndpoint
    * DOCS: https://elasticpath.dev/docs/api/carts/update-order-shipping-group
    */
   UpdateShippingGroup(id: string, ShippingGroupId: string, body: ShippingGroupUpdateBody): Promise<Resource<ShippingGroupBase>>
+
+  /**
+   * Update an Order Item
+   * Description: Updates the extended attributes and flow fields of an order item. Manual orders cannot be updated.
+   * DOCS: https://elasticpath.dev/docs/api/carts/update-an-order-item
+   */
+  UpdateItem(id: string, itemId: string, body: OrderItemUpdateBody): Promise<Resource<OrderItem>>
 
 }

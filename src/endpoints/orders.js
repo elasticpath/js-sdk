@@ -40,6 +40,17 @@ class OrdersEndpoint extends BaseExtend {
     )
   }
 
+  UpdateItem(orderId, itemId, body) {
+    return this.request.send(
+      `${this.endpoint}/${orderId}/items/${itemId}`,
+      'PUT',
+      {
+        ...body,
+        type: 'order_item'
+      }
+    )
+  }
+
   Payment(orderId, body) {
     return this.request.send(`${this.endpoint}/${orderId}/payments`, 'POST', {
       data: body,
