@@ -5,10 +5,11 @@ export type AccessLevel = 'none' | 'view' | 'manage'
 /**
  * The permission groups a custom user role grants access to.
  *
- * Every group is required on create. Composer, Legacy Catalogs, Metrics,
- * Custom Actions and Team accept a narrower set of levels than the rest —
- * Custom Actions and Team only ever 'none' for a custom user role, though
- * standard user roles may hold higher levels for them.
+ * Every group is required on create. Composer, Extended Attributes, Legacy
+ * Catalogs, Metrics, Custom Actions and Team accept a narrower set of levels
+ * than the rest — Custom Actions and Team only ever 'none' for a custom user
+ * role, though standard user roles may hold higher levels for them, and
+ * Extended Attributes never 'none'.
  */
 export type AccessLevels = {
   accounts: AccessLevel
@@ -22,6 +23,7 @@ export type AccessLevels = {
   currencies: AccessLevel
   custom_actions: 'none'
   custom_apis: AccessLevel
+  extended_attributes: 'view' | 'manage'
   flows: AccessLevel
   inventories: AccessLevel
   legacy_catalogs: 'none' | 'manage'
