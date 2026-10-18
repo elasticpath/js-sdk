@@ -72,6 +72,7 @@ import { CustomRelationshipsEndpoint } from './types/custom-relationships'
 import { MultiLocationInventoriesEndpoint } from './types/multi-location-inventories'
 import { CustomApiRolePoliciesEndpoint } from './types/custom-api-role-policies'
 import { CustomUserRolesEndpoint } from './types/custom-user-roles'
+import { ExtendedAttributesEndpoint } from './types/extended-attributes'
 import { AccountTagsEndpoint } from './types/account-tags'
 
 export * from './types/config'
@@ -146,6 +147,7 @@ export * from './types/subscriptions'
 export * from './types/rule-promotions'
 export * from './types/custom-api-role-policies'
 export * from './types/custom-user-roles'
+export * from './types/extended-attributes'
 export * from './types/subscription-subscribers'
 export * from './types/subscription-jobs'
 export * from './types/subscription-schedules'
@@ -222,6 +224,7 @@ export class ElasticPath {
   RulePromotions: RulePromotionsEndpoint
   CustomApiRolePolicies: CustomApiRolePoliciesEndpoint
   CustomUserRoles: CustomUserRolesEndpoint
+  ExtendedAttributes: ExtendedAttributesEndpoint
   SubscriptionSubscribers: SubscriptionSubscribersEndpoint
   SubscriptionJobs: SubscriptionJobsEndpoint
   SubscriptionSchedules: SubscriptionSchedulesEndpoint

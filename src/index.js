@@ -74,6 +74,7 @@ import ShopperCatalogEndpoint from './endpoints/catalog'
 import CustomApisEndpoint from './endpoints/custom-apis'
 import CustomApiRolePoliciesEndpoint from './endpoints/custom-api-role-policies'
 import CustomUserRolesEndpoint from './endpoints/custom-user-roles'
+import ExtendedAttributesEndpoint from './endpoints/extended-attributes'
 
 export default class ElasticPath {
   constructor(config) {
@@ -151,6 +152,7 @@ export default class ElasticPath {
     this.CustomApis = new CustomApisEndpoint(config)
     this.CustomApiRolePolicies = new CustomApiRolePoliciesEndpoint(config)
     this.CustomUserRoles = new CustomUserRolesEndpoint(config)
+    this.ExtendedAttributes = new ExtendedAttributesEndpoint(config)
     this.SubscriptionDunningRules = new SubscriptionDunningRulesEndpoint(config)
     this.SubscriptionProrationPolicies =
       new SubscriptionProrationPoliciesEndpoint(config)
