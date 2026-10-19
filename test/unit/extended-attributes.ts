@@ -40,7 +40,6 @@ const extendedAttribute: ExtendedAttributeDefinition = {
   }
 }
 
-// Compile-time coverage: the API rejects these, so the types should too.
 const createBody: CreateExtendedAttributeBody = {
   name: 'Payment terms',
   description: '',
@@ -48,6 +47,8 @@ const createBody: CreateExtendedAttributeBody = {
   field_type: 'string',
   searchable: false
 }
+
+// Compile-time coverage: the API rejects these, so the types should too.
 // @ts-expect-error product is not a registry resource type
 const unknownResourceType: ExtendedAttributeDefinition['resource_type'] =
   'product'
@@ -130,7 +131,7 @@ describe('ElasticPath extended attributes', () => {
     })
   })
 
-  it('should not reuse a Filter() from a previous request', () => {
+  it('should apply a Filter() to one request only', () => {
     nock(apiUrl, {
       reqheaders: {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
@@ -157,7 +158,7 @@ describe('ElasticPath extended attributes', () => {
       })
   })
 
-  it('should not reuse Limit() from a previous request', () => {
+  it('should apply a Limit() to one request only', () => {
     nock(apiUrl, {
       reqheaders: {
         Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
@@ -199,7 +200,7 @@ describe('ElasticPath extended attributes', () => {
     })
   })
 
-  it('should create a definition and add the resource type', () => {
+  it('should create a definition and add its type', () => {
     const body: CreateExtendedAttributeBody = {
       name: 'Payment terms',
       description: 'Agreed payment terms',
