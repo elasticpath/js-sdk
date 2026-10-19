@@ -9,11 +9,12 @@ class ExtendedAttributesEndpoint extends CRUDExtend {
     this.endpoint = 'settings/extensions/extended-attributes'
   }
 
-  GetExtendedAttributes(resourceType, { limit, offset, sort } = {}) {
+  GetExtendedAttributes(resourceType, { limit, offset, filter, sort } = {}) {
     return this.request.send(
       buildURL(`${this.endpoint}/${resourceType}`, {
         limit: limit !== undefined ? limit : this.limit,
         offset: offset !== undefined ? offset : this.offset,
+        filter: filter !== undefined ? filter : this.filter,
         sort: sort !== undefined ? sort : this.sort
       }),
       'GET',

@@ -63,7 +63,7 @@ export type ExtendedAttributeValidationInput =
   | { boolean: Partial<ExtendedAttributeBaseValidation> }
   | { date: Partial<ExtendedAttributeBaseValidation> }
 
-export interface ExtendedAttribute {
+export interface ExtendedAttributeDefinition {
   id: string
   type: 'extended_attribute'
   resource_type: ExtendedAttributeResourceType
@@ -108,6 +108,52 @@ export interface UpdateExtendedAttributeBody {
   validation?: ExtendedAttributeValidationInput | null
 }
 
+export type ExtendedAttributeSortField =
+  | 'id'
+  | 'created_at'
+  | 'updated_at'
+  | 'name'
+  | 'slug'
+  | 'field_type'
+
+/** A field name for ascending order, or the name with a `-` prefix for descending. */
+export type ExtendedAttributeSort =
+  | ExtendedAttributeSortField
+  | `-${ExtendedAttributeSortField}`
+
+interface ExtendedAttributeRangeFilterFields {
+  id?: string
+  /** An RFC 3339 date time with milliseconds, for example 2026-01-01T00:00:00.000Z. */
+  created_at?: string
+  /** An RFC 3339 date time with milliseconds, for example 2026-01-01T00:00:00.000Z. */
+  updated_at?: string
+}
+
+/**
+ * The registry rejects any other field or operator with a 400, including
+ * filters on `description`. `like` takes `*` as a wildcard.
+ */
+export interface ExtendedAttributeFilter {
+  eq?: ExtendedAttributeRangeFilterFields & {
+    name?: string
+    slug?: string
+    field_type?: ExtendedAttributeFieldType
+  }
+  lt?: ExtendedAttributeRangeFilterFields
+  le?: ExtendedAttributeRangeFilterFields
+  gt?: ExtendedAttributeRangeFilterFields
+  ge?: ExtendedAttributeRangeFilterFields
+  like?: {
+    name?: string
+    slug?: string
+  }
+  in?: {
+    id?: string[]
+    slug?: string[]
+    field_type?: ExtendedAttributeFieldType[]
+  }
+}
+
 export interface ExtendedAttributesEndpoint {
   endpoint: 'settings/extensions/extended-attributes'
 
@@ -120,25 +166,26 @@ export interface ExtendedAttributesEndpoint {
     args?: {
       limit?: number
       offset?: number
-      sort?: string
+      filter?: ExtendedAttributeFilter
+      sort?: ExtendedAttributeSort
     }
-  ): Promise<ResourcePage<ExtendedAttribute>>
+  ): Promise<ResourcePage<ExtendedAttributeDefinition>>
 
   GetExtendedAttribute(
     resourceType: ExtendedAttributeResourceType,
     id: string
-  ): Promise<Resource<ExtendedAttribute>>
+  ): Promise<Resource<ExtendedAttributeDefinition>>
 
   CreateExtendedAttribute(
     resourceType: ExtendedAttributeResourceType,
     body: CreateExtendedAttributeBody
-  ): Promise<Resource<ExtendedAttribute>>
+  ): Promise<Resource<ExtendedAttributeDefinition>>
 
   UpdateExtendedAttribute(
     resourceType: ExtendedAttributeResourceType,
     id: string,
     body: UpdateExtendedAttributeBody
-  ): Promise<Resource<ExtendedAttribute>>
+  ): Promise<Resource<ExtendedAttributeDefinition>>
 
   DeleteExtendedAttribute(
     resourceType: ExtendedAttributeResourceType,

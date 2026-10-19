@@ -3,14 +3,16 @@ import nock from 'nock'
 import { gateway as ElasticPathGateway } from '../../src'
 import type {
   CreateExtendedAttributeBody,
-  ExtendedAttribute,
+  ExtendedAttributeDefinition,
+  ExtendedAttributeFilter,
+  ExtendedAttributeSort,
   UpdateExtendedAttributeBody
 } from '../../src/types/extended-attributes'
 
 const apiUrl = 'https://euwest.api.elasticpath.com/v2'
 const path = '/settings/extensions/extended-attributes'
 
-const extendedAttribute: ExtendedAttribute = {
+const extendedAttribute: ExtendedAttributeDefinition = {
   id: 'def-1',
   type: 'extended_attribute',
   resource_type: 'order',
@@ -47,7 +49,8 @@ const createBody: CreateExtendedAttributeBody = {
   searchable: false
 }
 // @ts-expect-error product is not a registry resource type
-const unknownResourceType: ExtendedAttribute['resource_type'] = 'product'
+const unknownResourceType: ExtendedAttributeDefinition['resource_type'] =
+  'product'
 // @ts-expect-error slug cannot change on update
 const slugUpdate: UpdateExtendedAttributeBody = { slug: 'new_slug' }
 // @ts-expect-error field_type cannot change on update
@@ -56,13 +59,22 @@ const unsupportedRule: UpdateExtendedAttributeBody = {
   // @ts-expect-error date has no min_value rule
   validation: { date: { min_value: 1 } }
 }
+// @ts-expect-error description is not sortable
+const unknownSort: ExtendedAttributeSort = 'description'
+// @ts-expect-error description is not filterable
+const unknownFilterField: ExtendedAttributeFilter = { eq: { description: 'x' } }
+// @ts-expect-error name has no range operators
+const rangeOnName: ExtendedAttributeFilter = { lt: { name: 'x' } }
 
 void [
   createBody,
   unknownResourceType,
   slugUpdate,
   fieldTypeUpdate,
-  unsupportedRule
+  unsupportedRule,
+  unknownSort,
+  unknownFilterField,
+  rangeOnName
 ]
 
 describe('ElasticPath extended attributes', () => {
@@ -90,6 +102,59 @@ describe('ElasticPath extended attributes', () => {
       assert.lengthOf(response.data, 1)
       assert.propertyVal(response.data[0], 'resource_type', 'order_item')
     })
+  })
+
+  it('should filter definitions with several operators', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get(`${path}/order`)
+      .query({
+        filter:
+          'eq(field_type,string):like(name,Pay*):in(slug,payment_terms,po_number)',
+        sort: '-name'
+      })
+      .reply(200, { data: [extendedAttribute] })
+
+    return ElasticPath.ExtendedAttributes.GetExtendedAttributes('order', {
+      filter: {
+        eq: { field_type: 'string' },
+        like: { name: 'Pay*' },
+        in: { slug: ['payment_terms', 'po_number'] }
+      },
+      sort: '-name'
+    }).then(response => {
+      assert.lengthOf(response.data, 1)
+    })
+  })
+
+  it('should not reuse a Filter() from a previous request', () => {
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .get(`${path}/order`)
+      .query({ filter: 'gt(created_at,2026-01-01T00:00:00.000Z)' })
+      .reply(200, { data: [extendedAttribute] })
+      .get(`${path}/order`)
+      .reply(200, { data: [extendedAttribute, extendedAttribute] })
+
+    const definitions = ElasticPath.ExtendedAttributes as unknown as {
+      Filter(
+        filter: ExtendedAttributeFilter
+      ): typeof ElasticPath.ExtendedAttributes
+    }
+
+    return definitions
+      .Filter({ gt: { created_at: '2026-01-01T00:00:00.000Z' } })
+      .GetExtendedAttributes('order')
+      .then(() => ElasticPath.ExtendedAttributes.GetExtendedAttributes('order'))
+      .then(response => {
+        assert.lengthOf(response.data, 2)
+      })
   })
 
   it('should not reuse Limit() from a previous request', () => {
