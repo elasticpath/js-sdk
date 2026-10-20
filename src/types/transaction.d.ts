@@ -203,12 +203,6 @@ export interface TransactionEndpoint {
     body: TransactionNoteBody
   ): Promise<Resource<TransactionNote>>
 
-  DeleteNote(options: {
-    order: string
-    transaction: string
-    note: string
-  }): Promise<{}>
-
   Limit(value: number): TransactionEndpoint
 
   Offset(value: number): TransactionEndpoint

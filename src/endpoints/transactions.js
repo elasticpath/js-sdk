@@ -85,13 +85,6 @@ class TransactionsEndpoint extends BaseExtend {
       }
     )
   }
-
-  DeleteNote({ order, transaction, note }) {
-    return this.request.send(
-      `orders/${order}/${this.endpoint}/${transaction}/notes/${note}`,
-      'DELETE'
-    )
-  }
 }
 
 export default TransactionsEndpoint

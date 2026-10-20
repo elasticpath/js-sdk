@@ -241,22 +241,4 @@ describe('ElasticPath order transaction notes', () => {
       assert.propertyVal(response.data, 'text', 'Updated note')
     })
   })
-
-  it('should delete a transaction note', () => {
-    nock(apiUrl, {
-      reqheaders: {
-        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
-      }
-    })
-      .delete('/orders/order-1/transactions/transaction-1/notes/note-1')
-      .reply(204)
-
-    return ElasticPath.Transactions.DeleteNote({
-      order: 'order-1',
-      transaction: 'transaction-1',
-      note: 'note-1'
-    }).then(response => {
-      assert.equal(response, '{}')
-    })
-  })
 })
