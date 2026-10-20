@@ -119,10 +119,6 @@ export interface TransactionNote extends Identifiable, TransactionNoteBody {
       created_at: string
       updated_at: string
     }
-    /**
-     * The user ID, or empty for client credentials writes. Notes written
-     * before orders.svc stored user IDs hold the encoded initiator token.
-     */
     created_by: string
     updated_by: string
   }
