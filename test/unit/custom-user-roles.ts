@@ -20,7 +20,7 @@ const accessLevels: AccessLevels = {
   catalog_search: 'none',
   catalogs: 'none',
   composer: 'none',
-  content_and_pages: 'none',
+  content_and_pages: 'content',
   currencies: 'none',
   custom_actions: 'none',
   custom_apis: 'none',
@@ -68,8 +68,19 @@ const invalidTeamLevel: AccessLevels = { ...accessLevels, team: 'manage' }
 const invalidMetricsLevel: AccessLevels = { ...accessLevels, metrics: 'manage' }
 // @ts-expect-error inventores is not a permission group
 const unknownGroup: AccessLevels = { ...accessLevels, inventores: 'view' }
+// @ts-expect-error only content_and_pages has a 'content' level
+const invalidContentLevel: AccessLevels = { ...accessLevels, orders: 'content' }
+// @ts-expect-error only content_and_pages has a 'design' level
+const invalidDesignLevel: AccessLevels = { ...accessLevels, products: 'design' }
 
-void [invalidLevel, invalidTeamLevel, invalidMetricsLevel, unknownGroup]
+void [
+  invalidLevel,
+  invalidTeamLevel,
+  invalidMetricsLevel,
+  unknownGroup,
+  invalidContentLevel,
+  invalidDesignLevel
+]
 
 describe('ElasticPath custom user roles', () => {
   const ElasticPath = ElasticPathGateway({
@@ -276,7 +287,7 @@ describe('ElasticPath custom user roles', () => {
   it('should update a custom user role with a sparse body', () => {
     const body: UpdateCustomUserRoleBody = {
       type: 'custom_user_role',
-      access_levels: { inventories: 'manage' }
+      access_levels: { inventories: 'manage', content_and_pages: 'design' }
     }
 
     nock(apiUrl, {
