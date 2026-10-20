@@ -171,9 +171,9 @@ export interface ShippingGroupBase extends Identifiable {
   address?: OrderShippingAddress
   payment_status?: string
   shipping_status?: string
-  delivery_estimate: {
+  delivery_estimate?: {
     start: string
-    end: string
+    end?: string
   }
   created_at: string
   updated_at: string
