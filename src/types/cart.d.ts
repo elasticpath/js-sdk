@@ -231,9 +231,9 @@ export interface CartShippingGroupBase {
   shipping_type: string
   tracking_reference?: string
   address: Address
-  delivery_estimate: {
+  delivery_estimate?: {
     start: string
-    end: string
+    end?: string
   }
 }
 
@@ -247,9 +247,9 @@ export interface ShippingGroupResponse {
   address?: Partial<Address>
   payment_status?: string
   shipping_status?: string
-  delivery_estimate: {
+  delivery_estimate?: {
     start: string
-    end: string
+    end?: string
   }
   created_at: string
   updated_at: string
