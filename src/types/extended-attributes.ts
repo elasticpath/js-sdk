@@ -20,8 +20,8 @@ export interface ExtendedAttributeBaseValidation {
 }
 
 /**
- * Lengths are counted in UTF-8 bytes. Every allowed value must satisfy the
- * length bounds and the regex, which uses RE2 syntax.
+ * Lengths are counted in characters (Unicode code points). Every allowed value
+ * must satisfy the length bounds and the regex, which uses RE2 syntax.
  */
 export interface ExtendedAttributeStringValidation
   extends ExtendedAttributeBaseValidation {
