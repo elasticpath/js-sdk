@@ -45,13 +45,40 @@ const createBody: CreateExtendedAttributeBody = {
   description: '',
   slug: 'payment_terms',
   field_type: 'string',
-  searchable: false
+  searchable: false,
+  validation: { string: { allow_null_values: true, immutable: false } }
 }
 
 // Compile-time coverage: the API rejects these, so the types should too.
 // @ts-expect-error product is not a registry resource type
 const unknownResourceType: ExtendedAttributeDefinition['resource_type'] =
   'product'
+// @ts-expect-error validation is required on create
+const createWithoutValidation: CreateExtendedAttributeBody = {
+  name: 'Payment terms',
+  description: '',
+  slug: 'payment_terms',
+  field_type: 'string',
+  searchable: false
+}
+const createWithNullValidation: CreateExtendedAttributeBody = {
+  ...createBody,
+  // @ts-expect-error validation cannot be null
+  validation: null
+}
+const createWithoutImmutable: CreateExtendedAttributeBody = {
+  ...createBody,
+  // @ts-expect-error immutable is required on create
+  validation: { string: { allow_null_values: true } }
+}
+const updateWithNullValidation: UpdateExtendedAttributeBody = {
+  // @ts-expect-error validation cannot be null on update
+  validation: null
+}
+const updateWithNullImmutable: UpdateExtendedAttributeBody = {
+  // @ts-expect-error immutable cannot be null on update
+  validation: { string: { immutable: null } }
+}
 // @ts-expect-error slug cannot change on update
 const slugUpdate: UpdateExtendedAttributeBody = { slug: 'new_slug' }
 // @ts-expect-error field_type cannot change on update
@@ -69,6 +96,11 @@ const rangeOnName: ExtendedAttributeFilter = { lt: { name: 'x' } }
 
 void [
   createBody,
+  createWithoutValidation,
+  createWithNullValidation,
+  createWithoutImmutable,
+  updateWithNullValidation,
+  updateWithNullImmutable,
   unknownResourceType,
   slugUpdate,
   fieldTypeUpdate,
@@ -208,7 +240,12 @@ describe('ElasticPath extended attributes', () => {
       field_type: 'string',
       searchable: true,
       validation: {
-        string: { max_length: 32, allowed_values: ['net30', 'net60'] }
+        string: {
+          allow_null_values: true,
+          immutable: false,
+          max_length: 32,
+          allowed_values: ['net30', 'net60']
+        }
       }
     }
 
@@ -218,7 +255,22 @@ describe('ElasticPath extended attributes', () => {
       }
     })
       .post(`${path}/order`, {
-        data: { ...body, type: 'extended_attribute' }
+        data: {
+          name: 'Payment terms',
+          description: 'Agreed payment terms',
+          slug: 'payment_terms',
+          field_type: 'string',
+          searchable: true,
+          validation: {
+            string: {
+              allow_null_values: true,
+              immutable: false,
+              max_length: 32,
+              allowed_values: ['net30', 'net60']
+            }
+          },
+          type: 'extended_attribute'
+        }
       })
       .reply(201, { data: extendedAttribute })
 

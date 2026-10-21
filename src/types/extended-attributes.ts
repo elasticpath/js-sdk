@@ -51,12 +51,43 @@ export type ExtendedAttributeValidation =
   | { boolean: ExtendedAttributeBaseValidation }
   | { date: ExtendedAttributeBaseValidation }
 
+type ExtendedAttributeStringConstraints = Omit<
+  ExtendedAttributeStringValidation,
+  keyof ExtendedAttributeBaseValidation
+>
+
+type ExtendedAttributeNumberConstraints = Omit<
+  ExtendedAttributeNumberValidation,
+  keyof ExtendedAttributeBaseValidation
+>
+
 /**
- * A validation block in a request. Keys left out keep their stored value on
- * update, or their default on create; null clears a rule. Keys the field type
- * does not support are dropped without an error.
+ * A validation block in a create request. The block for the field type is
+ * required, with `allow_null_values` and `immutable` set. A constraint left out
+ * or null means no constraint. Blocks for other field types are ignored.
  */
-export type ExtendedAttributeValidationInput =
+export type ExtendedAttributeCreateValidation =
+  | {
+      string: ExtendedAttributeBaseValidation &
+        Partial<ExtendedAttributeStringConstraints>
+    }
+  | {
+      integer: ExtendedAttributeBaseValidation &
+        Partial<ExtendedAttributeNumberConstraints>
+    }
+  | {
+      float: ExtendedAttributeBaseValidation &
+        Partial<ExtendedAttributeNumberConstraints>
+    }
+  | { boolean: ExtendedAttributeBaseValidation }
+  | { date: ExtendedAttributeBaseValidation }
+
+/**
+ * A validation block in an update request. Keys left out keep their stored
+ * value and null clears a constraint; `allow_null_values` and `immutable`
+ * cannot be null. Blocks for other field types are ignored.
+ */
+export type ExtendedAttributeUpdateValidation =
   | { string: Partial<ExtendedAttributeStringValidation> }
   | { integer: Partial<ExtendedAttributeNumberValidation> }
   | { float: Partial<ExtendedAttributeNumberValidation> }
@@ -93,19 +124,18 @@ export interface CreateExtendedAttributeBody {
   slug: string
   field_type: ExtendedAttributeFieldType
   searchable: boolean
-  validation?: ExtendedAttributeValidationInput | null
+  validation: ExtendedAttributeCreateValidation
 }
 
 /**
  * Update merges into the stored definition, so any subset may be sent.
- * `slug` and `field_type` cannot change. Sending `validation: null` resets
- * every rule to its default.
+ * `slug` and `field_type` cannot change.
  */
 export interface UpdateExtendedAttributeBody {
   name?: string
   description?: string
   searchable?: boolean
-  validation?: ExtendedAttributeValidationInput | null
+  validation?: ExtendedAttributeUpdateValidation
 }
 
 export type ExtendedAttributeSortField =
