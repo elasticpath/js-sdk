@@ -4,7 +4,13 @@
  * This is useful when auditing product movements across your project.
  * DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions.html
  */
-import { Identifiable, ResourceList } from './core'
+import {
+  Identifiable,
+  Relationship,
+  Resource,
+  ResourceList,
+  ResourcePage
+} from './core'
 
 export interface TransactionsResponse {
   data: {
@@ -97,12 +103,35 @@ export interface TransactionBase {
 export interface Transaction extends Identifiable, TransactionBase {}
 
 /**
+ * Text is 1 to 250 characters. A transaction can have at most 50 notes.
+ */
+export interface TransactionNoteBody {
+  text: string
+}
+
+export interface TransactionNote extends Identifiable, TransactionNoteBody {
+  type: 'note'
+  relationships: {
+    transaction: Relationship<'transaction'>
+  }
+  meta: {
+    timestamps: {
+      created_at: string
+      updated_at: string
+    }
+    created_by: string
+    updated_by: string
+  }
+}
+
+/**
  * Transaction Endpoints
  * Get All DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions.html#get-get-all-transactions
  * Get single DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions.html#get-get-single-transaction
  * Capture DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions.html#post-capture-payment
  * Refund DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions.html#post-refund-payment
  * Cancel DOCS: https://documentation.elasticpath.com/commerce-cloud/docs/api/payments/transactions/cancel-a-pending-transaction.html
+ * Notes are admin only; shopper tokens are rejected.
  */
 export interface TransactionEndpoint {
   endpoint: 'transaction'
@@ -136,4 +165,41 @@ export interface TransactionEndpoint {
       reason: 'duplicate' | 'fraudulent' | 'requested_by_customer' | 'abandoned'
     }
   ): Promise<TransactionsResponse>
+
+  /**
+   * List the notes on a transaction, newest first. `limit` is at most 100.
+   */
+  AllNotes(options: {
+    order: string
+    transaction: string
+    limit?: number
+    offset?: number
+  }): Promise<ResourcePage<TransactionNote>>
+
+  GetNote(options: {
+    order: string
+    transaction: string
+    note: string
+  }): Promise<Resource<TransactionNote>>
+
+  CreateNote(
+    options: {
+      order: string
+      transaction: string
+    },
+    body: TransactionNoteBody
+  ): Promise<Resource<TransactionNote>>
+
+  UpdateNote(
+    options: {
+      order: string
+      transaction: string
+      note: string
+    },
+    body: TransactionNoteBody
+  ): Promise<Resource<TransactionNote>>
+
+  Limit(value: number): TransactionEndpoint
+
+  Offset(value: number): TransactionEndpoint
 }
