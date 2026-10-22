@@ -344,6 +344,46 @@ describe('ElasticPath orders', () => {
     })
   })
 
+  it('should update an order shipping group with a start-only delivery estimate', () => {
+    const ElasticPath = ElasticPathGateway({
+      client_id: 'XXX'
+    })
+
+    nock(apiUrl, {
+      reqheaders: {
+        Authorization: 'Bearer a550d8cbd4a4627013452359ab69694cd446615a'
+      }
+    })
+      .put('/orders/order-1/shipping-groups/shipping-group-1', {
+        data: {
+          type: 'shipping_group',
+          tracking_reference: 'TRK-1',
+          delivery_estimate: {
+            start: '2026-09-10T00:00:00Z'
+          }
+        }
+      })
+      .reply(200, {
+        data: {
+          id: 'shipping-group-1',
+          type: 'shipping_group',
+          tracking_reference: 'TRK-1',
+          delivery_estimate: {
+            start: '2026-09-10T00:00:00Z'
+          }
+        }
+      })
+
+    return ElasticPath.Orders.UpdateShippingGroup('order-1', 'shipping-group-1', {
+      tracking_reference: 'TRK-1',
+      delivery_estimate: {
+        start: '2026-09-10T00:00:00Z'
+      }
+    }).then(response => {
+      assert.propertyVal(response.data, 'tracking_reference', 'TRK-1')
+    })
+  })
+
   it('should update the extended attributes and flow fields of an order item', () => {
     const ElasticPath = ElasticPathGateway({
       client_id: 'XXX'

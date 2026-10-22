@@ -171,9 +171,9 @@ export interface ShippingGroupBase extends Identifiable {
   address?: OrderShippingAddress
   payment_status?: string
   shipping_status?: string
-  delivery_estimate: {
+  delivery_estimate?: {
     start: string
-    end: string
+    end?: string
   }
   created_at: string
   updated_at: string
@@ -211,6 +211,7 @@ export interface ShippingGroupBase extends Identifiable {
 /**
  * Fields accepted by PUT /v2/orders/:id/shipping-groups/:id.
  * `delivery_estimate` is replaced wholesale: omit it and the API clears it.
+ * Its `start` is required; `end` is optional.
  */
 export interface ShippingGroupUpdateBody {
   address?: OrderShippingAddress
@@ -219,7 +220,7 @@ export interface ShippingGroupUpdateBody {
   external_ref?: string
   delivery_estimate?: {
     start: string
-    end: string
+    end?: string
   }
 }
 

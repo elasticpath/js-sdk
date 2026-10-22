@@ -24,6 +24,7 @@ const accessLevels: AccessLevels = {
   currencies: 'none',
   custom_actions: 'none',
   custom_apis: 'none',
+  extended_attributes: 'view',
   flows: 'none',
   inventories: 'manage',
   legacy_catalogs: 'none',
@@ -72,6 +73,23 @@ const unknownGroup: AccessLevels = { ...accessLevels, inventores: 'view' }
 const invalidContentLevel: AccessLevels = { ...accessLevels, orders: 'content' }
 // @ts-expect-error only content_and_pages has a 'design' level
 const invalidDesignLevel: AccessLevels = { ...accessLevels, products: 'design' }
+const manageExtendedAttributes: AccessLevels = {
+  ...accessLevels,
+  extended_attributes: 'manage'
+}
+const invalidExtendedAttributesLevel: AccessLevels = {
+  ...accessLevels,
+  // @ts-expect-error extended_attributes has no 'none' level
+  extended_attributes: 'none'
+}
+const invalidExtendedAttributesUpdate: UpdateCustomUserRoleBody = {
+  type: 'custom_user_role',
+  // @ts-expect-error extended_attributes has no 'none' level on update either
+  access_levels: { extended_attributes: 'none' }
+}
+const { extended_attributes: _, ...withoutExtendedAttributes } = accessLevels
+// @ts-expect-error extended_attributes is required like every other group
+const missingGroup: AccessLevels = withoutExtendedAttributes
 
 void [
   invalidLevel,
@@ -79,7 +97,11 @@ void [
   invalidMetricsLevel,
   unknownGroup,
   invalidContentLevel,
-  invalidDesignLevel
+  invalidDesignLevel,
+  manageExtendedAttributes,
+  invalidExtendedAttributesLevel,
+  invalidExtendedAttributesUpdate,
+  missingGroup
 ]
 
 describe('ElasticPath custom user roles', () => {
