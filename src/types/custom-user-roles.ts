@@ -2,6 +2,8 @@ import { Resource, ResourcePage } from './core'
 
 export type AccessLevel = 'none' | 'view' | 'manage'
 
+export type ContentAndPagesAccessLevel = AccessLevel | 'content' | 'design'
+
 /**
  * The permission groups a custom user role grants access to.
  *
@@ -9,7 +11,8 @@ export type AccessLevel = 'none' | 'view' | 'manage'
  * Catalogs, Metrics, Custom Actions and Team accept a narrower set of levels
  * than the rest — Custom Actions and Team only ever 'none' for a custom user
  * role, though standard user roles may hold higher levels for them, and
- * Extended Attributes never 'none'.
+ * Extended Attributes never 'none'. Content & Pages accepts a wider set,
+ * adding 'content' and 'design'.
  */
 export type AccessLevels = {
   accounts: AccessLevel
@@ -19,7 +22,7 @@ export type AccessLevels = {
   catalog_search: AccessLevel
   catalogs: AccessLevel
   composer: 'none' | 'manage'
-  content_and_pages: AccessLevel
+  content_and_pages: ContentAndPagesAccessLevel
   currencies: AccessLevel
   custom_actions: 'none'
   custom_apis: AccessLevel
